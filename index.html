@@ -221,8 +221,8 @@
                                 stroke-dasharray="0 408.41" stroke-linecap="round"/>
                     </svg>
                     <div style="position: relative; z-index: 1; text-align: center;">
-                        <div class="percentage" id="wheel-pct-katakana">77%</div>
-                        <div id="wheel-count-katakana" style="font-size: 0.85em; color: #666; margin-top: 5px;">80 / 104</div>
+                        <div class="percentage" id="wheel-pct-katakana">—</div>
+                        <div id="wheel-count-katakana" style="font-size: 0.85em; color: #666; margin-top: 5px;">— / 104</div>
                     </div>
                 </div>
                 <div class="wheel-label">Katakana</div>
@@ -251,8 +251,8 @@
                                 stroke-dasharray="0 408.41" stroke-linecap="round"/>
                     </svg>
                     <div style="position: relative; z-index: 1; text-align: center;">
-                        <div class="percentage" id="wheel-pct-vocab">16%</div>
-                        <div id="wheel-count-vocab" style="font-size: 0.85em; color: #666; margin-top: 5px;">113 / 708</div>
+                        <div class="percentage" id="wheel-pct-vocab">—</div>
+                        <div id="wheel-count-vocab" style="font-size: 0.85em; color: #666; margin-top: 5px;">— / 708</div>
                     </div>
                 </div>
                 <div class="wheel-label">Vocabulary</div>
@@ -357,190 +357,43 @@
                 if (countEl) countEl.textContent = known + ' / ' + total;
             }
 
-            // Hardcoded defaults from kana.html
-            var hiraDefaults = {
-                // Basic (46)
-                'あ':'g','か':'g','さ':'g','た':'g','な':'g','は':'g','ま':'g','や':'g','ら':'g','わ':'g',
-                'い':'g','き':'g','し':'g','ち':'g','に':'g','ひ':'g','み':'g','り':'g',
-                'う':'g','く':'g','す':'g','つ':'g','ふ':'g','む':'g','ゆ':'g','る':'g',
-                'え':'g','け':'g','せ':'g','て':'g','ね':'g','へ':'g','め':'g',
-                'お':'g','こ':'g','そ':'g','と':'g','の':'g','ほ':'g','も':'g','よ':'g','ろ':'g','を':'g','ん':'g',
-                // Dakuten & Handakuten (25)
-                'が':'g','ぎ':'g','ぐ':'g','げ':'g','ご':'g',
-                'ざ':'g','じ':'g','ず':'g','ぞ':'g',
-                'だ':'g','ぢ':'g','づ':'g','で':'g','ど':'g',
-                'ば':'g','び':'g','ぶ':'g','ぼ':'g',
-                'ぱ':'g','ぴ':'g','ぷ':'g','ぺ':'g','ぽ':'g',
-                // Combos (33)
-                'きゃ':'g','きゅ':'g','きょ':'g','しゃ':'g','しゅ':'g','しょ':'g',
-                'ちゃ':'g','ちゅ':'g','ちょ':'g','にゃ':'g','にゅ':'g','にょ':'g',
-                'ひゃ':'g','ひゅ':'g','ひょ':'g','みゃ':'g','みゅ':'g','みょ':'g',
-                'りゃ':'g','りゅ':'g','りょ':'g','ぎゃ':'g','ぎゅ':'g','ぎょ':'g',
-                'じゃ':'g','じゅ':'g','じょ':'g','びょ':'g','ぴゃ':'g','ぴゅ':'g','ぴょ':'g',
-                // Amber (6)
-                'ぬ':'a','れ':'a','ぜ':'a','べ':'a','びゃ':'a','びゅ':'a'
-            };
-            var allHiragana = [
-                'あ','か','さ','た','な','は','ま','や','ら','わ',
-                'い','き','し','ち','に','ひ','み','り',
-                'う','く','す','つ','ぬ','ふ','む','ゆ','る',
-                'え','け','せ','て','ね','へ','め','れ',
-                'お','こ','そ','と','の','ほ','も','よ','ろ','を','ん',
-                'が','ぎ','ぐ','げ','ご','ざ','じ','ず','ぜ','ぞ',
-                'だ','ぢ','づ','で','ど','ば','び','ぶ','べ','ぼ',
-                'ぱ','ぴ','ぷ','ぺ','ぽ',
-                'きゃ','きゅ','きょ','しゃ','しゅ','しょ','ちゃ','ちゅ','ちょ',
-                'にゃ','にゅ','にょ','ひゃ','ひゅ','ひょ','みゃ','みゅ','みょ',
-                'りゃ','りゅ','りょ','ぎゃ','ぎゅ','ぎょ','じゃ','じゅ','じょ',
-                'びゃ','びゅ','びょ','ぴゃ','ぴゅ','ぴょ'
-            ];
-            var allKatakana = [
-                'ア','カ','サ','タ','ナ','ハ','マ','ヤ','ラ','ワ',
-                'イ','キ','シ','チ','ニ','ヒ','ミ','リ',
-                'ウ','ク','ス','ツ','ヌ','フ','ム','ユ','ル',
-                'エ','ケ','セ','テ','ネ','ヘ','メ','レ',
-                'オ','コ','ソ','ト','ノ','ホ','モ','ヨ','ロ','ヲ','ン',
-                'ガ','ギ','グ','ゲ','ゴ','ザ','ジ','ズ','ゼ','ゾ',
-                'ダ','ヂ','ヅ','デ','ド','バ','ビ','ブ','ベ','ボ',
-                'パ','ピ','プ','ペ','ポ',
-                'キャ','キュ','キョ','シャ','シュ','ショ','チャ','チュ','チョ',
-                'ニャ','ニュ','ニョ','ヒャ','ヒュ','ヒョ','ミャ','ミュ','ミョ',
-                'リャ','リュ','リョ','ギャ','ギュ','ギョ','ジャ','ジュ','ジョ',
-                'ビャ','ビュ','ビョ','ピャ','ピュ','ピョ'
-            ];
-
-            // --- Read kana_scores from localStorage ---
+            // --- Read scores from localStorage (populated by cloud_sync.js from Supabase) ---
             var kanaScores = {};
             try { kanaScores = JSON.parse(localStorage.getItem('kana_scores') || '{}'); } catch(e) {}
 
-            // Apply same migration as kana.html
-            Object.keys(kanaScores).forEach(function(k) {
-                if (kanaScores[k].streak > 0 && kanaScores[k].streak < 3) {
-                    kanaScores[k].streak = 3;
-                } else if (kanaScores[k].streak === 0 && kanaScores[k].total > 0) {
-                    kanaScores[k].streak = -1;
-                }
-            });
+            // Hiragana: all 104 mastered (hardcoded — no quiz tracking for hiragana)
+            setWheel('hiragana', 104, 104);
 
-            // Count hiragana: localStorage overrides hardcoded defaults
-            var hiraKnown = 0;
-            allHiragana.forEach(function(ch) {
-                var score = kanaScores[ch];
-                if (score) {
-                    if (score.streak >= 1 || score.streak === -1) hiraKnown++;
-                } else {
-                    var def = hiraDefaults[ch];
-                    if (def === 'g' || def === 'a') hiraKnown++;
-                }
-            });
-
-            // Katakana hardcoded defaults — updated 2026-04-22 PM after 60-q quiz (55/60)
-            // ク/タ/ヒ/ピ climbed to green; ラ-row + ワ,ヲ,ン + バ,ペ + 25 youon added
-            // 79 green + 7 amber = 86 known out of 104
-            var kataDefaults = {
-                'ア':'g','イ':'g','ウ':'g','エ':'g','オ':'g',
-                'カ':'g','キ':'g','ク':'g','ケ':'g','コ':'g',
-                'サ':'g','シ':'g','ス':'g','セ':'g','ソ':'g',
-                'タ':'g','チ':'g','ツ':'g','テ':'g','ト':'g',
-                'ナ':'g','ニ':'g','ヌ':'g','ネ':'g','ノ':'g',
-                'ハ':'g','ヒ':'g','フ':'g','ヘ':'g','ホ':'g',
-                'ヅ':'g','ピ':'g',
-                'マ':'a','ミ':'a','ユ':'a',
-                'ラ':'a','リ':'a','ル':'a','レ':'a','ロ':'a',
-                'ワ':'a','ヲ':'a','ン':'a',
-                'ガ':'a','ギ':'a','グ':'a',
-                'ダ':'a','ド':'a','バ':'a','ペ':'a',
-                // Youon combos
-                'キャ':'a','キュ':'a','キョ':'a',
-                'シャ':'a','シュ':'a','ショ':'a',
-                'チャ':'a','チュ':'a','チョ':'a',
-                'ニャ':'a','ニュ':'a','ニョ':'a',
-                'ヒャ':'a','ヒュ':'a','ヒョ':'a',
-                'ミャ':'a','ミュ':'a',
-                'リャ':'a','リュ':'a','リョ':'a',
-                'ギャ':'a','ギョ':'a',
-                'ジャ':'a','ジュ':'a','ジョ':'a',
-                'ビャ':'a','ビュ':'a','ビョ':'a',
-                'ピャ':'a','ピョ':'a'
-            };
-
-            // Count katakana: localStorage overrides hardcoded defaults
+            // Katakana: count from kana_scores (only katakana chars appear there)
             var kataKnown = 0;
-            allKatakana.forEach(function(ch) {
-                var score = kanaScores[ch];
-                if (score) {
-                    if (score.streak >= 1 || score.streak === -1) kataKnown++;
-                } else {
-                    var def = kataDefaults[ch];
-                    if (def === 'g' || def === 'a') kataKnown++;
-                }
+            Object.keys(kanaScores).forEach(function(ch) {
+                var s = kanaScores[ch];
+                if (s && s.streak >= 1) kataKnown++;
             });
-
-            setWheel('hiragana', hiraKnown, allHiragana.length);
-            setWheel('katakana', kataKnown, allKatakana.length);
+            setWheel('katakana', kataKnown, 104);
 
             // --- Kanji scores ---
             var kanjiScores = {};
             try { kanjiScores = JSON.parse(localStorage.getItem('kanji_scores') || '{}'); } catch(e) {}
-
             var KANJI_TOTAL = 103;
             var kanjiKnown = 0;
             Object.keys(kanjiScores).forEach(function(k) {
                 var s = kanjiScores[k];
-                if (s.streak >= 1 || s.streak === -1) kanjiKnown++;
+                if (s && s.streak >= 1) kanjiKnown++;
             });
-
             setWheel('kanji', kanjiKnown, KANJI_TOTAL);
 
             // --- Vocabulary scores ---
-            // Week 1 baseline seed (matches vocabulary.html). Non-destructive: only adds missing keys.
-            var VOCAB_BASELINE = {
-                'だいがく|college/university':'g','こうこう|high school':'g','がくせい|student':'g',
-                'だいがくせい|college student':'g','だいがくいんせい|graduate student':'g','りゅうがくせい|international student':'g',
-                'せんせい|teacher/professor':'g','せんこう|major':'g','ともだち|friend':'g',
-                'にほんご|Japanese language':'g','えいご|English':'a','にほん|Japan':'g',
-                'アメリカ|America':'g','でんわ|telephone':'g','かがく|science':'g',
-                'けいざい|economics':'g','こくさいかんけい|international relations':'g','せいじ|politics':'g',
-                'ビジネス|business':'g','ぶんがく|literature':'g','れきし|history':'a',
-                'コンピューター|computer':'g','アジアけんきゅう|Asian studies':'g','アート|art':'g',
-                'いしゃ|doctor':'g','かいしゃいん|office worker':'g','かんごし|nurse':'g',
-                'こうこうせい|high school student':'g','しゅふ|housewife':'g','エンジニア|engineer':'g',
-                'べんごし|lawyer':'g','むしょく|unemployed':'g','おかあさん|mother':'g','おとうさん|father':'g',
-                'わたし|I':'g','～さん|Mr./Ms.':'g',
-                'いま|now':'g','～じ|o\u0027clock':'g','はん|half':'g','ごぜん|a.m.':'g','ごご|p.m.':'g',
-                'なん・なに|what':'g','～ばん|number':'g','～じん|person (nationality)':'g','～ご|language':'g',
-                'はい|yes':'g','ええ|yes (informal)':'g','いいえ|no':'g',
-                'はじめまして|nice to meet you':'g','どうぞよろしく|pleased to meet you':'g',
-                'おはようございます|good morning':'g','こんにちは|good afternoon':'g','こんばんは|good evening':'g',
-                'おやすみなさい|good night':'g','さようなら|goodbye':'g','ありがとうございます|thank you':'g',
-                'すみません|excuse me':'g','いってきます|I\u0027ll go and come back':'a',
-                'いってらっしゃい|please go and come back':'g','ただいま|I\u0027m home':'g',
-                'おかえりなさい|welcome home':'g','おねがいします|please':'a',
-                'わたしたち|we':'g','かれ|boyfriend/he':'a','かのじょ|girlfriend/she':'g',
-                'おとこ|man':'r','おんな|woman':'g','よろしくおねがいします|nice to meet you':'g',
-                'いただきます|phrase before eating':'g','ごちそうさまでした|thanks for the meal':'g'
-            };
             var vocabScores = {};
             try { vocabScores = JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) {}
-            var _vAdded = 0;
-            for (var _vk in VOCAB_BASELINE) {
-                if (!vocabScores[_vk]) { vocabScores[_vk] = { state: VOCAB_BASELINE[_vk], total: 1 }; _vAdded++; }
-            }
-            if (_vAdded > 0) {
-                try { localStorage.setItem('vocab_scores', JSON.stringify(vocabScores)); } catch(e) {}
-            }
-
             var VOCAB_TOTAL = 708;
             var vocabMastered = 0;
-            // Count all green vocab keys. kana_scores and vocab_scores use separate
-            // localStorage keys so no filtering needed to keep kana entries out.
             Object.keys(vocabScores).forEach(function(k) {
                 var e = vocabScores[k];
                 var st = e.state || null;
-                if (!st && typeof e.streak === 'number' && e.streak >= 1) st = 'g';
+                if (!st && typeof e.streak === 'number' && e.streak >= 3) st = 'g';
                 if (st === 'g') vocabMastered++;
             });
-
             setWheel('vocab', vocabMastered, VOCAB_TOTAL);
         }
     </script>
