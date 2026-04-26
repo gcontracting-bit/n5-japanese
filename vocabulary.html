@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N5 Vocabulary - Japanese Study</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f0f4f8;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        /* Navigation */
+        nav { margin-bottom: 30px; }
+        nav a {
+            background-color: #b83280;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover { background-color: #d53f8c; }
+
+        /* Header Section */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        .header h1 { font-size: 2.5em; color: #b83280; margin-bottom: 10px; }
+        .progress-container { margin: 20px 0; }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 500; }
+        .progress-bar { width: 100%; height: 24px; background: #e0e7f1; border-radius: 12px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #b83280, #d53f8c); width: 10%; transition: width 0.3s ease; }
+        .header-subtitle { color: #666; margin-top: 15px; }
+
+        /* Week Sections */
+        .week-section { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden; }
+        .week-header { padding: 12px 16px; background: linear-gradient(135deg, #b83280 0%, #d53f8c 100%); color: white; border-radius: 8px 8px 0 0; cursor: pointer; display: flex; align-items: center; gap: 12px; user-select: none; transition: background 0.2s ease; }
+        .week-header:hover { opacity: 0.95; }
+        .week-info { display: flex; align-items: center; gap: 20px; flex: 1; }
+        .week-title { font-size: 1.4em; font-weight: 600; color: white; }
+        .week-dates { font-size: 0.75em; opacity: 0.85; font-weight: 400; }
+        .week-meta { display: flex; gap: 15px; font-size: 14px; color: white; }
+        .word-count { background: rgba(255,255,255,0.2); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+        .mastery-percent { background: rgba(255,255,255,0.2); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+        .toggle-icon { font-size: 1.2em; color: white; min-width: 20px; }
+        .week-content { padding: 20px; max-height: 5000px; overflow: hidden; transition: max-height 0.3s ease; }
+        .week-content.collapsed { max-height: 0; padding: 0 20px; }
+
+        .category { margin-bottom: 25px; }
+        .category-title { font-size: 16px; font-weight: 600; color: #b83280; margin-bottom: 12px; padding-bottom: 8px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        thead { background-color: #fdf2f8; border-bottom: 2px solid #b83280; }
+        th { padding: 12px 16px; text-align: left; color: #b83280; font-weight: 600; }
+        td { padding: 12px 16px; border-bottom: 1px solid #e0e0e0; }
+        tbody tr:hover { background-color: #fdf8fb; }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .toggle-all-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .toggle-all-buttons button { padding: 6px 16px; border: 1px solid #cbd5e0; background: white; border-radius: 6px; cursor: pointer; font-size: 0.9em; color: #4a5568; transition: background 0.2s ease; }
+        .toggle-all-buttons button:hover { background: #edf2f7; }
+
+        .vocab-score-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+        .vocab-score-dot.green { background: #276749; }
+        .vocab-score-dot.amber { background: #d69e2e; }
+        .vocab-score-dot.red { background: #c53030; }
+        .vocab-fire-badge { font-size: 0.8em; color: #9b2c2c; font-weight: 700; margin-left: 2px; }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 24px; }
+            .week-info { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .week-header { flex-direction: column; align-items: flex-start; }
+            th, td { padding: 8px 12px; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud_sync.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav><a href="index.html">← Home</a></nav>
+
+        <div class="header">
+            <h1>N5 Vocabulary 語彙</h1>
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Mastery Progress</span>
+                    <span id="overall-percent">10%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="overall-progress"></div>
+                </div>
+            </div>
+            <p class="header-subtitle">Genki I vocabulary organized by chapter</p>
+        </div>
+
+        <div class="toggle-all-buttons">
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+        </div>
+
+        <div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 1: Genki Ch. 1 – New Friends <span class="week-dates">(Apr 13 – 19)</span></div><div class="week-meta"><span class="word-count">70 words</span><span class="mastery-percent">94%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>だいがく（大学）</td><td>daigaku</td><td>college/university</td></tr>
+        <tr><td>こうこう（高校）</td><td>koukou</td><td>high school</td></tr>
+        <tr><td>がくせい（学生）</td><td>gakusei</td><td>student</td></tr>
+        <tr><td>だいがくせい（大学生）</td><td>daigakusei</td><td>college student</td></tr>
+        <tr><td>だいがくいんせい（大学院生）</td><td>daigakuinsei</td><td>graduate student</td></tr>
+        <tr><td>りゅうがくせい（留学生）</td><td>ryuugakusei</td><td>international student</td></tr>
+        <tr><td>せんせい（先生）</td><td>sensei</td><td>teacher/professor</td></tr>
+        <tr><td>せんこう（専攻）</td><td>senkou</td><td>major</td></tr>
+        <tr><td>ともだち（友達）</td><td>tomodachi</td><td>friend</td></tr>
+        <tr><td>にほんご（日本語）</td><td>nihongo</td><td>Japanese language</td></tr>
+        <tr><td>えいご（英語）</td><td>eigo</td><td>English</td></tr>
+        <tr><td>にほん（日本）</td><td>nihon</td><td>Japan</td></tr>
+        <tr><td>アメリカ</td><td>amerika</td><td>America</td></tr>
+        <tr><td>でんわ（電話）</td><td>denwa</td><td>telephone</td></tr>
+        <tr><td>かがく（科学）</td><td>kagaku</td><td>science</td></tr>
+        <tr><td>けいざい（経済）</td><td>keizai</td><td>economics</td></tr>
+        <tr><td>こくさいかんけい（国際関係）</td><td>kokusaikankei</td><td>international relations</td></tr>
+        <tr><td>せいじ（政治）</td><td>seiji</td><td>politics</td></tr>
+        <tr><td>ビジネス</td><td>bijinesu</td><td>business</td></tr>
+        <tr><td>ぶんがく（文学）</td><td>bungaku</td><td>literature</td></tr>
+        <tr><td>れきし（歴史）</td><td>rekishi</td><td>history</td></tr>
+        <tr><td>コンピューター</td><td>konpyuutaa</td><td>computer</td></tr>
+        <tr><td>アジアけんきゅう（アジア研究）</td><td>ajia kenkyuu</td><td>Asian studies</td></tr>
+        <tr><td>アート</td><td>aato</td><td>art</td></tr>
+        <tr><td>いしゃ（医者）</td><td>isha</td><td>doctor</td></tr>
+        <tr><td>かいしゃいん（会社員）</td><td>kaishain</td><td>office worker</td></tr>
+        <tr><td>かんごし（看護師）</td><td>kangoshi</td><td>nurse</td></tr>
+        <tr><td>こうこうせい（高校生）</td><td>koukousei</td><td>high school student</td></tr>
+        <tr><td>しゅふ（主婦）</td><td>shufu</td><td>housewife</td></tr>
+        <tr><td>エンジニア</td><td>enjinia</td><td>engineer</td></tr>
+        <tr><td>べんごし（弁護士）</td><td>bengoshi</td><td>lawyer</td></tr>
+        <tr><td>むしょく（無職）</td><td>mushoku</td><td>unemployed</td></tr>
+        <tr><td>おかあさん（お母さん）</td><td>okaasan</td><td>mother</td></tr>
+        <tr><td>おとうさん（お父さん）</td><td>otousan</td><td>father</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Pronouns & Demonstratives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>わたし（私）</td><td>watashi</td><td>I</td></tr>
+        <tr><td>～さん</td><td>san</td><td>Mr./Ms.</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Time & Numbers</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>いま（今）</td><td>ima</td><td>now</td></tr>
+        <tr><td>～じ（時）</td><td>ji</td><td>o'clock</td></tr>
+        <tr><td>はん（半）</td><td>han</td><td>half</td></tr>
+        <tr><td>ごぜん（午前）</td><td>gozen</td><td>a.m.</td></tr>
+        <tr><td>ごご（午後）</td><td>gogo</td><td>p.m.</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Question Words & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>なん・なに（何）</td><td>nan/nani</td><td>what</td></tr>
+        <tr><td>～ばん（番）</td><td>ban</td><td>number</td></tr>
+        <tr><td>～じん（人）</td><td>jin</td><td>person (nationality)</td></tr>
+        <tr><td>～ご（語）</td><td>go</td><td>language</td></tr>
+        <tr><td>はい</td><td>hai</td><td>yes</td></tr>
+        <tr><td>ええ</td><td>ee</td><td>yes (informal)</td></tr>
+        <tr><td>いいえ</td><td>iie</td><td>no</td></tr>
+        <tr><td>はじめまして</td><td>hajimemashite</td><td>nice to meet you</td></tr>
+        <tr><td>どうぞよろしく</td><td>douzo yoroshiku</td><td>pleased to meet you</td></tr>
+        <tr><td>おはようございます</td><td>ohayou gozaimasu</td><td>good morning</td></tr>
+        <tr><td>こんにちは</td><td>konnichiha</td><td>good afternoon</td></tr>
+        <tr><td>こんばんは</td><td>konbanha</td><td>good evening</td></tr>
+        <tr><td>おやすみなさい</td><td>oyasuminasai</td><td>good night</td></tr>
+        <tr><td>さようなら</td><td>sayounara</td><td>goodbye</td></tr>
+        <tr><td>ありがとうございます</td><td>arigatou gozaimasu</td><td>thank you</td></tr>
+        <tr><td>すみません</td><td>sumimasen</td><td>excuse me</td></tr>
+        <tr><td>いってきます</td><td>ittekimasu</td><td>I'll go and come back</td></tr>
+        <tr><td>いってらっしゃい</td><td>itterashai</td><td>please go and come back</td></tr>
+        <tr><td>ただいま</td><td>tadaima</td><td>I'm home</td></tr>
+        <tr><td>おかえりなさい</td><td>okaerinasai</td><td>welcome home</td></tr>
+        <tr><td>おねがいします</td><td>onegaishimasu</td><td>please</td></tr>
+            <tr><td>わたしたち</td><td>watashitachi</td><td>we</td></tr>
+        <tr><td>かれ</td><td>kare</td><td>boyfriend/he</td></tr>
+        <tr><td>かのじょ</td><td>kanojo</td><td>girlfriend/she</td></tr>
+        <tr><td>おとこ</td><td>otoko</td><td>man</td></tr>
+        <tr><td>おんな</td><td>onna</td><td>woman</td></tr>
+        <tr><td>よろしくおねがいします</td><td>yoroshiku onegai shimasu</td><td>nice to meet you</td></tr>
+        <tr><td>いただきます</td><td>itadakimasu</td><td>phrase before eating</td></tr>
+        <tr><td>ごちそうさまでした</td><td>gochisou sama deshita</td><td>thanks for the meal</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 2: Genki Ch. 2 – Shopping <span class="week-dates">(Apr 20 – 26)</span></div><div class="week-meta"><span class="word-count">80 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Demonstratives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>これ</td><td>kore</td><td>this one</td></tr>
+        <tr><td>それ</td><td>sore</td><td>that one (near you)</td></tr>
+        <tr><td>あれ</td><td>are</td><td>that one (over there)</td></tr>
+        <tr><td>どれ</td><td>dore</td><td>which one</td></tr>
+        <tr><td>この</td><td>kono</td><td>this ~</td></tr>
+        <tr><td>その</td><td>sono</td><td>that ~ (near you)</td></tr>
+        <tr><td>あの</td><td>ano</td><td>that ~ (over there)</td></tr>
+        <tr><td>どの</td><td>dono</td><td>which ~</td></tr>
+        <tr><td>ここ</td><td>koko</td><td>here</td></tr>
+        <tr><td>そこ</td><td>soko</td><td>there</td></tr>
+        <tr><td>あそこ</td><td>asoko</td><td>over there</td></tr>
+        <tr><td>どこ</td><td>doko</td><td>where</td></tr>
+        <tr><td>だれ（誰）</td><td>dare</td><td>who</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Food)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>さかな（魚）</td><td>sakana</td><td>fish</td></tr>
+        <tr><td>とんかつ</td><td>tonkatsu</td><td>pork cutlet</td></tr>
+        <tr><td>にく（肉）</td><td>niku</td><td>meat</td></tr>
+        <tr><td>メニュー</td><td>menyuu</td><td>menu</td></tr>
+        <tr><td>やさい（野菜）</td><td>yasai</td><td>vegetable</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Items)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>かさ（傘）</td><td>kasa</td><td>umbrella</td></tr>
+        <tr><td>かばん</td><td>kaban</td><td>bag</td></tr>
+        <tr><td>くつ（靴）</td><td>kutsu</td><td>shoes</td></tr>
+        <tr><td>さいふ（財布）</td><td>saifu</td><td>wallet</td></tr>
+        <tr><td>ジーンズ</td><td>jiinzu</td><td>jeans</td></tr>
+        <tr><td>じしょ（辞書）</td><td>jisho</td><td>dictionary</td></tr>
+        <tr><td>じてんしゃ（自転車）</td><td>jitensha</td><td>bicycle</td></tr>
+        <tr><td>しんぶん（新聞）</td><td>shinbun</td><td>newspaper</td></tr>
+        <tr><td>Tシャツ</td><td>tiishatsu</td><td>T-shirt</td></tr>
+        <tr><td>とけい（時計）</td><td>tokei</td><td>clock/watch</td></tr>
+        <tr><td>ノート</td><td>nouto</td><td>notebook</td></tr>
+        <tr><td>ペン</td><td>pen</td><td>pen</td></tr>
+        <tr><td>ぼうし（帽子）</td><td>boushi</td><td>hat</td></tr>
+        <tr><td>ほん（本）</td><td>hon</td><td>book</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Places)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>カフェ</td><td>kafe</td><td>cafe</td></tr>
+        <tr><td>ドンキ</td><td>donki</td><td>discount store</td></tr>
+        <tr><td>としょかん（図書館）</td><td>toshokan</td><td>library</td></tr>
+        <tr><td>ゆうびんきょく（郵便局）</td><td>yuubinkyoku</td><td>post office</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adjectives & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>おいしい</td><td>oishii</td><td>delicious</td></tr>
+        <tr><td>いくら</td><td>ikura</td><td>how much</td></tr>
+        <tr><td>たかい（高い）</td><td>takai</td><td>expensive</td></tr>
+        <tr><td>やすい（安い）</td><td>yasui</td><td>cheap</td></tr>
+        <tr><td>いらっしゃいませ</td><td>irasshaimase</td><td>welcome</td></tr>
+        <tr><td>～をください</td><td>kudasai</td><td>please give me ~</td></tr>
+        <tr><td>じゃあ</td><td>jaa</td><td>then/if so</td></tr>
+        
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Numbers & Currency</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>えん（円）</td><td>en</td><td>yen</td></tr>
+        <tr><td>ひゃく（百）</td><td>hyaku</td><td>one hundred</td></tr>
+        <tr><td>せん（千）</td><td>sen</td><td>thousand</td></tr>
+        <tr><td>まん（万）</td><td>man</td><td>ten thousand</td></tr>
+            <tr><td>いち</td><td>ichi</td><td>one</td></tr>
+        <tr><td>し</td><td>shi</td><td>four</td></tr>
+        <tr><td>よん</td><td>yon</td><td>four</td></tr>
+        <tr><td>ろく</td><td>roku</td><td>six</td></tr>
+        <tr><td>なな</td><td>nana</td><td>seven</td></tr>
+        <tr><td>しち</td><td>shichi</td><td>seven</td></tr>
+        <tr><td>はち</td><td>hachi</td><td>eight</td></tr>
+        <tr><td>きゅう</td><td>kyu</td><td>nine</td></tr>
+        <tr><td>じゅう</td><td>juu</td><td>ten</td></tr>
+        <tr><td>えんぴつ</td><td>enpitsu</td><td>pencil</td></tr>
+        <tr><td>カード</td><td>kaado</td><td>card</td></tr>
+        <tr><td>おかんじょう</td><td>okanjou</td><td>bill/check</td></tr>
+        <tr><td>おつり</td><td>otsuri</td><td>change</td></tr>
+</tbody></table></div>
+    <div class="category"><div class="category-title">Countries</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>イギリス</td><td>igirisu</td><td>Britain</td></tr>
+        <tr><td>かんこく（韓国）</td><td>kankoku</td><td>Korea</td></tr>
+        <tr><td>ちゅうごく（中国）</td><td>chuugoku</td><td>China</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Classroom)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>こくばん（黒板）</td><td>kokuban</td><td>blackboard</td></tr>
+        <tr><td>カーテン</td><td>kaaten</td><td>curtain</td></tr>
+        <tr><td>けしゴム</td><td>keshigomu</td><td>eraser</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Menu)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>ていしょく（定食）</td><td>teishoku</td><td>set meal</td></tr>
+        <tr><td>スパゲッティ</td><td>supagettii</td><td>spaghetti</td></tr>
+        <tr><td>うどん</td><td>udon</td><td>udon noodles</td></tr>
+        <tr><td>サンドイッチ</td><td>sandoicchi</td><td>sandwich</td></tr>
+        <tr><td>ラーメン</td><td>raamen</td><td>ramen</td></tr>
+        <tr><td>コーラ</td><td>koora</td><td>cola</td></tr>
+        <tr><td>サラダ</td><td>sarada</td><td>salad</td></tr>
+        <tr><td>ミルク</td><td>miruku</td><td>milk</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Useful Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>わかりました</td><td>wakarimashita</td><td>I understand</td></tr>
+        <tr><td>わかりません</td><td>wakarimasen</td><td>I don't understand</td></tr>
+        <tr><td>ゆっくりいってください</td><td>yukkuri itte kudasai</td><td>Please say it slowly</td></tr>
+        <tr><td>もういちどいってください</td><td>moo ichido itte kudasai</td><td>Please say it again</td></tr>
+        <tr><td>ちょっとまってください</td><td>chotto matte kudasai</td><td>Please wait</td></tr>
+        <tr><td>きいてください</td><td>kiite kudasai</td><td>Please listen/ask</td></tr>
+    </tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 3: Genki Ch. 3 – Making a Date <span class="week-dates">(Apr 27 – May 3)</span></div><div class="week-meta"><span class="word-count">71 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns (Entertainment)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>えいが（映画）</td><td>eiga</td><td>movie</td></tr>
+        <tr><td>おんがく（音楽）</td><td>ongaku</td><td>music</td></tr>
+        <tr><td>ざっし（雑誌）</td><td>zasshi</td><td>magazine</td></tr>
+        <tr><td>スポーツ</td><td>supoutsu</td><td>sports</td></tr>
+        <tr><td>デート</td><td>deeto</td><td>date</td></tr>
+        <tr><td>テニス</td><td>tenisu</td><td>tennis</td></tr>
+        <tr><td>テレビ</td><td>terebi</td><td>TV</td></tr>
+        <tr><td>テレビゲーム</td><td>terebi geemu</td><td>video game</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Food & Drink)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>アイスクリーム</td><td>aisukuriimu</td><td>ice cream</td></tr>
+        <tr><td>ハンバーガー</td><td>hanbaagaa</td><td>hamburger</td></tr>
+        <tr><td>みず（水）</td><td>mizu</td><td>water</td></tr>
+        <tr><td>コーヒー</td><td>kouhii</td><td>coffee</td></tr>
+        <tr><td>おちゃ（お茶）</td><td>ocha</td><td>green tea</td></tr>
+        <tr><td>ごはん（ご飯）</td><td>gohan</td><td>rice/meal</td></tr>
+        <tr><td>あさごはん（朝ご飯）</td><td>asagohan</td><td>breakfast</td></tr>
+        <tr><td>ひるごはん（昼ご飯）</td><td>hirogohan</td><td>lunch</td></tr>
+        <tr><td>ばんごはん（晩ご飯）</td><td>bangohan</td><td>dinner</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Places)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>うち（家）</td><td>uchi</td><td>home</td></tr>
+        <tr><td>がっこう（学校）</td><td>gakkou</td><td>school</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Time)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>あした（明日）</td><td>ashita</td><td>tomorrow</td></tr>
+        <tr><td>きょう（今日）</td><td>kyou</td><td>today</td></tr>
+        <tr><td>あさ（朝）</td><td>asa</td><td>morning</td></tr>
+        <tr><td>こんばん（今晩）</td><td>konban</td><td>tonight</td></tr>
+        <tr><td>まいにち（毎日）</td><td>mainichi</td><td>every day</td></tr>
+        <tr><td>まいばん（毎晩）</td><td>maiban</td><td>every night</td></tr>
+        <tr><td>しゅうまつ（週末）</td><td>shuumatsu</td><td>weekend</td></tr>
+        <tr><td>どようび（土曜日）</td><td>doyoubi</td><td>Saturday</td></tr>
+        <tr><td>にちようび（日曜日）</td><td>nichiyoubi</td><td>Sunday</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs (U-verbs)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>いく（行く）</td><td>iku</td><td>to go</td></tr>
+        <tr><td>かえる（帰る）</td><td>kaeru</td><td>to go back/return</td></tr>
+        <tr><td>きく（聞く）</td><td>kiku</td><td>to listen</td></tr>
+        <tr><td>のむ（飲む）</td><td>nomu</td><td>to drink</td></tr>
+        <tr><td>はなす（話す）</td><td>hanasu</td><td>to speak</td></tr>
+        <tr><td>よむ（読む）</td><td>yomu</td><td>to read</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs (Ru-verbs)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>おきる（起きる）</td><td>okiru</td><td>to get up</td></tr>
+        <tr><td>たべる（食べる）</td><td>taberu</td><td>to eat</td></tr>
+        <tr><td>ねる（寝る）</td><td>neru</td><td>to sleep</td></tr>
+        <tr><td>みる（見る）</td><td>miru</td><td>to see/look/watch</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Irregular Verbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>くる（来る）</td><td>kuru</td><td>to come</td></tr>
+        <tr><td>する</td><td>suru</td><td>to do</td></tr>
+        <tr><td>べんきょうする（勉強する）</td><td>benkyousuru</td><td>to study</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adjectives & Adverbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>いい（良い）</td><td>ii</td><td>good</td></tr>
+        <tr><td>はやい（早い）</td><td>hayai</td><td>early</td></tr>
+        <tr><td>よくない</td><td>yokunai</td><td>not good</td></tr>
+        <tr><td>あまり</td><td>amari</td><td>not much</td></tr>
+        <tr><td>ぜんぜん（全然）</td><td>zenzen</td><td>not at all</td></tr>
+        <tr><td>たいてい（大体）</td><td>taitei</td><td>usually</td></tr>
+        <tr><td>ちょっと</td><td>chotto</td><td>a little</td></tr>
+        <tr><td>ときどき（時々）</td><td>tokidoki</td><td>sometimes</td></tr>
+        <tr><td>よく（良く）</td><td>yoku</td><td>often</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>じゃあ</td><td>jaa</td><td>then/so</td></tr>
+        <tr><td>ええ</td><td>ee</td><td>yes</td></tr>
+        <tr><td>でも</td><td>demo</td><td>but</td></tr>
+        <tr><td>どうですか</td><td>dou desu ka</td><td>how about...?</td></tr>
+            <tr><td>ひる</td><td>hiru</td><td>daytime</td></tr>
+        <tr><td>よる</td><td>yoru</td><td>night</td></tr>
+        <tr><td>べんきょう</td><td>benkyou</td><td>study</td></tr>
+        <tr><td>おおきい</td><td>ookii</td><td>big</td></tr>
+        <tr><td>ちいさい</td><td>chiisai</td><td>small</td></tr>
+        <tr><td>よい</td><td>yoi</td><td>good</td></tr>
+        <tr><td>ふるい</td><td>furui</td><td>old</td></tr>
+        <tr><td>いそがしい</td><td>isogashii</td><td>busy</td></tr>
+        <tr><td>たのしい</td><td>tanoshii</td><td>fun/enjoyable</td></tr>
+        <tr><td>すし</td><td>sushi</td><td>sushi</td></tr>
+        <tr><td>たまご</td><td>tamago</td><td>egg</td></tr>
+        <tr><td>ぎゅうにゅう</td><td>gyuunyuu</td><td>milk</td></tr>
+        <tr><td>ジュース</td><td>juusu</td><td>juice</td></tr>
+        <tr><td>おさけ</td><td>osake</td><td>alcohol</td></tr>
+        <tr><td>さとう</td><td>satou</td><td>sugar</td></tr>
+        <tr><td>パン</td><td>pan</td><td>bread</td></tr>
+        <tr><td>くだもの</td><td>kudamono</td><td>fruit</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 4: Genki Ch. 4 – The First Date <span class="week-dates">(May 4 – 10)</span></div><div class="week-meta"><span class="word-count">83 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns (Things/People)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>ゲーム</td><td>geemu</td><td>game</td></tr>
+        <tr><td>アルバイト</td><td>arubaito</td><td>part-time job</td></tr>
+        <tr><td>かいもの（買い物）</td><td>kaimono</td><td>shopping</td></tr>
+        <tr><td>クラス</td><td>kurasu</td><td>class</td></tr>
+        <tr><td>いぬ（犬）</td><td>inu</td><td>dog</td></tr>
+        <tr><td>ねこ（猫）</td><td>neko</td><td>cat</td></tr>
+        <tr><td>ひと（人）</td><td>hito</td><td>person</td></tr>
+        <tr><td>こども（子供）</td><td>kodomo</td><td>child</td></tr>
+        <tr><td>あなた</td><td>anata</td><td>you</td></tr>
+        <tr><td>いす（椅子）</td><td>isu</td><td>chair</td></tr>
+        <tr><td>つくえ（机）</td><td>tsukue</td><td>desk</td></tr>
+        <tr><td>しゃしん（写真）</td><td>shashin</td><td>photograph</td></tr>
+        <tr><td>はな（花）</td><td>hana</td><td>flower</td></tr>
+        <tr><td>やま（山）</td><td>yama</td><td>mountain</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Places)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>えいがかん（映画館）</td><td>eigakan</td><td>movie theater</td></tr>
+        <tr><td>しょくどう（食堂）</td><td>shokudou</td><td>cafeteria</td></tr>
+        <tr><td>こうえん（公園）</td><td>kouen</td><td>park</td></tr>
+        <tr><td>スーパー</td><td>suupaa</td><td>supermarket</td></tr>
+        <tr><td>バスてい（バス停）</td><td>bas-tei</td><td>bus stop</td></tr>
+        <tr><td>びょういん（病院）</td><td>byouin</td><td>hospital</td></tr>
+        <tr><td>ホテル</td><td>hoteru</td><td>hotel</td></tr>
+        <tr><td>ほんや（本屋）</td><td>honya</td><td>bookstore</td></tr>
+        <tr><td>まち（町）</td><td>machi</td><td>town/city</td></tr>
+        <tr><td>レストラン</td><td>resutoran</td><td>restaurant</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Time) & Directions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>けさ（今朝）</td><td>kesa</td><td>this morning</td></tr>
+        
+        <tr><td>きのう（昨日）</td><td>kinou</td><td>yesterday</td></tr>
+        <tr><td>ゆうべ（夕べ）</td><td>yuube</td><td>last night</td></tr>
+        <tr><td>いちじ（一時）</td><td>ichiji</td><td>one o'clock</td></tr>
+        <tr><td>みぎ（右）</td><td>migi</td><td>right</td></tr>
+        <tr><td>ひだり（左）</td><td>hidari</td><td>left</td></tr>
+        <tr><td>まえ（前）</td><td>mae</td><td>front</td></tr>
+        <tr><td>うしろ（後ろ）</td><td>ushiro</td><td>back</td></tr>
+        <tr><td>なか（中）</td><td>naka</td><td>inside</td></tr>
+        <tr><td>うえ（上）</td><td>ue</td><td>on/above</td></tr>
+        <tr><td>した（下）</td><td>shita</td><td>under/below</td></tr>
+        <tr><td>ちかく（近く）</td><td>chikaku</td><td>near</td></tr>
+        <tr><td>となり（隣）</td><td>tonari</td><td>next to</td></tr>
+        <tr><td>あいだ（間）</td><td>aida</td><td>between</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs (U-verbs)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>およぐ（泳ぐ）</td><td>oyogu</td><td>to swim</td></tr>
+        <tr><td>きく（聞く）</td><td>kiku</td><td>to ask</td></tr>
+        <tr><td>のる（乗る）</td><td>noru</td><td>to ride</td></tr>
+        <tr><td>やる</td><td>yaru</td><td>to do/perform</td></tr>
+        <tr><td>まつ（待つ）</td><td>matsu</td><td>to wait</td></tr>
+        <tr><td>かう（買う）</td><td>kau</td><td>to buy</td></tr>
+        <tr><td>かく（書く）</td><td>kaku</td><td>to write</td></tr>
+        <tr><td>とる（撮る）</td><td>toru</td><td>to take/photograph</td></tr>
+        <tr><td>まがる（曲がる）</td><td>magaru</td><td>to turn</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs (Ru-verbs)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>ある（在る・有る）</td><td>aru</td><td>there is (things)</td></tr>
+        <tr><td>いる（居る）</td><td>iru</td><td>there is (people)</td></tr>
+        <tr><td>わかる（分かる）</td><td>wakaru</td><td>to understand</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>ぐらい</td><td>gurai</td><td>about</td></tr>
+        <tr><td>けど</td><td>kedo</td><td>but/however</td></tr>
+        <tr><td>ごめんなさい</td><td>gomen'nasai</td><td>sorry</td></tr>
+        <tr><td>だから</td><td>dakara</td><td>so/therefore</td></tr>
+        <tr><td>たくさん（沢山）</td><td>takusan</td><td>many/much</td></tr>
+        <tr><td>いっしょに（一緒に）</td><td>issho ni</td><td>together</td></tr>
+        <tr><td>ひとりで（一人で）</td><td>hitori de</td><td>alone</td></tr>
+        <tr><td>どうぞ</td><td>douzo</td><td>please</td></tr>
+        <tr><td>まっすぐ（真っ直ぐ）</td><td>massugu</td><td>straight</td></tr>
+        <tr><td>どうやって</td><td>dou yatte</td><td>how</td></tr>
+        <tr><td>どっち</td><td>dotchi</td><td>which way</td></tr>
+        
+            <tr><td>いえ</td><td>ie</td><td>house</td></tr>
+        <tr><td>えき</td><td>eki</td><td>train station</td></tr>
+        <tr><td>ぎんこう</td><td>ginkou</td><td>bank</td></tr>
+        <tr><td>くうこう</td><td>kuukou</td><td>airport</td></tr>
+        <tr><td>トイレ</td><td>toiree</td><td>restroom</td></tr>
+        <tr><td>みせ</td><td>mise</td><td>store</td></tr>
+        <tr><td>たてもの</td><td>tatemono</td><td>building</td></tr>
+        <tr><td>でんしゃ</td><td>densha</td><td>train</td></tr>
+        <tr><td>タクシー</td><td>takushii</td><td>taxi</td></tr>
+        <tr><td>あう</td><td>au</td><td>to meet</td></tr>
+        <tr><td>でる</td><td>deru</td><td>to go out</td></tr>
+        <tr><td>あるく</td><td>aruku</td><td>to walk</td></tr>
+        <tr><td>おわる</td><td>owaru</td><td>to end</td></tr>
+        <tr><td>ならう</td><td>narau</td><td>to learn</td></tr>
+        <tr><td>でんき</td><td>denki</td><td>electricity</td></tr>
+        <tr><td>ドア</td><td>doa</td><td>door</td></tr>
+        <tr><td>まど</td><td>mado</td><td>window</td></tr>
+        <tr><td>ベッド</td><td>beddo</td><td>bed</td></tr>
+        <tr><td>テーブル</td><td>teeburu</td><td>table</td></tr>
+        <tr><td>パソコン</td><td>pasokon</td><td>computer</td></tr>
+        <tr><td>カメラ</td><td>kamera</td><td>camera</td></tr>
+        <tr><td>めがね</td><td>megane</td><td>glasses</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 5: Genki Ch. 5 – A Trip to Okinawa <span class="week-dates">(May 11 – 17)</span></div><div class="week-meta"><span class="word-count">50 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>うみ（海）</td><td>umi</td><td>sea</td></tr>
+        <tr><td>きって（切手）</td><td>kitte</td><td>postal stamps</td></tr>
+        <tr><td>きっぷ（切符）</td><td>kippu</td><td>ticket</td></tr>
+        <tr><td>サーフィン</td><td>saafin</td><td>surfing</td></tr>
+        <tr><td>しゅくだい（宿題）</td><td>shukudai</td><td>homework</td></tr>
+        <tr><td>たべもの（食べ物）</td><td>tabemono</td><td>food</td></tr>
+        <tr><td>たんじょうび（誕生日）</td><td>tanjoubi</td><td>birthday</td></tr>
+        <tr><td>テスト</td><td>tesuto</td><td>test</td></tr>
+        <tr><td>てんき（天気）</td><td>tenki</td><td>weather</td></tr>
+        <tr><td>のみもの（飲み物）</td><td>nomimono</td><td>drink</td></tr>
+        <tr><td>はがき（葉書）</td><td>hagaki</td><td>postcard</td></tr>
+        <tr><td>バス（バス）</td><td>basu</td><td>bus</td></tr>
+        <tr><td>ひこうき（飛行機）</td><td>hikouki</td><td>airplane</td></tr>
+        <tr><td>へや（部屋）</td><td>heya</td><td>room</td></tr>
+        <tr><td>ぼく（僕）</td><td>boku</td><td>I (informal male)</td></tr>
+        <tr><td>やすみ（休み）</td><td>yasumi</td><td>holiday/rest</td></tr>
+        <tr><td>りょこう（旅行）</td><td>ryokou</td><td>travel</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">I-adjectives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>あたらしい（新しい）</td><td>atarashii</td><td>new</td></tr>
+        <tr><td>あつい（熱い）</td><td>atsui</td><td>hot (to touch)</td></tr>
+        <tr><td>あつい（暑い）</td><td>atsui</td><td>hot (weather)</td></tr>
+        <tr><td>こわい（怖い）</td><td>kowai</td><td>scary</td></tr>
+        <tr><td>さむい（寒い）</td><td>samui</td><td>cold (weather)</td></tr>
+        <tr><td>おもしろい（面白い）</td><td>omoshiroi</td><td>interesting/funny</td></tr>
+        <tr><td>つまらない</td><td>tsumaranai</td><td>boring</td></tr>
+        <tr><td>つめたい（冷たい）</td><td>tsumetai</td><td>cold (to touch)</td></tr>
+        <tr><td>おそい（遅い）</td><td>osoi</td><td>slow/late</td></tr>
+        <tr><td>むずかしい（難しい）</td><td>muzukashii</td><td>difficult</td></tr>
+        <tr><td>やさしい（易しい）</td><td>yasashii</td><td>easy</td></tr>
+        
+        <tr><td>かっこいい</td><td>kakkoii</td><td>handsome/cool</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Na-adjectives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>にぎやか（賑やか）</td><td>nigiyaka</td><td>lively</td></tr>
+        <tr><td>しずか（静か）</td><td>shizuka</td><td>quiet</td></tr>
+        <tr><td>きれい（綺麗）</td><td>kirei</td><td>pretty/clean</td></tr>
+        <tr><td>げんき（元気）</td><td>genki</td><td>healthy/energetic</td></tr>
+        <tr><td>きらい（嫌い）</td><td>kirai</td><td>not fond of</td></tr>
+        <tr><td>すき（好き）</td><td>suki</td><td>fond of</td></tr>
+        <tr><td>だいきらい（大嫌い）</td><td>daikira</td><td>dislike a lot</td></tr>
+        <tr><td>だいすき（大好き）</td><td>daisuki</td><td>like a lot</td></tr>
+        <tr><td>ゆうめい（有名）</td><td>yuumei</td><td>famous</td></tr>
+        <tr><td>べんり（便利）</td><td>benri</td><td>convenient</td></tr>
+        <tr><td>ふべん（不便）</td><td>fuben</td><td>not convenient</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>やる</td><td>yaru</td><td>to do</td></tr>
+        <tr><td>でかける（出かける）</td><td>dekakeru</td><td>to go out</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        
+        <tr><td>すごく（凄く）</td><td>sugoku</td><td>very</td></tr>
+        <tr><td>とても</td><td>totemo</td><td>very much</td></tr>
+        <tr><td>どんな</td><td>donna</td><td>which/what kind of</td></tr>
+        
+        <tr><td>けど</td><td>kedo</td><td>but</td></tr>
+        <tr><td>なぜ（何故）</td><td>naze</td><td>why</td></tr>
+        <tr><td>どうして</td><td>doushite</td><td>why</td></tr>
+            <tr><td>そら</td><td>sora</td><td>sky</td></tr>
+        <tr><td>かわ</td><td>kawa</td><td>river</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 6: Genki Ch. 6 – A Day in Robert's Life <span class="week-dates">(May 18 – 24)</span></div><div class="week-meta"><span class="word-count">41 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>かいしゃ（会社）</td><td>kaisha</td><td>company</td></tr>
+        <tr><td>おふろ（お風呂）</td><td>ofuro</td><td>bath</td></tr>
+        
+        <tr><td>うた（歌）</td><td>uta</td><td>song</td></tr>
+        <tr><td>かみ（紙）</td><td>kami</td><td>paper</td></tr>
+        <tr><td>おかね（お金）</td><td>okane</td><td>salary/money</td></tr>
+        <tr><td>コンビニ</td><td>konbini</td><td>convenience store</td></tr>
+        <tr><td>シーディー</td><td>shiidii</td><td>CD</td></tr>
+        
+        <tr><td>あしたのあさ（明日の朝）</td><td>ashita no asa</td><td>tomorrow morning</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">U-verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>あそぶ（遊ぶ）</td><td>asobu</td><td>to play</td></tr>
+        <tr><td>いそぐ（急ぐ）</td><td>isogu</td><td>to hurry</td></tr>
+        <tr><td>おふろにはいる（お風呂に入る）</td><td>ofuro ni hairu</td><td>to bathe</td></tr>
+        <tr><td>かえす（返す）</td><td>kaesu</td><td>to return/give back</td></tr>
+        <tr><td>けす（消す）</td><td>kesu</td><td>to turn off</td></tr>
+        <tr><td>しぬ（死ぬ）</td><td>shinu</td><td>to die</td></tr>
+        <tr><td>すわる（座る）</td><td>suwaru</td><td>to sit</td></tr>
+        <tr><td>たつ（立つ）</td><td>tatsu</td><td>to stand</td></tr>
+        <tr><td>たばこをすう（タバコを吸う）</td><td>tabako wo suu</td><td>to smoke</td></tr>
+        <tr><td>つかう（使う）</td><td>tsukau</td><td>to use</td></tr>
+        <tr><td>てつだう（手伝う）</td><td>tetsudau</td><td>to help</td></tr>
+        <tr><td>はいる（入る）</td><td>hairu</td><td>to enter</td></tr>
+        <tr><td>もつ（持つ）</td><td>motsu</td><td>to carry</td></tr>
+        <tr><td>やすむ（休む）</td><td>yasumu</td><td>to rest/be absent</td></tr>
+        <tr><td>あける（開ける）</td><td>akeru</td><td>to open</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Ru-verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>おしえる（教える）</td><td>oshieru</td><td>to teach/tell</td></tr>
+        <tr><td>おりる（降りる）</td><td>oriru</td><td>to get off</td></tr>
+        <tr><td>かりる（借りる）</td><td>kariru</td><td>to borrow</td></tr>
+        <tr><td>しめる（閉める）</td><td>shimeru</td><td>to close</td></tr>
+        <tr><td>シャワーをあびる</td><td>shawaa wo abiru</td><td>to take a shower</td></tr>
+        <tr><td>つける（付ける）</td><td>tsukeru</td><td>to turn on</td></tr>
+        <tr><td>でんわをかける（電話をかける）</td><td>denwa wo kakeru</td><td>to call</td></tr>
+        <tr><td>わすれる（忘れる）</td><td>wasureru</td><td>to forget</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Irregular Verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>つれてくる（連れてくる）</td><td>tsurete kuru</td><td>to bring (person)</td></tr>
+        <tr><td>もってくる（持ってくる）</td><td>motte kuru</td><td>to bring (thing)</td></tr>
+        <tr><td>はたらく（働く）</td><td>hataraku</td><td>to work</td></tr>
+        <tr><td>はじまる（始まる）</td><td>hajimaru</td><td>to begin</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adjectives & Adverbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        
+        <tr><td>はやい（早い）</td><td>hayai</td><td>fast/early</td></tr>
+        <tr><td>それから</td><td>sorekara</td><td>and then/after that</td></tr>
+        <tr><td>すぐ</td><td>sugu</td><td>right away</td></tr>
+        <tr><td>こちら（こちら）</td><td>kochira</td><td>this way/this person</td></tr>
+            <tr><td>しごと</td><td>shigoto</td><td>work</td></tr>
+        <tr><td>できる</td><td>dekiru</td><td>can do/possible</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 7: Genki Ch. 7 – Family Picture <span class="week-dates">(May 25 – 31)</span></div><div class="week-meta"><span class="word-count">54 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Family Terms (Polite/Plain Forms)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>おにいさん</td><td>oniisan</td><td>older brother (polite)</td></tr>
+        <tr><td>あに</td><td>ani</td><td>older brother (plain)</td></tr>
+        <tr><td>おねえさん</td><td>oneesan</td><td>older sister (polite)</td></tr>
+        <tr><td>あね</td><td>ane</td><td>older sister (plain)</td></tr>
+        <tr><td>いもうと</td><td>imouto</td><td>younger sister (plain)</td></tr>
+        <tr><td>いもうとさん</td><td>imoutosan</td><td>younger sister (polite)</td></tr>
+        <tr><td>おとうと</td><td>otouto</td><td>younger brother</td></tr>
+        <tr><td>おかあさん</td><td>okaasan</td><td>mother (polite)</td></tr>
+        <tr><td>はは</td><td>haha</td><td>mother (plain)</td></tr>
+        <tr><td>おとうさん</td><td>otousan</td><td>father (polite)</td></tr>
+        <tr><td>ちち</td><td>chichi</td><td>father (plain)</td></tr>
+        <tr><td>おじいさん</td><td>ojiisan</td><td>grandfather (polite)</td></tr>
+        <tr><td>そふ</td><td>sofu</td><td>grandfather (plain)</td></tr>
+        <tr><td>おばあさん</td><td>obaasan</td><td>grandmother (polite)</td></tr>
+        <tr><td>そぼ</td><td>sobo</td><td>grandmother (plain)</td></tr>
+        <tr><td>ごしゅじん</td><td>goshujin</td><td>husband (polite)</td></tr>
+        <tr><td>おっと</td><td>otto</td><td>husband (plain)</td></tr>
+        <tr><td>おくさん</td><td>okusan</td><td>wife (polite)</td></tr>
+        <tr><td>つま</td><td>tsuma</td><td>wife (plain)</td></tr>
+        <tr><td>きょうだい</td><td>kyoudai</td><td>siblings</td></tr>
+        <tr><td>かぞく</td><td>kazoku</td><td>family</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Body Parts & Physical Description</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>かみ</td><td>kami</td><td>hair</td></tr>
+        <tr><td>め</td><td>me</td><td>eyes</td></tr>
+        <tr><td>くち</td><td>kuchi</td><td>mouth</td></tr>
+        <tr><td>あたま</td><td>atama</td><td>head</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">I-Adjectives (Physical Appearance)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>たかい</td><td>takai</td><td>tall; expensive</td></tr>
+        <tr><td>せがたかい</td><td>sega takai</td><td>tall (stature)</td></tr>
+        <tr><td>せがひくい</td><td>sega hikui</td><td>short (stature)</td></tr>
+        <tr><td>ながい</td><td>nagai</td><td>long</td></tr>
+        <tr><td>みじかい</td><td>mijikai</td><td>short</td></tr>
+        <tr><td>はやい</td><td>hayai</td><td>fast; early</td></tr>
+        <tr><td>やさしい</td><td>yasashii</td><td>kind</td></tr>
+        <tr><td>あたまがいい</td><td>atama ga ii</td><td>smart</td></tr>
+        <tr><td>かっこいい</td><td>kakkoii</td><td>good-looking; cool</td></tr>
+        <tr><td>かわいい</td><td>kawaii</td><td>cute</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs (Clothing & Actions)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>うたう</td><td>utau</td><td>to sing</td></tr>
+        <tr><td>かぶる</td><td>kaburu</td><td>to put on (hat)</td></tr>
+        <tr><td>めがねをかける</td><td>megane wo kakeru</td><td>to wear glasses</td></tr>
+        <tr><td>きる</td><td>kiru</td><td>to wear (above waist)</td></tr>
+        <tr><td>はく</td><td>haku</td><td>to wear (below waist)</td></tr>
+        <tr><td>ふとる</td><td>futoru</td><td>to get fat</td></tr>
+        <tr><td>やせる</td><td>yaseru</td><td>to get thin</td></tr>
+        <tr><td>しる</td><td>shiru</td><td>to know</td></tr>
+        <tr><td>すむ</td><td>sumu</td><td>to live</td></tr>
+        
+        <tr><td>する</td><td>suru</td><td>to wear (accessories); to do</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>よく</td><td>yoku</td><td>well; often</td></tr>
+        <tr><td>けど</td><td>kedo</td><td>but; however</td></tr>
+        <tr><td>が</td><td>ga</td><td>but; however</td></tr>
+        
+        <tr><td>ちょうど</td><td>choudo</td><td>exactly</td></tr>
+        <tr><td>なにも</td><td>nanimo</td><td>not...anything; nothing</td></tr>
+        <tr><td>もちろん</td><td>mochiron</td><td>of course</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns & Other</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>～にん</td><td>~nin</td><td>counter for people</td></tr>
+        <tr><td>くに</td><td>kuni</td><td>country</td></tr>
+        <tr><td>まち</td><td>machi</td><td>city; town</td></tr>
+        
+    </tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 8: Genki Ch. 8 – Barbecue <span class="week-dates">(Jun 1 – 7)</span></div><div class="week-meta"><span class="word-count">59 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Weather & Seasons</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        
+        <tr><td>あめ</td><td>ame</td><td>rain</td></tr>
+        <tr><td>くも</td><td>kumo</td><td>clouds</td></tr>
+        <tr><td>ゆき</td><td>yuki</td><td>snow</td></tr>
+        <tr><td>かぜ</td><td>kaze</td><td>wind</td></tr>
+        <tr><td>おんど</td><td>ondo</td><td>temperature</td></tr>
+        
+        <tr><td>はる</td><td>haru</td><td>spring</td></tr>
+        <tr><td>なつ</td><td>natsu</td><td>summer</td></tr>
+        <tr><td>あき</td><td>aki</td><td>autumn</td></tr>
+        <tr><td>ふゆ</td><td>fuyu</td><td>winter</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Time Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        
+        <tr><td>せんげつ</td><td>sengetsu</td><td>last month</td></tr>
+        <tr><td>こんげつ</td><td>kongetsu</td><td>this month</td></tr>
+        <tr><td>らいげつ</td><td>raigetsu</td><td>next month</td></tr>
+        <tr><td>きょねん</td><td>kyonen</td><td>last year</td></tr>
+        <tr><td>ことし</td><td>kotoshi</td><td>this year</td></tr>
+        <tr><td>らいねん</td><td>rainen</td><td>next year</td></tr>
+        <tr><td>せんしゅう</td><td>senshuu</td><td>last week</td></tr>
+        <tr><td>こんしゅう</td><td>konshuu</td><td>this week</td></tr>
+        <tr><td>らいしゅう</td><td>raishuu</td><td>next week</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Days of the Week</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>げつようび</td><td>getsuyoubi</td><td>Monday</td></tr>
+        <tr><td>かようび</td><td>kayoubi</td><td>Tuesday</td></tr>
+        <tr><td>すいようび</td><td>suiyoubi</td><td>Wednesday</td></tr>
+        <tr><td>もくようび</td><td>mokuyoubi</td><td>Thursday</td></tr>
+        <tr><td>きんようび</td><td>kinyoubi</td><td>Friday</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Counters</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>～じかん</td><td>~jikan</td><td>hours (counter)</td></tr>
+        <tr><td>～ぷん / ～ふん</td><td>~pun / ~fun</td><td>minutes (counter)</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">U-Verbs (Short Past Tense Forms)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>あらう</td><td>arau</td><td>to wash</td></tr>
+        <tr><td>いう</td><td>iu</td><td>to say</td></tr>
+        <tr><td>いる</td><td>iru</td><td>to need; to have</td></tr>
+        <tr><td>おそくなる</td><td>osoku naru</td><td>to get late</td></tr>
+        <tr><td>おもう</td><td>omou</td><td>to think</td></tr>
+        <tr><td>きる</td><td>kiru</td><td>to cut</td></tr>
+        <tr><td>つくる</td><td>tsukuru</td><td>to make</td></tr>
+        <tr><td>かかる</td><td>kakaru</td><td>to take (time)</td></tr>
+        <tr><td>あめがふる</td><td>ame ga furu</td><td>to rain</td></tr>
+        <tr><td>もっていく</td><td>motte iku</td><td>to bring</td></tr>
+        <tr><td>はじまる</td><td>hajimaru</td><td>to start; to begin</td></tr>
+        <tr><td>ひく</td><td>hiku</td><td>to play (instrument)</td></tr>
+        <tr><td>すわる</td><td>suwaru</td><td>to sit down</td></tr>
+        <tr><td>たつ</td><td>tatsu</td><td>to stand up</td></tr>
+        
+        <tr><td>もつ</td><td>motsu</td><td>to carry; to hold</td></tr>
+        <tr><td>しりあう</td><td>shiriau</td><td>to get to know</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">I-Adjectives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>はやい</td><td>hayai</td><td>fast</td></tr>
+        <tr><td>おそい</td><td>osoi</td><td>slow</td></tr>
+        <tr><td>おもい</td><td>omoi</td><td>heavy</td></tr>
+        <tr><td>かるい</td><td>karui</td><td>light (weight)</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>なにか</td><td>nanika</td><td>something</td></tr>
+        <tr><td>なにも</td><td>nanimo</td><td>nothing</td></tr>
+            <tr><td>いちがつ</td><td>ichigatsu</td><td>January</td></tr>
+        <tr><td>にがつ</td><td>nigatsu</td><td>February</td></tr>
+        <tr><td>さんがつ</td><td>sangatsu</td><td>March</td></tr>
+        <tr><td>しがつ</td><td>shigatsu</td><td>April</td></tr>
+        <tr><td>ごがつ</td><td>gogatsu</td><td>May</td></tr>
+        <tr><td>ろくがつ</td><td>rokugatsu</td><td>June</td></tr>
+        <tr><td>しちがつ</td><td>shichigatsu</td><td>July</td></tr>
+        <tr><td>はちがつ</td><td>hachigatsu</td><td>August</td></tr>
+        <tr><td>きゅうがつ</td><td>kyuugatsu</td><td>September</td></tr>
+        <tr><td>じゅうがつ</td><td>juugatsu</td><td>October</td></tr>
+        <tr><td>じゅういちがつ</td><td>juuichigatsu</td><td>November</td></tr>
+        <tr><td>じゅうにがつ</td><td>juunigatsu</td><td>December</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 9: Genki Ch. 9 – Kabuki <span class="week-dates">(Jun 8 – 14)</span></div><div class="week-meta"><span class="word-count">39 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Time Expressions (Past)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>この前</td><td>kono mae</td><td>the other day; last</td></tr>
+        <tr><td>さいきん</td><td>saikin</td><td>recently</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">U-Verbs (Past Tense)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>おどる</td><td>odoru</td><td>to dance</td></tr>
+        <tr><td>えをかく</td><td>e wo kaku</td><td>to draw</td></tr>
+        <tr><td>さがす</td><td>sagasu</td><td>to look for; to search</td></tr>
+        <tr><td>さそう</td><td>sasou</td><td>to invite</td></tr>
+        <tr><td>つく</td><td>tsuku</td><td>to arrive</td></tr>
+        <tr><td>ぬぐ</td><td>nugu</td><td>to remove (clothing)</td></tr>
+        <tr><td>えらぶ</td><td>erabu</td><td>to choose; to select</td></tr>
+        <tr><td>おくる</td><td>okuru</td><td>to send</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Ru-Verbs & Irregular Verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>そうだんする</td><td>soudan suru</td><td>to consult; to discuss</td></tr>
+        <tr><td>きめる</td><td>kimeru</td><td>to decide</td></tr>
+        <tr><td>れんしゅうする</td><td>renshuu suru</td><td>to practice</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Other Nouns</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>プレゼント</td><td>purezento</td><td>present; gift</td></tr>
+        <tr><td>ギター</td><td>gitaa</td><td>guitar</td></tr>
+        <tr><td>ピアノ</td><td>piano</td><td>piano</td></tr>
+        <tr><td>ペット</td><td>petto</td><td>pet</td></tr>
+        <tr><td>どうぶつ</td><td>doubutsu</td><td>animal</td></tr>
+        <tr><td>こめ</td><td>kome</td><td>rice (uncooked)</td></tr>
+        
+        <tr><td>ケーキ</td><td>keeki</td><td>cake</td></tr>
+        <tr><td>てがみ</td><td>tegami</td><td>letter (mail)</td></tr>
+        <tr><td>コンサート</td><td>konsaato</td><td>concert</td></tr>
+        <tr><td>さくら</td><td>sakura</td><td>cherry blossoms</td></tr>
+        <tr><td>りょこう</td><td>ryokou</td><td>trip; journey</td></tr>
+        <tr><td>しゅみ</td><td>shumi</td><td>hobby</td></tr>
+        <tr><td>くるま</td><td>kuruma</td><td>automobile; car</td></tr>
+        
+        <tr><td>ハイキング</td><td>haikingu</td><td>hiking</td></tr>
+        <tr><td>つり</td><td>tsuri</td><td>fishing</td></tr>
+        <tr><td>りょうり</td><td>ryouri</td><td>cooking; cuisine</td></tr>
+        <tr><td>え</td><td>e</td><td>painting; drawing; picture</td></tr>
+        <tr><td>がいこく</td><td>gaikoku</td><td>foreign country</td></tr>
+        <tr><td>いろ</td><td>iro</td><td>color</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>もう</td><td>mou</td><td>already; one more; another</td></tr>
+        <tr><td>ぜんぶ</td><td>zenbu</td><td>all; everything</td></tr>
+        <tr><td>まだ</td><td>mada</td><td>not yet; still</td></tr>
+            <tr><td>さんぽ</td><td>sanpo</td><td>walk</td></tr>
+        <tr><td>れんしゅう</td><td>renshuu</td><td>practice</td></tr>
+        <tr><td>サッカー</td><td>sakkaa</td><td>soccer</td></tr>
+        <tr><td>パーティー</td><td>paatii</td><td>party</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 10: Genki Ch. 10 – Winter Vacation Plans <span class="week-dates">(Jun 15 – 21)</span></div><div class="week-meta"><span class="word-count">51 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns (Health & Leisure)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        
+        <tr><td>かお</td><td>kao</td><td>expression; face</td></tr>
+        <tr><td>きせつ</td><td>kisetsu</td><td>season</td></tr>
+        <tr><td>じゅく</td><td>juku</td><td>cram school</td></tr>
+        <tr><td>キャンプ</td><td>kyampu</td><td>camp</td></tr>
+        <tr><td>にっき</td><td>nikki</td><td>diary</td></tr>
+        <tr><td>おんせん</td><td>onsen</td><td>hot spring</td></tr>
+        <tr><td>びょうき</td><td>byouki</td><td>illness; sickness</td></tr>
+        <tr><td>くすり</td><td>kusuri</td><td>medicine</td></tr>
+        <tr><td>かぜ</td><td>kaze</td><td>cold (illness)</td></tr>
+        <tr><td>けいざい</td><td>keizai</td><td>economy</td></tr>
+        <tr><td>ゆめ</td><td>yume</td><td>dream</td></tr>
+        <tr><td>よやく</td><td>yoyaku</td><td>reservation</td></tr>
+        <tr><td>よてい</td><td>yotei</td><td>plan; schedule</td></tr>
+        <tr><td>ねつ</td><td>netsu</td><td>fever</td></tr>
+        <tr><td>ぶかつ</td><td>bukatsu</td><td>club activity</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs (U & Ru)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>かぜをひく</td><td>kaze wo hiku</td><td>to catch a cold</td></tr>
+        <tr><td>きょうみがある</td><td>kyoumi ga aru</td><td>to be interested</td></tr>
+        <tr><td>そだつ</td><td>sodatsu</td><td>to grow up; to raise</td></tr>
+        <tr><td>さんぽする</td><td>sanpo suru</td><td>to take a walk</td></tr>
+        <tr><td>うんてんする</td><td>unten suru</td><td>to drive</td></tr>
+        <tr><td>よやくする</td><td>yoyaku suru</td><td>to make a reservation</td></tr>
+        <tr><td>はしる</td><td>hashiru</td><td>to run</td></tr>
+        <tr><td>えをかく</td><td>e wo kaku</td><td>to paint; to draw</td></tr>
+        <tr><td>やすむ</td><td>yasumu</td><td>to rest; to take a break</td></tr>
+        <tr><td>きをつける</td><td>ki wo tsukeru</td><td>to be careful</td></tr>
+        <tr><td>なる</td><td>naru</td><td>to become</td></tr>
+        <tr><td>せきがでる</td><td>seki ga deru</td><td>to cough</td></tr>
+        <tr><td>りょこうする</td><td>ryokou suru</td><td>to travel</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>たぶん</td><td>tabun</td><td>probably</td></tr>
+        <tr><td>たくさん</td><td>takusan</td><td>a lot; many</td></tr>
+        <tr><td>そのころ</td><td>sono koro</td><td>around that time</td></tr>
+        <tr><td>きっと</td><td>kitto</td><td>surely; certainly</td></tr>
+        <tr><td>すぐ</td><td>sugu</td><td>immediately; right away</td></tr>
+        <tr><td>もう</td><td>mou</td><td>already</td></tr>
+        <tr><td>もし</td><td>moshi</td><td>if</td></tr>
+        <tr><td>ぜひ</td><td>zehi</td><td>by all means; definitely</td></tr>
+        <tr><td>まず</td><td>mazu</td><td>first of all</td></tr>
+        <tr><td>もういちど</td><td>mou ichido</td><td>one more time</td></tr>
+        <tr><td>いちばん</td><td>ichiban</td><td>best; most</td></tr>
+        <tr><td>ぜんぶ</td><td>zenbu</td><td>all</td></tr>
+            <tr><td>しけん</td><td>shiken</td><td>exam/test</td></tr>
+        <tr><td>きょうしつ</td><td>kyoushitsu</td><td>classroom</td></tr>
+        <tr><td>もんだい</td><td>mondai</td><td>problem</td></tr>
+        <tr><td>こたえ</td><td>kotae</td><td>answer</td></tr>
+        <tr><td>しつもん</td><td>shitsumon</td><td>question</td></tr>
+        <tr><td>ほとんど</td><td>hotondo</td><td>almost</td></tr>
+        <tr><td>だいたい</td><td>daitai</td><td>about/mostly</td></tr>
+        <tr><td>もうすぐ</td><td>mousugu</td><td>soon</td></tr>
+        <tr><td>はじめて</td><td>hajimete</td><td>for the first time</td></tr>
+        <tr><td>ゆっくり</td><td>yukkuri</td><td>slowly</td></tr>
+        <tr><td>はやく</td><td>hayaku</td><td>quickly</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 11: Genki Ch. 11 – After the Vacation <span class="week-dates">(Jun 22 – 28)</span></div><div class="week-meta"><span class="word-count">68 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns (People & Things)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        
+        <tr><td>がっき</td><td>gakki</td><td>musical instrument</td></tr>
+        
+        <tr><td>きじ</td><td>kiji</td><td>article</td></tr>
+        
+        <tr><td>しょうせつ</td><td>shousetsu</td><td>novel</td></tr>
+        <tr><td>にもつ</td><td>nimotsu</td><td>baggage; luggage</td></tr>
+        <tr><td>あいさつ</td><td>aisatsu</td><td>greeting</td></tr>
+        <tr><td>いしゃ</td><td>isha</td><td>medical doctor</td></tr>
+        <tr><td>かしゅ</td><td>kashu</td><td>singer</td></tr>
+        <tr><td>だいとうりょう</td><td>daitouryou</td><td>president (of a country)</td></tr>
+        <tr><td>おかねもち</td><td>okanemochi</td><td>rich person</td></tr>
+        <tr><td>ゆうめいじん</td><td>yuumeijin</td><td>famous person</td></tr>
+        <tr><td>じぶん</td><td>jibun</td><td>oneself</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">U-Verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>はなす</td><td>hanasu</td><td>to talk; to speak</td></tr>
+        <tr><td>ひく</td><td>hiku</td><td>to pull; to play (string instrument)</td></tr>
+        
+        <tr><td>おす</td><td>osu</td><td>to push</td></tr>
+        <tr><td>おとす</td><td>otosu</td><td>to drop</td></tr>
+        <tr><td>たすかる</td><td>tasukaru</td><td>to be saved; to be helped</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Ru-Verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>きる</td><td>kiru</td><td>to wear</td></tr>
+        <tr><td>はじめる</td><td>hajimeru</td><td>to start; to begin</td></tr>
+        <tr><td>なくす</td><td>nakusu</td><td>to lose (item)</td></tr>
+        <tr><td>なる</td><td>naru</td><td>to become; to get</td></tr>
+        <tr><td>あく</td><td>aku</td><td>to open</td></tr>
+        <tr><td>しまる</td><td>shimaru</td><td>to close</td></tr>
+        <tr><td>さく</td><td>saku</td><td>to bloom</td></tr>
+        <tr><td>いる</td><td>iru</td><td>to need; to be</td></tr>
+        <tr><td>おくれる</td><td>okureru</td><td>to be late</td></tr>
+        <tr><td>あげる</td><td>ageru</td><td>to give</td></tr>
+        <tr><td>せんたくする</td><td>sentaku suru</td><td>to do laundry</td></tr>
+        <tr><td>そうじする</td><td>souji suru</td><td>to clean</td></tr>
+        <tr><td>りょうりする</td><td>ryouri suru</td><td>to cook</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">I-Adjectives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>せまい</td><td>semai</td><td>narrow</td></tr>
+        <tr><td>ひろい</td><td>hiroi</td><td>wide; spacious</td></tr>
+        <tr><td>わるい</td><td>warui</td><td>bad</td></tr>
+        <tr><td>うれしい</td><td>ureshii</td><td>happy</td></tr>
+        <tr><td>かなしい</td><td>kanashii</td><td>sad</td></tr>
+        <tr><td>きびしい</td><td>kibishi</td><td>strict</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Na-Adjectives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>ラッキー</td><td>rakkii</td><td>lucky</td></tr>
+        <tr><td>いろいろ</td><td>iroiro</td><td>various</td></tr>
+        <tr><td>かんたん</td><td>kantan</td><td>easy; simple</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>すぐ</td><td>sugu</td><td>immediately</td></tr>
+        <tr><td>ほんとうに</td><td>hontou ni</td><td>really; truly</td></tr>
+        <tr><td>まっすぐ</td><td>massugu</td><td>directly; straight</td></tr>
+        
+        <tr><td>まだ</td><td>mada</td><td>not yet</td></tr>
+            <tr><td>ひとつ</td><td>hitotsu                        (one</td><td>counting</td></tr>
+        <tr><td>ふたつ</td><td>futatsu                        (two</td><td>counting</td></tr>
+        <tr><td>みっつ</td><td>mittsu                         (three</td><td>counting</td></tr>
+        <tr><td>よっつ</td><td>yottsu                         (four</td><td>counting</td></tr>
+        <tr><td>いつつ</td><td>itsutsu                        (five</td><td>counting</td></tr>
+        <tr><td>むっつ</td><td>muttsu                         (six</td><td>counting</td></tr>
+        <tr><td>ななつ</td><td>nanatsu                        (seven</td><td>counting</td></tr>
+        <tr><td>やっつ</td><td>yattsu                         (eight</td><td>counting</td></tr>
+        <tr><td>ここのつ</td><td>kokonotsu                      (nine</td><td>counting</td></tr>
+        <tr><td>とお</td><td>too                            (ten</td><td>counting</td></tr>
+        <tr><td>ひとり</td><td>hitori</td><td>one person</td></tr>
+        <tr><td>ふたり</td><td>futari</td><td>two people</td></tr>
+        <tr><td>あかい</td><td>akai</td><td>red</td></tr>
+        <tr><td>あおい</td><td>aoi</td><td>blue</td></tr>
+        <tr><td>しろい</td><td>shiroi</td><td>white</td></tr>
+        <tr><td>くろい</td><td>kuroi</td><td>black</td></tr>
+        <tr><td>きいろい</td><td>kiiroi</td><td>yellow</td></tr>
+        <tr><td>みどり</td><td>midori</td><td>green</td></tr>
+        <tr><td>あかるい</td><td>akarui</td><td>bright</td></tr>
+        <tr><td>くらい</td><td>kurai</td><td>dark</td></tr>
+        <tr><td>すこし</td><td>sukoshi</td><td>a little</td></tr>
+        <tr><td>すばらしい</td><td>subarashii</td><td>wonderful</td></tr>
+        <tr><td>だいじょうぶ</td><td>daijoubu</td><td>okay/alright</td></tr>
+        <tr><td>まじめ</td><td>majime</td><td>serious</td></tr>
+        <tr><td>しんせつ</td><td>shinsetsu</td><td>kind/friendly</td></tr>
+        <tr><td>ひま</td><td>hima</td><td>free time</td></tr>
+</tbody></table></div>
+</div></div>
+
+<div class="week-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Week 12: Genki Ch. 12 – Feeling Sick <span class="week-dates">(Jun 29 – Jul 5)</span></div><div class="week-meta"><span class="word-count">42 words</span><span class="mastery-percent">0%</span></div></div></div>
+<div class="week-content collapsed">
+    <div class="category"><div class="category-title">Body Parts</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>からだ</td><td>karada</td><td>body</td></tr>
+        <tr><td>かお</td><td>kao</td><td>face</td></tr>
+        <tr><td>め</td><td>me</td><td>eye</td></tr>
+        <tr><td>みみ</td><td>mimi</td><td>ear</td></tr>
+        <tr><td>はな</td><td>hana</td><td>nose</td></tr>
+        
+        <tr><td>は</td><td>ha</td><td>tooth</td></tr>
+        <tr><td>のど</td><td>nodo</td><td>throat</td></tr>
+        <tr><td>おなか</td><td>onaka</td><td>stomach; belly</td></tr>
+        <tr><td>あし</td><td>ashi</td><td>leg; foot</td></tr>
+        <tr><td>て</td><td>te</td><td>hand</td></tr>
+        <tr><td>ゆび</td><td>yubi</td><td>finger</td></tr>
+        <tr><td>せなか</td><td>senaka</td><td>back</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Health & Illness</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>かぜ</td><td>kaze</td><td>cold</td></tr>
+        <tr><td>せき</td><td>seki</td><td>cough</td></tr>
+        
+        <tr><td>アレルギー</td><td>arerugii</td><td>allergy</td></tr>
+        <tr><td>ふつかよい</td><td>futsukayoi</td><td>hangover</td></tr>
+        
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Health Verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>しんぱいする</td><td>shinpai suru</td><td>to be worried; to worry</td></tr>
+        <tr><td>なおる</td><td>naoru</td><td>to become well; to recover</td></tr>
+        <tr><td>のむ</td><td>nomu</td><td>to take (medicine)</td></tr>
+        <tr><td>にゅういんする</td><td>nyuuin suru</td><td>to be hospitalized</td></tr>
+        <tr><td>くしゃみがでる</td><td>kushami ga deru</td><td>to sneeze</td></tr>
+        <tr><td>はなみずがでる</td><td>hanamizu ga deru</td><td>to have a runny nose</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adjectives (I-adj)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>いたい</td><td>itai</td><td>to hurt; to be painful</td></tr>
+        <tr><td>あまい</td><td>amai</td><td>sweet</td></tr>
+        <tr><td>からい</td><td>karai</td><td>spicy; hot (taste)</td></tr>
+        <tr><td>すっぱい</td><td>suppai</td><td>sour</td></tr>
+        <tr><td>にがい</td><td>nigai</td><td>bitter</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adjectives (Na-adj)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>のどがかわいた</td><td>nodo ga kawaita</td><td>thirsty</td></tr>
+        <tr><td>おなかがすいた</td><td>onaka ga suita</td><td>hungry</td></tr>
+        <tr><td>けんこう</td><td>kenkou</td><td>healthy</td></tr>
+        <tr><td>だいじ</td><td>daiji</td><td>important</td></tr>
+        <tr><td>じゅうぶん</td><td>juubun</td><td>enough; sufficient</td></tr>
+        <tr><td>じょうず</td><td>jouzu</td><td>good at</td></tr>
+        <tr><td>へた</td><td>heta</td><td>bad at; unskilled</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Measurement)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>たいじゅう</td><td>taijuu</td><td>weight</td></tr>
+        <tr><td>しんちょう</td><td>shinchou</td><td>height</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>きをつけて</td><td>ki wo tsukete</td><td>to be careful</td></tr>
+        <tr><td>おだいじに</td><td>odaiji ni</td><td>take care of yourself</td></tr>
+        <tr><td>どうしましたか</td><td>dou shimashita ka</td><td>what happened?</td></tr>
+        <tr><td>ぐらい</td><td>gurai</td><td>about; approximately</td></tr>
+        <tr><td>いつも</td><td>itsumo</td><td>always</td></tr>
+        <tr><td>いちにちじゅう</td><td>ichinichi juu</td><td>all day</td></tr>
+        
+    </tbody></table></div>
+</div></div>
+
+<!-- EXTRA N5 VOCABULARY -->
+        <div class="week-section" id="extra-n5-vocab-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Extra N5 Vocabulary</div><div class="week-meta"><span class="word-count">257 words — From JLPT N5 reference list</span></div></div></div>
+        <div class="week-content collapsed">
+    <div class="category"><div class="category-title">Nouns (People & Places)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>台所（だいどころ）</td><td>daidokoro</td><td>kitchen</td></tr>
+        <tr><td>外国人（がいこくじん）</td><td>gaikokujin</td><td>foreigner</td></tr>
+        <tr><td>玄関（げんかん）</td><td>genkan</td><td>entrance; front door</td></tr>
+        <tr><td>いりぐち</td><td>iriguchi</td><td>entrance</td></tr>
+        <tr><td>階段（かいだん）</td><td>kaidan</td><td>stairs</td></tr>
+        <tr><td>方（かた）</td><td>kata</td><td>way; person (polite)</td></tr>
+        <tr><td>警官（けいかん）</td><td>keikan</td><td>policeman</td></tr>
+        <tr><td>喫茶店（きっさてん）</td><td>kissaten</td><td>coffee shop; cafe</td></tr>
+        <tr><td>交番（こうばん）</td><td>kouban</td><td>police box</td></tr>
+        <tr><td>交差点（こうさてん）</td><td>kousaten</td><td>intersection</td></tr>
+        <tr><td>おばさん</td><td>obasan</td><td>aunt; old lady</td></tr>
+        <tr><td>おじさん</td><td>ojisan</td><td>uncle; old man</td></tr>
+        <tr><td>女の子（おんなのこ）</td><td>onnanoko</td><td>girl</td></tr>
+        <tr><td>大勢（おおぜい）</td><td>oozei</td><td>crowd; many people</td></tr>
+        <tr><td>男の子（おとこのこ）</td><td>otokonoko</td><td>boy</td></tr>
+        <tr><td>廊下（ろうか）</td><td>rouka</td><td>corridor; hallway</td></tr>
+        <tr><td>両親（りょうしん）</td><td>ryoushin</td><td>parents</td></tr>
+        <tr><td>生徒（せいと）</td><td>seito</td><td>pupil; student</td></tr>
+        <tr><td>大使館（たいしかん）</td><td>taishikan</td><td>embassy</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Things & Concepts)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>あちら</td><td>achira</td><td>there; that direction</td></tr>
+        <tr><td>赤（あか）</td><td>aka</td><td>red (noun)</td></tr>
+        <tr><td>青（あお）</td><td>ao</td><td>blue (noun)</td></tr>
+        <tr><td>後（あと）</td><td>ato</td><td>after; behind</td></tr>
+        <tr><td>番号（ばんごう）</td><td>bangou</td><td>number</td></tr>
+        <tr><td>文章（ぶんしょう）</td><td>bunshou</td><td>sentence</td></tr>
+        <tr><td>茶色（ちゃいろ）</td><td>chairo</td><td>brown</td></tr>
+        <tr><td>地下鉄（ちかてつ）</td><td>chikatetsu</td><td>subway</td></tr>
+        <tr><td>ちず</td><td>chizu</td><td>map</td></tr>
+        <tr><td>誰か（だれか）</td><td>dareka</td><td>someone</td></tr>
+        <tr><td>でぐち</td><td>deguchi</td><td>exit</td></tr>
+        <tr><td>どう</td><td>dou</td><td>how</td></tr>
+        <tr><td>ふく</td><td>fuku</td><td>clothes</td></tr>
+        <tr><td>封筒（ふうとう）</td><td>fuutou</td><td>envelope</td></tr>
+        <tr><td>灰皿（はいざら）</td><td>haizara</td><td>ashtray</td></tr>
+        <tr><td>はこ</td><td>hako</td><td>box</td></tr>
+        <tr><td>話（はなし）</td><td>hanashi</td><td>talk; conversation</td></tr>
+        <tr><td>半分（はんぶん）</td><td>hanbun</td><td>half</td></tr>
+        <tr><td>晴れ（はれ）</td><td>hare</td><td>clear weather</td></tr>
+        <tr><td>はし</td><td>hashi</td><td>bridge</td></tr>
+        <tr><td>一つ（ひとつ）</td><td>hitotsu</td><td>one</td></tr>
+        <tr><td>本棚（ほんだな）</td><td>hondana</td><td>bookshelf</td></tr>
+        <tr><td>本当（ほんとう）</td><td>hontou</td><td>truth; really</td></tr>
+        <tr><td>欲しい（ほしい）</td><td>hoshii</td><td>want; desire</td></tr>
+        <tr><td>いけ</td><td>ike</td><td>pond</td></tr>
+        <tr><td>いくつ</td><td>ikutsu</td><td>how many</td></tr>
+        <tr><td>いみ</td><td>imi</td><td>meaning</td></tr>
+        <tr><td>一緒（いっしょ）</td><td>issho</td><td>together</td></tr>
+        <tr><td>いつ</td><td>itsu</td><td>when</td></tr>
+        <tr><td>嫌（いや）</td><td>iya</td><td>unpleasant; disagreeable</td></tr>
+        <tr><td>字引（じびき）</td><td>jibiki</td><td>dictionary (old)</td></tr>
+        <tr><td>自動車（じどうしゃ）</td><td>jidousha</td><td>automobile</td></tr>
+        <tr><td>授業（じゅぎょう）</td><td>jugyou</td><td>lesson; class</td></tr>
+        <tr><td>花瓶（かびん）</td><td>kabin</td><td>vase</td></tr>
+        <tr><td>かど</td><td>kado</td><td>corner</td></tr>
+        <tr><td>かぎ</td><td>kagi</td><td>key</td></tr>
+        <tr><td>漢字（かんじ）</td><td>kanji</td><td>kanji</td></tr>
+        <tr><td>家庭（かてい）</td><td>katei</td><td>household</td></tr>
+        <tr><td>き</td><td>ki</td><td>tree</td></tr>
+        <tr><td>こえ</td><td>koe</td><td>voice</td></tr>
+        <tr><td>曇り（くもり）</td><td>kumori</td><td>cloudy weather</td></tr>
+        <tr><td>黒（くろ）</td><td>kuro</td><td>black (noun)</td></tr>
+        <tr><td>靴下（くつした）</td><td>kutsushita</td><td>socks</td></tr>
+        <tr><td>まいあさ</td><td>maiasa</td><td>every morning</td></tr>
+        <tr><td>毎週（まいしゅう）</td><td>maishuu</td><td>every week</td></tr>
+        <tr><td>万年筆（まんねんひつ）</td><td>mannenhitsu</td><td>fountain pen</td></tr>
+        <tr><td>みち</td><td>michi</td><td>road / path</td></tr>
+        <tr><td>みんな</td><td>minna</td><td>everyone; all</td></tr>
+        <tr><td>門（もん）</td><td>mon</td><td>gate</td></tr>
+        <tr><td>なまえ</td><td>namae</td><td>name</td></tr>
+        <tr><td>何（なに）</td><td>nani</td><td>what</td></tr>
+        <tr><td>夏休み（なつやすみ）</td><td>natsuyasumi</td><td>summer vacation</td></tr>
+        <tr><td>多い（おおい）</td><td>ooi</td><td>many; numerous</td></tr>
+        <tr><td>大きな（おおきな）</td><td>ookina</td><td>big; large</td></tr>
+        <tr><td>お皿（おさら）</td><td>osara</td><td>plate; dish</td></tr>
+        <tr><td>お手洗い（おてあらい）</td><td>otearai</td><td>restroom; toilet</td></tr>
+        <tr><td>おとな</td><td>otona</td><td>adult</td></tr>
+        <tr><td>冷蔵庫（れいぞうこ）</td><td>reizouko</td><td>refrigerator</td></tr>
+        <tr><td>先（さき）</td><td>saki</td><td>ahead; previous</td></tr>
+        <tr><td>作文（さくぶん）</td><td>sakubun</td><td>composition; writing</td></tr>
+        <tr><td>背広（せびろ）</td><td>sebiro</td><td>business suit</td></tr>
+        <tr><td>石鹼（せっけん）</td><td>sekken</td><td>soap</td></tr>
+        <tr><td>白（しろ）</td><td>shiro</td><td>white (noun)</td></tr>
+        <tr><td>そば</td><td>soba</td><td>buckwheat noodles</td></tr>
+        <tr><td>そと</td><td>soto</td><td>outside</td></tr>
+        <tr><td>たばこ</td><td>tabako</td><td>tobacco; cigarette</td></tr>
+        <tr><td>たいへん</td><td>taihen</td><td>terrible/very</td></tr>
+        <tr><td>と</td><td>to</td><td>and (particle)</td></tr>
+        <tr><td>ところ</td><td>tokoro</td><td>place</td></tr>
+        <tr><td>鳥（とり）</td><td>tori</td><td>bird</td></tr>
+        <tr><td>上着（うわぎ）</td><td>uwagi</td><td>coat; jacket</td></tr>
+        <tr><td>わかい</td><td>wakai</td><td>young</td></tr>
+        <tr><td>八百屋（やおや）</td><td>yaoya</td><td>greengrocer</td></tr>
+        <tr><td>夕方（ゆうがた）</td><td>yuugata</td><td>evening; dusk</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Food & Drink)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>豚肉（ぶたにく）</td><td>butaniku</td><td>pork</td></tr>
+        <tr><td>茶碗（ちゃわん）</td><td>chawan</td><td>rice bowl; tea cup</td></tr>
+        <tr><td>牛肉（ぎゅうにく）</td><td>gyuuniku</td><td>beef</td></tr>
+        <tr><td>昼ご飯（ひるごはん）</td><td>hirugohan</td><td>lunch</td></tr>
+        <tr><td>紅茶（こうちゃ）</td><td>koucha</td><td>black tea</td></tr>
+        <tr><td>お弁当（おべんとう）</td><td>obentou</td><td>lunch box</td></tr>
+        <tr><td>お菓子（おかし）</td><td>okashi</td><td>sweets; candy</td></tr>
+        <tr><td>塩（しお）</td><td>shio</td><td>salt</td></tr>
+        <tr><td>醬油（しょうゆ）</td><td>shouyu</td><td>soy sauce</td></tr>
+        <tr><td>鶏肉（とりにく）</td><td>toriniku</td><td>chicken meat</td></tr>
+        <tr><td>夕飯（ゆうはん）</td><td>yuuhan</td><td>evening meal</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Time & Numbers)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>明後日（あさって）</td><td>asatte</td><td>day after tomorrow</td></tr>
+        <tr><td>どちら</td><td>dochira</td><td>which of two; where (polite)</td></tr>
+        <tr><td>二つ（ふたつ）</td><td>futatsu</td><td>two</td></tr>
+        <tr><td>二日（ふつか）</td><td>futsuka</td><td>2nd day / 2 days</td></tr>
+        <tr><td>二十歳（はたち）</td><td>hatachi</td><td>20 years old</td></tr>
+        <tr><td>二十日（はつか）</td><td>hatsuka</td><td>20th / 20 days</td></tr>
+        <tr><td>一日（いちにち）</td><td>ichinichi</td><td>one day; all day</td></tr>
+        <tr><td>五日（いつか）</td><td>itsuka</td><td>5th / 5 days</td></tr>
+        <tr><td>五つ（いつつ）</td><td>itsutsu</td><td>five</td></tr>
+        <tr><td>結婚（けっこん）</td><td>kekkon</td><td>marriage</td></tr>
+        <tr><td>九日（ここのか）</td><td>kokonoka</td><td>9th / 9 days</td></tr>
+        <tr><td>九つ（ここのつ）</td><td>kokonotsu</td><td>nine</td></tr>
+        <tr><td>ことば</td><td>kotoba</td><td>word/language</td></tr>
+        <tr><td>毎年（まいとし）</td><td>maitoshi</td><td>every year</td></tr>
+        <tr><td>毎月（まいつき）</td><td>maitsuki</td><td>every month</td></tr>
+        <tr><td>三日（みっか）</td><td>mikka</td><td>3rd / 3 days</td></tr>
+        <tr><td>皆さん（みなさん）</td><td>minasan</td><td>everyone (polite)</td></tr>
+        <tr><td>三つ（みっつ）</td><td>mittsu</td><td>three</td></tr>
+        <tr><td>六日（むいか）</td><td>muika</td><td>6th / 6 days</td></tr>
+        <tr><td>六つ（むっつ）</td><td>muttsu</td><td>six</td></tr>
+        <tr><td>七つ（ななつ）</td><td>nanatsu</td><td>seven</td></tr>
+        <tr><td>七日（なのか）</td><td>nanoka</td><td>7th / 7 days</td></tr>
+        <tr><td>一昨日（おととい）</td><td>ototoi</td><td>day before yesterday</td></tr>
+        <tr><td>一昨年（おととし）</td><td>ototoshi</td><td>year before last</td></tr>
+        <tr><td>ページ</td><td>peeji</td><td>page</td></tr>
+        <tr><td>再来年（さらいねん）</td><td>sarainen</td><td>year after next</td></tr>
+        <tr><td>背（せ）</td><td>se</td><td>height; stature; back</td></tr>
+        <tr><td>縦（たて）</td><td>tate</td><td>length; height</td></tr>
+        <tr><td>時（とき）</td><td>toki</td><td>time; moment; occasion</td></tr>
+        <tr><td>十日（とおか）</td><td>tooka</td><td>10th / 10 days</td></tr>
+        <tr><td>年（とし）</td><td>toshi</td><td>year; age</td></tr>
+        <tr><td>次（つぎ）</td><td>tsugi</td><td>next</td></tr>
+        <tr><td>一日（ついたち）</td><td>tsuitachi</td><td>first of the month</td></tr>
+        <tr><td>八つ（やっつ）</td><td>yattsu</td><td>eight</td></tr>
+        <tr><td>四日（よっか）</td><td>yokka</td><td>4th / 4 days</td></tr>
+        <tr><td>四つ（よっつ）</td><td>yottsu</td><td>four</td></tr>
+        <tr><td>八日（ようか）</td><td>youka</td><td>8th / 8 days</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Nouns (Nature & Directions)</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>辺（へん）</td><td>hen</td><td>area; vicinity</td></tr>
+        <tr><td>東（ひがし）</td><td>higashi</td><td>east</td></tr>
+        <tr><td>北（きた）</td><td>kita</td><td>north</td></tr>
+        <tr><td>南（みなみ）</td><td>minami</td><td>south</td></tr>
+        <tr><td>村（むら）</td><td>mura</td><td>village</td></tr>
+        <tr><td>西（にし）</td><td>nishi</td><td>west</td></tr>
+        <tr><td>庭（にわ）</td><td>niwa</td><td>garden</td></tr>
+        <tr><td>洋服（ようふく）</td><td>youfuku</td><td>western clothes</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Verbs</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>浴びる（あびる）</td><td>abiru</td><td>to bathe; to shower</td></tr>
+        <tr><td>違う（ちがう）</td><td>chigau</td><td>to differ; to be wrong</td></tr>
+        <tr><td>出す（だす）</td><td>dasu</td><td>to take out; to put out</td></tr>
+        <tr><td>降る（ふる）</td><td>furu</td><td>to fall (rain/snow)</td></tr>
+        <tr><td>晴れる（はれる）</td><td>hareru</td><td>to be sunny</td></tr>
+        <tr><td>貼る（はる）</td><td>haru</td><td>to stick; to paste</td></tr>
+        <tr><td>入れる（いれる）</td><td>ireru</td><td>to put in; to insert</td></tr>
+        <tr><td>言う（いう）</td><td>iu</td><td>to say</td></tr>
+        <tr><td>掛ける（かける）</td><td>kakeru</td><td>to hang; to call</td></tr>
+        <tr><td>かす</td><td>kasu</td><td>to lend</td></tr>
+        <tr><td>消える（きえる）</td><td>kieru</td><td>to disappear</td></tr>
+        <tr><td>困る（こまる）</td><td>komaru</td><td>to be troubled</td></tr>
+        <tr><td>答える（こたえる）</td><td>kotaeru</td><td>to answer</td></tr>
+        <tr><td>曇る（くもる）</td><td>kumoru</td><td>to become cloudy</td></tr>
+        <tr><td>磨く（みがく）</td><td>migaku</td><td>to polish; to brush (teeth)</td></tr>
+        <tr><td>見せる（みせる）</td><td>miseru</td><td>to show</td></tr>
+        <tr><td>鳴く（なく）</td><td>naku</td><td>to cry (animal)</td></tr>
+        <tr><td>並べる（ならべる）</td><td>naraberu</td><td>to line up (trans.)</td></tr>
+        <tr><td>並ぶ（ならぶ）</td><td>narabu</td><td>to stand in line</td></tr>
+        <tr><td>登る（のぼる）</td><td>noboru</td><td>to climb</td></tr>
+        <tr><td>覚える（おぼえる）</td><td>oboeru</td><td>to remember</td></tr>
+        <tr><td>置く（おく）</td><td>oku</td><td>to put; to place</td></tr>
+        <tr><td>差す（さす）</td><td>sasu</td><td>to raise (umbrella)</td></tr>
+        <tr><td>吸う（すう）</td><td>suu</td><td>to smoke; to suck</td></tr>
+        <tr><td>頼む（たのむ）</td><td>tanomu</td><td>to request; to ask</td></tr>
+        <tr><td>飛ぶ（とぶ）</td><td>tobu</td><td>to fly; to hop</td></tr>
+        <tr><td>止まる（とまる）</td><td>tomaru</td><td>to stop</td></tr>
+        <tr><td>疲れる（つかれる）</td><td>tsukareru</td><td>to get tired</td></tr>
+        <tr><td>勤める（つとめる）</td><td>tsutomeru</td><td>to work for someone</td></tr>
+        <tr><td>生まれる（うまれる）</td><td>umareru</td><td>to be born</td></tr>
+        <tr><td>売る（うる）</td><td>uru</td><td>to sell</td></tr>
+        <tr><td>渡る（わたる）</td><td>wataru</td><td>to cross; to go across</td></tr>
+        <tr><td>渡す（わたす）</td><td>watasu</td><td>to hand over</td></tr>
+        <tr><td>呼ぶ（よぶ）</td><td>yobu</td><td>to call; to invite</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adjectives</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>危ない（あぶない）</td><td>abunai</td><td>dangerous</td></tr>
+        <tr><td>暖かい（あたたかい）</td><td>atatakai</td><td>warm</td></tr>
+        <tr><td>小さな（ちいさな）</td><td>chiisana</td><td>small; little</td></tr>
+        <tr><td>近い（ちかい）</td><td>chikai</td><td>near; close</td></tr>
+        <tr><td>太い（ふとい）</td><td>futoi</td><td>fat; thick</td></tr>
+        <tr><td>はな</td><td>hana</td><td>flower / nose</td></tr>
+        <tr><td>低い（ひくい）</td><td>hikui</td><td>short; low</td></tr>
+        <tr><td>細い（ほそい）</td><td>hosoi</td><td>thin; slender</td></tr>
+        <tr><td>丈夫（じょうぶ）</td><td>joubu</td><td>durable; strong</td></tr>
+        <tr><td>結構（けっこう）</td><td>kekkou</td><td>enough; splendid</td></tr>
+        <tr><td>汚い（きたない）</td><td>kitanai</td><td>dirty</td></tr>
+        <tr><td>丸い（まるい）</td><td>marui</td><td>round; circular</td></tr>
+        <tr><td>不味い（まずい）</td><td>mazui</td><td>bad-tasting</td></tr>
+        <tr><td>もの</td><td>mono</td><td>thing</td></tr>
+        <tr><td>温い（ぬるい）</td><td>nurui</td><td>lukewarm</td></tr>
+        <tr><td>同じ（おなじ）</td><td>onaji</td><td>same</td></tr>
+        <tr><td>立派（りっぱ）</td><td>rippa</td><td>splendid; fine</td></tr>
+        <tr><td>少ない（すくない）</td><td>sukunai</td><td>few; scarce</td></tr>
+        <tr><td>涼しい（すずしい）</td><td>suzushii</td><td>cool; refreshing</td></tr>
+        <tr><td>大切（たいせつ）</td><td>taisetsu</td><td>important</td></tr>
+        <tr><td>遠い（とおい）</td><td>tooi</td><td>far; distant</td></tr>
+        <tr><td>強い（つよい）</td><td>tsuyoi</td><td>strong; powerful</td></tr>
+        <tr><td>煩い（うるさい）</td><td>urusai</td><td>noisy; annoying</td></tr>
+        <tr><td>薄い（うすい）</td><td>usui</td><td>thin; weak</td></tr>
+        <tr><td>弱い（よわい）</td><td>yowai</td><td>weak</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Adverbs & Expressions</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>あっち</td><td>acchi</td><td>over there</td></tr>
+        <tr><td>だんだん</td><td>dandan</td><td>gradually</td></tr>
+        <tr><td>どなた</td><td>donata</td><td>who (polite)</td></tr>
+        <tr><td>どうも</td><td>doumo</td><td>thanks</td></tr>
+        <tr><td>ほか</td><td>hoka</td><td>other</td></tr>
+        <tr><td>いかが</td><td>ikaga</td><td>how about (polite)</td></tr>
+        <tr><td>こっち</td><td>kocchi</td><td>this way; here</td></tr>
+        <tr><td>こんな</td><td>konna</td><td>such; like this</td></tr>
+        <tr><td>もっと</td><td>motto</td><td>more</td></tr>
+        <tr><td>向こう（むこう）</td><td>mukou</td><td>over there; opposite side</td></tr>
+        <tr><td>そっち</td><td>socchi</td><td>that way</td></tr>
+        <tr><td>そちら</td><td>sochira</td><td>that way (polite)</td></tr>
+        <tr><td>横（よこ）</td><td>yoko</td><td>beside; side; width</td></tr>
+    </tbody></table></div>
+    <div class="category"><div class="category-title">Katakana Words</div><table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+        <tr><td>アパート</td><td>apaato</td><td>apartment</td></tr>
+        <tr><td>バター</td><td>bataa</td><td>butter</td></tr>
+        <tr><td>ボールペン</td><td>boorupen</td><td>ball-point pen</td></tr>
+        <tr><td>ボタン</td><td>botan</td><td>button</td></tr>
+        <tr><td>デパート</td><td>depaato</td><td>department store</td></tr>
+        <tr><td>エレベーター</td><td>erebeetaa</td><td>elevator</td></tr>
+        <tr><td>フィルム</td><td>firumu</td><td>film (for camera)</td></tr>
+        <tr><td>フォーク</td><td>fooku</td><td>fork</td></tr>
+        <tr><td>グラム</td><td>guramu</td><td>gram</td></tr>
+        <tr><td>ハンカチ</td><td>hankachi</td><td>handkerchief</td></tr>
+        <tr><td>カップ</td><td>kappu</td><td>cup</td></tr>
+        <tr><td>カレー</td><td>karee</td><td>curry</td></tr>
+        <tr><td>カレンダー</td><td>karendaa</td><td>calendar</td></tr>
+        <tr><td>コート</td><td>kooto</td><td>coat</td></tr>
+        <tr><td>コピー</td><td>kopii</td><td>copy; photocopy</td></tr>
+        <tr><td>コップ</td><td>koppu</td><td>glass (drinking)</td></tr>
+        <tr><td>マッチ</td><td>macchi</td><td>match</td></tr>
+        <tr><td>メートル</td><td>meetoru</td><td>metre</td></tr>
+        <tr><td>ナイフ</td><td>naifu</td><td>knife</td></tr>
+        <tr><td>ネクタイ</td><td>nekutai</td><td>necktie</td></tr>
+        <tr><td>ニュース</td><td>nyuusu</td><td>news</td></tr>
+        <tr><td>ポケット</td><td>poketto</td><td>pocket</td></tr>
+        <tr><td>ポスト</td><td>posuto</td><td>post; mailbox</td></tr>
+        <tr><td>プール</td><td>puuru</td><td>swimming pool</td></tr>
+        <tr><td>ラジオ</td><td>rajiio</td><td>radio</td></tr>
+        <tr><td>レコード</td><td>rekoodo</td><td>record</td></tr>
+        <tr><td>セーター</td><td>seetaa</td><td>sweater</td></tr>
+        <tr><td>シャツ</td><td>shatsu</td><td>shirt</td></tr>
+        <tr><td>シャワー</td><td>shawaa</td><td>shower</td></tr>
+        <tr><td>スカート</td><td>sukaato</td><td>skirt</td></tr>
+        <tr><td>スプーン</td><td>supuun</td><td>spoon</td></tr>
+        <tr><td>スリッパ</td><td>surippa</td><td>slippers</td></tr>
+        <tr><td>ストーブ</td><td>sutoobu</td><td>heater; stove</td></tr>
+        <tr><td>テープ</td><td>teepu</td><td>tape</td></tr>
+        <tr><td>ワイシャツ</td><td>waishatsu</td><td>dress shirt</td></tr>
+        <tr><td>ズボン</td><td>zubon</td><td>pants</td></tr>
+    </tbody></table></div>
+        </div></div>
+
+        <!-- EXTRA VOCABULARY -->
+        <div class="week-section" id="extra-vocab-section"><div class="week-header collapsed" onclick="toggleWeek(this)"><div class="toggle-icon">▶</div><div class="week-info"><div class="week-title">Extra Vocabulary</div><div class="week-meta"><span class="word-count"><span id="extra-word-count"></span> words — Learned from quizzes</span></div></div></div>
+        <div class="week-content collapsed">
+            <table><thead><tr><th>Japanese</th><th>Reading</th><th>English</th></tr></thead><tbody>
+                <tr><td>か</td><td>ka</td><td>mosquito</td></tr>
+                <tr><td>け</td><td>ke</td><td>hair</td></tr>
+                <tr><td>がく</td><td>gaku</td><td>learning / frame</td></tr>
+                <tr><td>がけ</td><td>gake</td><td>cliff</td></tr>
+                <tr><td>いか</td><td>ika</td><td>squid</td></tr>
+                <tr><td>いご</td><td>igo</td><td>the board game Go</td></tr>
+                <tr><td>かげ</td><td>kage</td><td>shadow</td></tr>
+                <tr><td>かき</td><td>kaki</td><td>persimmon</td></tr>
+                <tr><td>こい</td><td>koi</td><td>love / carp</td></tr>
+                <tr><td>こぎ</td><td>kogi</td><td>rowing</td></tr>
+                <tr><td>こく</td><td>koku</td><td>unit of measure</td></tr>
+                <tr><td>おけ</td><td>oke</td><td>bucket</td></tr>
+                <tr><td>おき</td><td>oki</td><td>open sea</td></tr>
+                <tr><td>ごかい</td><td>gokai</td><td>misunderstanding</td></tr>
+                <tr><td>かいこ</td><td>kaiko</td><td>silkworm</td></tr>
+                <tr><td>きかい</td><td>kikai</td><td>machine</td></tr>
+                <tr><td>きおく</td><td>kioku</td><td>memory</td></tr>
+                <tr><td>くうき</td><td>kuuki</td><td>air</td></tr>
+                <tr><td>おいけ</td><td>oike</td><td>pond (polite)</td></tr>
+                <tr><td>ちか</td><td>chika</td><td>underground</td></tr>
+                <tr><td>つき</td><td>tsuki</td><td>moon</td></tr>
+                <tr><td>つち</td><td>tsuchi</td><td>soil / earth</td></tr>
+                <tr><td>なす</td><td>nasu</td><td>eggplant</td></tr>
+                <tr><td>ぬの</td><td>nuno</td><td>fabric / cloth</td></tr>
+                <tr><td>のう</td><td>nou</td><td>brain</td></tr>
+                <tr><td>へそ</td><td>heso</td><td>belly button</td></tr>
+                <tr><td>むし</td><td>mushi</td><td>bug / insect</td></tr>
+                <tr><td>もえ</td><td>moe</td><td>budding / sprouting</td></tr>
+                <tr><td>もも</td><td>momo</td><td>peach</td></tr>
+                <tr><td>ほのお</td><td>honoo</td><td>fire / flame</td></tr>
+                <tr><td>すな</td><td>suna</td><td>sand</td></tr>
+                <tr><td>ほし</td><td>hoshi</td><td>star</td></tr>
+                <tr><td>ほね</td><td>hone</td><td>bone</td></tr>
+                <tr><td>きば</td><td>kiba</td><td>fang</td></tr>
+                <tr><td>かべ</td><td>kabe</td><td>wall</td></tr>
+                <tr><td>しま</td><td>shima</td><td>island</td></tr>
+                <tr><td>ぶた</td><td>buta</td><td>pig</td></tr>
+                <tr><td>むぎ</td><td>mugi</td><td>wheat / barley</td></tr>
+                <tr><td>なべ</td><td>nabe</td><td>pot</td></tr>
+                <tr><td>おばけ</td><td>obake</td><td>ghost</td></tr>
+                <tr><td>あかちゃん</td><td>akachan</td><td>baby</td></tr>
+                <tr><td>おじゃまします</td><td>ojama shimasu</td><td>excuse me for intruding</td></tr>
+                <tr><td>おみやげ</td><td>omiyage</td><td>souvenir</td></tr>
+                <tr><td>おめでとうございます</td><td>omedetou gozaimasu</td><td>congratulations</td></tr>
+                <tr><td>かわる</td><td>kawaru</td><td>to change</td></tr>
+                <tr><td>かんがえる</td><td>kangaeru</td><td>to think</td></tr>
+                <tr><td>きもち</td><td>kimochi</td><td>feeling</td></tr>
+                <tr><td>けいたいでんわ</td><td>keitai denwa</td><td>cell phone</td></tr>
+                <tr><td>こう</td><td>kou</td><td>this way</td></tr>
+                <tr><td>こと</td><td>koto</td><td>thing/matter</td></tr>
+                <tr><td>しかし</td><td>shikashi</td><td>but/however</td></tr>
+                <tr><td>しんごう</td><td>shingou</td><td>traffic light</td></tr>
+                <tr><td>じゅうしょ</td><td>juusho</td><td>address</td></tr>
+                <tr><td>そう</td><td>sou</td><td>that way</td></tr>
+                <tr><td>そうですか</td><td>sou desu ka</td><td>is that so</td></tr>
+                <tr><td>そうですね</td><td>sou desu ne</td><td>that's right</td></tr>
+                <tr><td>そして</td><td>soshite</td><td>and then</td></tr>
+                <tr><td>だいじょうぶです</td><td>daijoubu desu</td><td>I'm fine</td></tr>
+                <tr><td>ちゅうもん</td><td>chuumon</td><td>order</td></tr>
+                <tr><td>ちょっとまってください</td><td>chotto matte kudasai</td><td>please wait a moment</td></tr>
+                <tr><td>でんわばんごう</td><td>denwa banngou</td><td>phone number</td></tr>
+                <tr><td>また</td><td>mata</td><td>again/also</td></tr>
+                <tr><td>もういちどおねがいします</td><td>mou ichido onegai shimasu</td><td>please say it again</td></tr>
+                <tr><td>もらう</td><td>morau</td><td>to receive</td></tr>
+                <tr><td>メール</td><td>meeru</td><td>email</td></tr>
+                <tr><td>く（九）</td><td>ku</td><td>nine</td></tr>
+                <tr><td>に（二）</td><td>ni</td><td>two</td></tr>
+                <tr><td>ああ</td><td>aa</td><td>Ah!, Oh!</td></tr>
+                <tr><td>キロ</td><td>kiro</td><td>kilo (kilogram)</td></tr>
+                <tr><td>さあ</td><td>saa</td><td>come now, well</td></tr>
+                <tr><td>せい（背）</td><td>sei</td><td>height, stature</td></tr>
+                <tr><td>ゼロ</td><td>zero</td><td>zero</td></tr>
+                <tr><td>では</td><td>deha</td><td>then, well, so</td></tr>
+                <tr><td>とお（十）</td><td>tou</td><td>ten</td></tr>
+                <tr><td>ない</td><td>nai</td><td>there isn't, doesn't have</td></tr>
+                <tr><td>れい（零）</td><td>rei</td><td>zero, nought</td></tr>
+                <tr><td>あっち</td><td>atchi</td><td>over there</td></tr>
+                <tr><td>カップ</td><td>kappu</td><td>cup</td></tr>
+                <tr><td>きいろ（黄色）</td><td>kiiro</td><td>yellow</td></tr>
+                <tr><td>どっち</td><td>docchi</td><td>which one, which way</td></tr>
+                <tr><td>ナイフ</td><td>naifu</td><td>knife</td></tr>
+                <tr><td>はじめ（初め）</td><td>hajime</td><td>beginning, start</td></tr>
+                <tr><td>マッチ</td><td>matchi</td><td>match</td></tr>
+                <tr><td>ラジオ</td><td>rajio</td><td>radio</td></tr>
+                <tr><td>かたかな（片仮名）</td><td>katakana</td><td>katakana</td></tr>
+                <tr><td>そうして</td><td>soushite</td><td>and, like that</td></tr>
+                <tr><td>それでは</td><td>soredeha</td><td>in that situation, well then</td></tr>
+                <tr><td>ひとつき（一月）</td><td>hitotsuki</td><td>one month</td></tr>
+                <tr><td>ひらがな（平仮名）</td><td>hiragana</td><td>hiragana</td></tr>
+                <tr><td>まいげつ（毎月）</td><td>maigetsu</td><td>every month</td></tr>
+                <tr><td>まいねん（毎年）</td><td>mainen</td><td>every year</td></tr>
+                <tr><td>メートル</td><td>meetoru</td><td>meter</td></tr>
+                <tr><td>もしもし</td><td>moshimoshi</td><td>Hello (on phone)</td></tr>
+                <tr><td>わたくし（私）</td><td>watakushi</td><td>I (formal), myself</td></tr>
+                <tr><td>ラジオカセ</td><td>rajio kase</td><td>radio cassette player</td></tr>
+                <tr><td>おまわりさん</td><td>omawari-san</td><td>policeman</td></tr>
+                <tr><td>キロメートル</td><td>kiromeetoru</td><td>kilometer</td></tr>
+                <tr><td>テープレコーダー</td><td>teepurekoodaa</td><td>tape recorder</td></tr>
+</tbody></table>
+        </div></div>
+    </div>
+
+    <script>
+        function toggleWeek(header) {
+            header.classList.toggle('collapsed');
+            const content = header.nextElementSibling;
+            content.classList.toggle('collapsed');
+            const arrow = header.querySelector('.toggle-icon');
+            arrow.textContent = header.classList.contains('collapsed') ? '▶' : '▼';
+        }
+
+        // Baseline state for Week 1 (Genki Ch.1) — source of truth as of 2026-04-21.
+        // 66 green + 4 amber. Merged into vocab_scores on first load (non-destructive: existing keys are preserved).
+        const VOCAB_BASELINE = {
+            // Nouns (33 green + 1 amber)
+            'だいがく|college/university':'g','こうこう|high school':'g','がくせい|student':'g',
+            'だいがくせい|college student':'g','だいがくいんせい|graduate student':'g','りゅうがくせい|international student':'g',
+            'せんせい|teacher/professor':'g','せんこう|major':'g','ともだち|friend':'g',
+            'にほんご|Japanese language':'g','えいご|English':'a','にほん|Japan':'g',
+            'アメリカ|America':'g','でんわ|telephone':'g','かがく|science':'g',
+            'けいざい|economics':'g','こくさいかんけい|international relations':'g','せいじ|politics':'g',
+            'ビジネス|business':'g','ぶんがく|literature':'g','れきし|history':'g',
+            'コンピューター|computer':'g','アジアけんきゅう|Asian studies':'g','アート|art':'g',
+            'いしゃ|doctor':'g','かいしゃいん|office worker':'g','かんごし|nurse':'g',
+            'こうこうせい|high school student':'g','しゅふ|housewife':'g','エンジニア|engineer':'g',
+            'べんごし|lawyer':'g','むしょく|unemployed':'g','おかあさん|mother':'g','おとうさん|father':'g',
+            // Pronouns & Demonstratives (2 green)
+            'わたし|I':'g','～さん|Mr./Ms.':'g',
+            // Time & Numbers (5 green)
+            'いま|now':'g','～じ|o\u0027clock':'g','はん|half':'g','ごぜん|a.m.':'g','ごご|p.m.':'g',
+            // Question Words & Expressions (26 green + 3 amber)
+            'なん・なに|what':'g','～ばん|number':'g','～じん|person (nationality)':'g','～ご|language':'g',
+            'はい|yes':'g','ええ|yes (informal)':'g','いいえ|no':'g',
+            'はじめまして|nice to meet you':'g','どうぞよろしく|pleased to meet you':'g',
+            'おはようございます|good morning':'g','こんにちは|good afternoon':'g','こんばんは|good evening':'g',
+            'おやすみなさい|good night':'g','さようなら|goodbye':'g','ありがとうございます|thank you':'g',
+            'すみません|excuse me':'g','いってきます|I\u0027ll go and come back':'a',
+            'いってらっしゃい|please go and come back':'g','ただいま|I\u0027m home':'g',
+            'おかえりなさい|welcome home':'g','おねがいします|please':'a',
+            'わたしたち|we':'g','かれ|boyfriend/he':'g','かのじょ|girlfriend/she':'g',
+            'おとこ|man':'a','おんな|woman':'g','よろしくおねがいします|nice to meet you':'g',
+            'いただきます|phrase before eating':'g','ごちそうさまでした|thanks for the meal':'g'
+        };
+
+        function seedBaselineIfNeeded() {
+            // Non-destructive merge: any key already in localStorage is left alone.
+            // Re-seeds after new deploys if keys are still missing.
+            try {
+                const cur = JSON.parse(localStorage.getItem('vocab_scores') || '{}');
+                let added = 0;
+                for (const k in VOCAB_BASELINE) {
+                    if (!cur[k]) { cur[k] = { state: VOCAB_BASELINE[k], total: 1 }; added++; }
+                }
+                if (added > 0) localStorage.setItem('vocab_scores', JSON.stringify(cur));
+            } catch(e) {}
+        }
+
+        function getScores() {
+            try { return JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) { return {}; }
+        }
+
+        function applyScores() {
+            const scores = getScores();
+            let totalWords = 0, masteredWords = 0;
+
+            document.querySelectorAll('.week-section').forEach(section => {
+                // Skip Extra Vocabulary from mastery tally
+                const title = section.querySelector('.week-title');
+                const isExtra = title && (title.textContent.trim() === 'Extra Vocabulary' || title.textContent.trim().startsWith('Extra'));
+
+                let sTotal = 0, sMastered = 0;
+                section.querySelectorAll('tbody tr').forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 3) {
+                        // Strip kanji parenthetical to match flashcard keys
+                        // e.g. "だいがく（大学）" → "だいがく"
+                        const jp = cells[0].textContent.trim().replace(/[（(][^）)]*[）)]/g, '').trim();
+                        const en = cells[2].textContent.trim();
+                        const key = jp + '|' + en;
+                        if (!isExtra) { totalWords++; sTotal++; }
+                        if (scores[key]) {
+                            const e = scores[key];
+                            // Support both new {state} and old {streak} format
+                            let st = e.state || null;
+                            if (!st && typeof e.streak === 'number') {
+                                if (e.streak >= 1) st = 'g';
+                                else if (e.streak === -1) st = 'a';
+                                else if (e.streak <= -2) st = 'r';
+                                else if (e.total > 0) st = 'r';
+                            }
+                            let color = null;
+                            if (st === 'g') { color = 'green'; if (!isExtra) { masteredWords++; sMastered++; } }
+                            else if (st === 'a') color = 'amber';
+                            else if (st === 'r') color = 'red';
+                            let ind = '';
+                            if (color) ind += '<span class="vocab-score-dot ' + color + '"></span>';
+                            const total = e.total || 0;
+                            if (total >= 10) ind += ' 🔥 <span class="vocab-fire-badge">' + (Math.floor(total/10)*10) + '+</span>';
+                            if (ind) cells[0].innerHTML = ind + cells[0].innerHTML;
+                        }
+                    }
+                });
+                const pctEl = section.querySelector('.mastery-percent');
+                if (pctEl && sTotal > 0) pctEl.textContent = Math.round((sMastered / sTotal) * 100) + '%';
+            });
+
+            const mp = totalWords > 0 ? Math.round((masteredWords / totalWords) * 100) : 0;
+            const op = document.getElementById('overall-progress');
+            const opct = document.getElementById('overall-percent');
+            if (op) op.style.width = mp + '%';
+            if (opct) opct.textContent = mp + '%';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            seedBaselineIfNeeded();
+            applyScores();
+            // Count and display extra vocab words
+            const extraSection = document.getElementById('extra-vocab-section');
+            if (extraSection) {
+                const count = extraSection.querySelectorAll('tbody tr').length;
+                const el = document.getElementById('extra-word-count');
+                if (el) el.textContent = count;
+            }
+        });
+
+        function expandAll() {
+            document.querySelectorAll('.week-header').forEach(h => h.classList.remove('collapsed'));
+            document.querySelectorAll('.week-content').forEach(c => c.classList.remove('collapsed'));
+            document.querySelectorAll('.toggle-icon').forEach(a => a.textContent = '▼');
+        }
+        function collapseAll() {
+            document.querySelectorAll('.week-header').forEach(h => h.classList.add('collapsed'));
+            document.querySelectorAll('.week-content').forEach(c => c.classList.add('collapsed'));
+            document.querySelectorAll('.toggle-icon').forEach(a => a.textContent = '▶');
+        }
+    </script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

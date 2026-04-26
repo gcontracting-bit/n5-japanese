@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JLPT N5 Mock Exam</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+        nav { margin-bottom: 30px; }
+        nav a { color: #2b6cb0; text-decoration: none; font-size: 1.1em; }
+        nav a:hover { text-decoration: underline; }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 2.2em; color: #2b6cb0; margin-bottom: 8px; }
+        .header p { font-size: 1.1em; color: #666; }
+        .header .exam-info {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            color: white; padding: 10px 24px; border-radius: 30px;
+            margin-top: 15px; font-weight: 600; font-size: 0.95em;
+        }
+
+        .exam-instructions {
+            background: #fffff0; border: 1px solid #ecc94b; border-radius: 12px;
+            padding: 16px 24px; margin-bottom: 30px; font-size: 0.95em; color: #744210;
+        }
+        .exam-instructions strong { color: #975a16; }
+
+        /* Chapter Section */
+        .chapter-section {
+            background: white; border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 30px; overflow: hidden;
+        }
+        .chapter-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 28px;
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            color: white; cursor: pointer; user-select: none;
+        }
+        .chapter-header:hover { opacity: 0.95; }
+        .chapter-title { font-size: 1.3em; font-weight: 700; }
+        .chapter-meta { font-size: 0.9em; opacity: 0.9; }
+        .chapter-toggle { font-size: 1.4em; transition: transform 0.3s; }
+        .chapter-header.open .chapter-toggle { transform: rotate(90deg); }
+        .chapter-body { display: none; }
+        .chapter-body.open { display: block; }
+
+        /* Exam A/B sub-sections */
+        .exam-sub {
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .exam-sub:last-child { border-bottom: none; }
+        .exam-sub-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 28px;
+            background: #edf2f7;
+            cursor: pointer; user-select: none;
+        }
+        .exam-sub-header:hover { background: #e2e8f0; }
+        .exam-sub-title { font-size: 1.1em; font-weight: 700; color: #2d3748; }
+        .exam-sub-right { display: flex; align-items: center; gap: 14px; }
+        .exam-sub-toggle { font-size: 1.2em; transition: transform 0.3s; color: #718096; }
+        .exam-sub-header.open .exam-sub-toggle { transform: rotate(90deg); }
+        .exam-sub-body { display: none; }
+        .exam-sub-body.open { display: block; }
+
+        /* Answer toggle in sub-header */
+        .answer-toggle {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .answer-toggle label {
+            font-size: 0.85em; font-weight: 600; color: #4a5568; cursor: pointer;
+        }
+        .toggle-switch {
+            position: relative; width: 48px; height: 26px; cursor: pointer; display: inline-block;
+        }
+        .toggle-switch input {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer; z-index: 2; margin: 0;
+        }
+        .toggle-slider {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: #cbd5e0; border-radius: 26px; transition: background 0.3s;
+            pointer-events: none;
+        }
+        .toggle-slider::before {
+            content: ''; position: absolute; width: 20px; height: 20px;
+            left: 3px; bottom: 3px; background: white; border-radius: 50%;
+            transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #38a169; }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+        /* Section dividers */
+        .section-divider {
+            background: #f7fafc; padding: 14px 28px; font-weight: 700; font-size: 1.05em;
+            color: #2b6cb0; border-bottom: 2px solid #e2e8f0;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-divider .section-jp { font-size: 0.85em; color: #718096; font-weight: 500; }
+        .part-label {
+            background: #fff; font-size: 0.92em; color: #4a5568; padding: 10px 28px;
+            border-bottom: 1px solid #edf2f7; font-weight: 600;
+        }
+
+        /* Question styling */
+        .question-block { padding: 20px 28px; border-bottom: 1px solid #edf2f7; }
+        .question-block:last-child { border-bottom: none; }
+        .q-number {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; background: #2b6cb0; color: white;
+            border-radius: 50%; font-size: 0.85em; font-weight: 700;
+            margin-right: 10px; flex-shrink: 0;
+        }
+        .q-stem { font-size: 1.15em; margin-bottom: 14px; line-height: 1.7; }
+        .q-stem .underline {
+            text-decoration: underline; text-decoration-color: #e53e3e;
+            text-underline-offset: 4px; font-weight: 600;
+        }
+        .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-left: 38px; }
+        @media (max-width: 600px) { .q-options { grid-template-columns: 1fr; } }
+        .q-option {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+            border-radius: 8px; font-size: 1.05em; transition: background 0.2s;
+            border: 2px solid transparent;
+        }
+        .q-option .opt-num { font-weight: 700; color: #718096; min-width: 20px; }
+        .q-option.correct { background: #c6f6d5; border-color: #38a169; font-weight: 600; }
+
+        /* Reading passage */
+        .reading-passage {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 20px 24px; margin: 0 28px 16px; font-size: 1.1em; line-height: 2;
+        }
+        .reading-passage .passage-label {
+            font-size: 0.8em; color: #718096; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+        }
+
+        /* Locked chapters */
+        .chapter-locked .chapter-header {
+            background: linear-gradient(135deg, #a0aec0 0%, #cbd5e0 100%);
+        }
+        .lock-msg { padding: 30px; text-align: center; color: #a0aec0; font-size: 1.1em; }
+
+        .star { color: #e53e3e; font-weight: 700; }
+
+        /* Listening section */
+        .listen-block {
+            padding: 20px 28px; border-bottom: 1px solid #edf2f7;
+        }
+        .listen-context {
+            font-size: 0.95em; color: #4a5568; margin-bottom: 12px;
+            font-style: italic; margin-left: 38px;
+        }
+        .play-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            color: white; border: none; padding: 10px 22px; border-radius: 10px;
+            font-size: 1em; font-weight: 600; cursor: pointer;
+            margin-left: 38px; margin-bottom: 14px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .play-btn:hover { opacity: 0.9; }
+        .play-btn:active { transform: scale(0.97); }
+        .play-btn.playing {
+            background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+        }
+        .play-btn .play-icon { font-size: 1.2em; }
+        .speed-controls {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-left: 12px;
+        }
+        .speed-btn {
+            background: #edf2f7; border: 1px solid #cbd5e0; padding: 6px 12px;
+            border-radius: 6px; font-size: 0.85em; cursor: pointer; font-weight: 600;
+            color: #4a5568; transition: background 0.2s;
+        }
+        .speed-btn:hover { background: #e2e8f0; }
+        .speed-btn.active { background: #2b6cb0; color: white; border-color: #2b6cb0; }
+        .listen-note {
+            font-size: 0.82em; color: #a0aec0; margin-left: 38px; margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav><a href="index.html">← Home</a></nav>
+
+        <div class="header">
+            <h1>Mock Exam 模擬試験</h1>
+            <p>JLPT N5 format — answer on paper, then reveal answers</p>
+            <div class="exam-info">
+                <span>📝 Paper-based</span>
+                <span style="opacity:0.5">|</span>
+                <span>Cumulative by chapter</span>
+            </div>
+        </div>
+
+        <div class="exam-instructions">
+            <strong>How to use:</strong> Answer each question on paper or in your head. When you're done, use the <strong>Show Answers</strong> slider next to each exam title to reveal the correct answers in green. Each chapter level includes questions from all previous chapters.
+        </div>
+
+        <!-- ============================================ -->
+        <!-- CHAPTER 1–2                                  -->
+        <!-- ============================================ -->
+        <div class="chapter-section" id="ch1-2">
+            <div class="chapter-header open" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapters 1–2: New Friends & Shopping</div>
+                    <div class="chapter-meta">2 exams · 30 questions each (incl. listening)</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body open">
+
+                <!-- ========== EXAM A ========== -->
+                <div class="exam-sub" id="ch12-examA">
+                    <div class="exam-sub-header" onclick="toggleExamSub(event, this)">
+                        <div class="exam-sub-title">Exam A</div>
+                        <div class="exam-sub-right">
+                            <div class="answer-toggle" onclick="event.stopPropagation()">
+                                <label>Answers</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" onchange="toggleAnswers('ch12-examA', this.checked)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            <div class="exam-sub-toggle">▶</div>
+                        </div>
+                    </div>
+                    <div class="exam-sub-body">
+
+                        <div class="section-divider">Section 1: Vocabulary <span class="section-jp">もじ・ごい</span></div>
+                        <div class="part-label">Part A: Kanji Reading — Choose the correct reading for the underlined word</div>
+
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">1</span>わたしの<span class="underline">友達</span>はアメリカじんです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ゆうたち</div>
+                                <div class="q-option"><span class="opt-num">2</span> ともたち</div>
+                                <div class="q-option"><span class="opt-num">3</span> ともだち</div>
+                                <div class="q-option"><span class="opt-num">4</span> ゆうだち</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">2</span>いま<span class="underline">午後</span>三じです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ごまえ</div>
+                                <div class="q-option"><span class="opt-num">2</span> ごご</div>
+                                <div class="q-option"><span class="opt-num">3</span> ごぜん</div>
+                                <div class="q-option"><span class="opt-num">4</span> こご</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">3</span><span class="underline">大学</span>で　けいざいを　べんきょうします。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> たいがく</div>
+                                <div class="q-option"><span class="opt-num">2</span> だいかく</div>
+                                <div class="q-option"><span class="opt-num">3</span> たいかく</div>
+                                <div class="q-option"><span class="opt-num">4</span> だいがく</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">4</span>この<span class="underline">時計</span>は　たかいです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> とけい</div>
+                                <div class="q-option"><span class="opt-num">2</span> じけい</div>
+                                <div class="q-option"><span class="opt-num">3</span> どけい</div>
+                                <div class="q-option"><span class="opt-num">4</span> ときえ</div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part B: Orthography — Choose the correct written form for the underlined word</div>
+
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">5</span>あの<span class="underline">せんせい</span>は　にほんじんです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> 先主</div>
+                                <div class="q-option"><span class="opt-num">2</span> 先生</div>
+                                <div class="q-option"><span class="opt-num">3</span> 千生</div>
+                                <div class="q-option"><span class="opt-num">4</span> 先牛</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">6</span><span class="underline">としょかん</span>で　ほんを　よみます。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> 図所館</div>
+                                <div class="q-option"><span class="opt-num">2</span> 図書間</div>
+                                <div class="q-option"><span class="opt-num">3</span> 図書館</div>
+                                <div class="q-option"><span class="opt-num">4</span> 園書館</div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part C: Contextual Vocabulary — Choose the best word for the blank</div>
+
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">7</span>すみません、この かばんは（　　　）ですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> だれ</div>
+                                <div class="q-option"><span class="opt-num">2</span> なに</div>
+                                <div class="q-option"><span class="opt-num">3</span> どこ</div>
+                                <div class="q-option"><span class="opt-num">4</span> いくら</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">8</span>あの（　　　）は　やまださんの　おかあさんです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> これ</div>
+                                <div class="q-option"><span class="opt-num">2</span> ひと</div>
+                                <div class="q-option"><span class="opt-num">3</span> ここ</div>
+                                <div class="q-option"><span class="opt-num">4</span> もの</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">9</span>わかりません。もういちど（　　　）ください。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> みて</div>
+                                <div class="q-option"><span class="opt-num">2</span> かいて</div>
+                                <div class="q-option"><span class="opt-num">3</span> いって</div>
+                                <div class="q-option"><span class="opt-num">4</span> きいて</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">10</span>「おかあさんの　しごとは　なんですか。」「（　　　）です。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> かんごし</div>
+                                <div class="q-option"><span class="opt-num">2</span> れきし</div>
+                                <div class="q-option"><span class="opt-num">3</span> だいがく</div>
+                                <div class="q-option"><span class="opt-num">4</span> にほんご</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">11</span>「この　くつは　やすいですか。」「いいえ、とても（　　　）です。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> おいしい</div>
+                                <div class="q-option"><span class="opt-num">2</span> たかい</div>
+                                <div class="q-option"><span class="opt-num">3</span> いくら</div>
+                                <div class="q-option"><span class="opt-num">4</span> やすい</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">Section 2: Grammar <span class="section-jp">ぶんぽう</span></div>
+                        <div class="part-label">Part A: Grammar — Choose the best option for the blank</div>
+
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">12</span>たなかさん（　　　）にほんじんです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> を</div>
+                                <div class="q-option"><span class="opt-num">2</span> に</div>
+                                <div class="q-option"><span class="opt-num">3</span> は</div>
+                                <div class="q-option"><span class="opt-num">4</span> で</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">13</span>これは　わたし（　　　）かさです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> の</div>
+                                <div class="q-option"><span class="opt-num">2</span> は</div>
+                                <div class="q-option"><span class="opt-num">3</span> が</div>
+                                <div class="q-option"><span class="opt-num">4</span> を</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">14</span>やまださんは　がくせいです。スミスさん（　　　）がくせいです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> は</div>
+                                <div class="q-option"><span class="opt-num">2</span> の</div>
+                                <div class="q-option"><span class="opt-num">3</span> と</div>
+                                <div class="q-option"><span class="opt-num">4</span> も</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">15</span>あれは（　　　）じしょですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> だれ</div>
+                                <div class="q-option"><span class="opt-num">2</span> だれの</div>
+                                <div class="q-option"><span class="opt-num">3</span> なに</div>
+                                <div class="q-option"><span class="opt-num">4</span> なにの</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">16</span>「これは　にほんの　しんぶんですか。」「いいえ、（　　　）。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> そうです</div>
+                                <div class="q-option"><span class="opt-num">2</span> にほんのです</div>
+                                <div class="q-option"><span class="opt-num">3</span> ちがいます</div>
+                                <div class="q-option"><span class="opt-num">4</span> しんぶんです</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">17</span>わたしは　だいがくせいです。せんこうは　けいざい（　　　）。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> です</div>
+                                <div class="q-option"><span class="opt-num">2</span> ます</div>
+                                <div class="q-option"><span class="opt-num">3</span> でした</div>
+                                <div class="q-option"><span class="opt-num">4</span> だ</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">18</span>すみません、ゆうびんきょくは（　　　）ですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> だれ</div>
+                                <div class="q-option"><span class="opt-num">2</span> なに</div>
+                                <div class="q-option"><span class="opt-num">3</span> いくら</div>
+                                <div class="q-option"><span class="opt-num">4</span> どこ</div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part B: Sentence Composition — Which word goes in the <span class="star">★</span> position?</div>
+
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">19</span>あの ＿＿ ＿＿ <span class="star">★</span> ＿＿ です。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> せんせい</div>
+                                <div class="q-option"><span class="opt-num">2</span> にほんご</div>
+                                <div class="q-option"><span class="opt-num">3</span> の</div>
+                                <div class="q-option"><span class="opt-num">4</span> ひとは</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">20</span>すみません、＿＿ <span class="star">★</span> ＿＿ ＿＿ か。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> は</div>
+                                <div class="q-option"><span class="opt-num">2</span> いくら</div>
+                                <div class="q-option"><span class="opt-num">3</span> です</div>
+                                <div class="q-option"><span class="opt-num">4</span> このノート</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">Section 3: Reading <span class="section-jp">どっかい</span></div>
+
+                        <div class="reading-passage">
+                            <div class="passage-label">Passage A — Self-introduction</div>
+                            はじめまして。わたしは　キムです。かんこくじんです。いま、にほんの　だいがくの　がくせいです。せんこうは　コンピューターです。にほんごの　クラスは　まいにち　ごぜん　九じから　十じはんまでです。にほんごの　せんせいは　やまだせんせいです。どうぞ　よろしく。
+                        </div>
+
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">21</span>キムさんは　どこの　ひとですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> にほんじん</div>
+                                <div class="q-option"><span class="opt-num">2</span> ちゅうごくじん</div>
+                                <div class="q-option"><span class="opt-num">3</span> かんこくじん</div>
+                                <div class="q-option"><span class="opt-num">4</span> アメリカじん</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">22</span>キムさんの　せんこうは　なんですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> コンピューター</div>
+                                <div class="q-option"><span class="opt-num">2</span> にほんご</div>
+                                <div class="q-option"><span class="opt-num">3</span> けいざい</div>
+                                <div class="q-option"><span class="opt-num">4</span> れきし</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">23</span>にほんごの　クラスは　なんじからですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ごご　九じ</div>
+                                <div class="q-option"><span class="opt-num">2</span> ごぜん　十じ</div>
+                                <div class="q-option"><span class="opt-num">3</span> ごご　十じはん</div>
+                                <div class="q-option"><span class="opt-num">4</span> ごぜん　九じ</div>
+                            </div>
+                        </div>
+
+                        <div class="reading-passage">
+                            <div class="passage-label">Passage B — At a shop</div>
+                            スミス：すみません、この　とけいは　いくらですか。<br>
+                            みせの　ひと：それは　五せん　えんです。<br>
+                            スミス：じゃあ、あの　とけいは？<br>
+                            みせの　ひと：あれは　いちまん　えんです。<br>
+                            スミス：たかいですね。じゃあ、この　とけいを　ください。<br>
+                            みせの　ひと：はい、五せん　えんです。ありがとうございます。
+                        </div>
+
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">24</span>たかい　とけいは　いくらですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> 五せん えん</div>
+                                <div class="q-option"><span class="opt-num">2</span> いちまん えん</div>
+                                <div class="q-option"><span class="opt-num">3</span> さんぜん えん</div>
+                                <div class="q-option"><span class="opt-num">4</span> にせん えん</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">25</span>スミスさんは　どの　とけいを　かいましたか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> 五せん えんの　とけい</div>
+                                <div class="q-option"><span class="opt-num">2</span> いちまん えんの　とけい</div>
+                                <div class="q-option"><span class="opt-num">3</span> やすい　とけいと　たかい　とけい</div>
+                                <div class="q-option"><span class="opt-num">4</span> かいませんでした</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">Section 4: Listening <span class="section-jp">ちょうかい</span></div>
+                        <div class="part-label">Part A: Task-based — Listen to the conversation, then answer the question</div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="2" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">26</span>おんなの　ひとは　なにを　かいますか。</div>
+                                <div class="listen-context">A woman is at a store. Listen to the conversation.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examA_q26')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> ぼうし</div>
+                                    <div class="q-option"><span class="opt-num">2</span> かさ</div>
+                                    <div class="q-option"><span class="opt-num">3</span> くつ</div>
+                                    <div class="q-option"><span class="opt-num">4</span> かばん</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="3" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">27</span>おとこの　ひとの　せんこうは　なんですか。</div>
+                                <div class="listen-context">Two students are introducing themselves.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examA_q27')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> にほんご</div>
+                                    <div class="q-option"><span class="opt-num">2</span> ビジネス</div>
+                                    <div class="q-option"><span class="opt-num">3</span> けいざい</div>
+                                    <div class="q-option"><span class="opt-num">4</span> れきし</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part B: Key-point — Listen and choose the best answer to the question</div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="4" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">28</span>としょかんは　どこですか。</div>
+                                <div class="listen-context">A student is asking for directions on campus.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examA_q28')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> ここ</div>
+                                    <div class="q-option"><span class="opt-num">2</span> そこ</div>
+                                    <div class="q-option"><span class="opt-num">3</span> どこ</div>
+                                    <div class="q-option"><span class="opt-num">4</span> あそこ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="1" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">29</span>とけいは　いくらですか。</div>
+                                <div class="listen-context">A customer is asking about prices.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examA_q29')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> さんぜん えん</div>
+                                    <div class="q-option"><span class="opt-num">2</span> よんせん えん</div>
+                                    <div class="q-option"><span class="opt-num">3</span> ごせん えん</div>
+                                    <div class="q-option"><span class="opt-num">4</span> ろくせん えん</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="2" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">30</span>おんなの　ひとは　なにじんですか。</div>
+                                <div class="listen-context">Two people are meeting for the first time.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examA_q30')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> にほんじん</div>
+                                    <div class="q-option"><span class="opt-num">2</span> かんこくじん</div>
+                                    <div class="q-option"><span class="opt-num">3</span> ちゅうごくじん</div>
+                                    <div class="q-option"><span class="opt-num">4</span> アメリカじん</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-note">Audio uses your browser's Japanese text-to-speech. If no sound plays, check your device volume or try Chrome/Edge for best Japanese voice support.</div>
+
+                    </div>
+                </div>
+
+                <!-- ========== EXAM B ========== -->
+                <div class="exam-sub" id="ch12-examB">
+                    <div class="exam-sub-header" onclick="toggleExamSub(event, this)">
+                        <div class="exam-sub-title">Exam B</div>
+                        <div class="exam-sub-right">
+                            <div class="answer-toggle" onclick="event.stopPropagation()">
+                                <label>Answers</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" onchange="toggleAnswers('ch12-examB', this.checked)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            <div class="exam-sub-toggle">▶</div>
+                        </div>
+                    </div>
+                    <div class="exam-sub-body">
+
+                        <div class="section-divider">Section 1: Vocabulary <span class="section-jp">もじ・ごい</span></div>
+                        <div class="part-label">Part A: Kanji Reading — Choose the correct reading for the underlined word</div>
+
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">1</span>おとうさんは<span class="underline">会社員</span>です。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> かいしゃん</div>
+                                <div class="q-option"><span class="opt-num">2</span> かいしゃいん</div>
+                                <div class="q-option"><span class="opt-num">3</span> かいしいん</div>
+                                <div class="q-option"><span class="opt-num">4</span> がいしゃいん</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">2</span>いま<span class="underline">午前</span>十じです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ごご</div>
+                                <div class="q-option"><span class="opt-num">2</span> こぜん</div>
+                                <div class="q-option"><span class="opt-num">3</span> ごまえ</div>
+                                <div class="q-option"><span class="opt-num">4</span> ごぜん</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">3</span>わたしの<span class="underline">電話</span>ばんごうは　090です。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> でんわ</div>
+                                <div class="q-option"><span class="opt-num">2</span> てんわ</div>
+                                <div class="q-option"><span class="opt-num">3</span> でんは</div>
+                                <div class="q-option"><span class="opt-num">4</span> てんは</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">4</span>あの<span class="underline">留学生</span>は　イギリスじんです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> りゅがくせい</div>
+                                <div class="q-option"><span class="opt-num">2</span> るがくせい</div>
+                                <div class="q-option"><span class="opt-num">3</span> りゅうがくせい</div>
+                                <div class="q-option"><span class="opt-num">4</span> りゅうかくせい</div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part B: Orthography — Choose the correct written form for the underlined word</div>
+
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">5</span>わたしの<span class="underline">だいがく</span>は　とうきょうに　あります。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> 大字</div>
+                                <div class="q-option"><span class="opt-num">2</span> 犬学</div>
+                                <div class="q-option"><span class="opt-num">3</span> 太学</div>
+                                <div class="q-option"><span class="opt-num">4</span> 大学</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">6</span>おかあさんは<span class="underline">いしゃ</span>です。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> 医者</div>
+                                <div class="q-option"><span class="opt-num">2</span> 医着</div>
+                                <div class="q-option"><span class="opt-num">3</span> 医考</div>
+                                <div class="q-option"><span class="opt-num">4</span> 医老</div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part C: Contextual Vocabulary — Choose the best word for the blank</div>
+
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">7</span>「あの　ひとは（　　　）ですか。」「やまださんです。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> なん</div>
+                                <div class="q-option"><span class="opt-num">2</span> どこ</div>
+                                <div class="q-option"><span class="opt-num">3</span> だれ</div>
+                                <div class="q-option"><span class="opt-num">4</span> いくら</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">8</span>きょうしつに（　　　）と　えんぴつが　あります。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> けしゴム</div>
+                                <div class="q-option"><span class="opt-num">2</span> カーテン</div>
+                                <div class="q-option"><span class="opt-num">3</span> こくばん</div>
+                                <div class="q-option"><span class="opt-num">4</span> まど</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">9</span>ひるごはんに　サラダと（　　　）を　たべます。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ペン</div>
+                                <div class="q-option"><span class="opt-num">2</span> かさ</div>
+                                <div class="q-option"><span class="opt-num">3</span> じしょ</div>
+                                <div class="q-option"><span class="opt-num">4</span> サンドイッチ</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">10</span>あさ、「（　　　）」と　いいます。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> こんばんは</div>
+                                <div class="q-option"><span class="opt-num">2</span> おはようございます</div>
+                                <div class="q-option"><span class="opt-num">3</span> おやすみなさい</div>
+                                <div class="q-option"><span class="opt-num">4</span> さようなら</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">11</span>みせで「いらっしゃいませ」。おきゃくさんは「この　ラーメンを（　　　）」。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> おいしいです</div>
+                                <div class="q-option"><span class="opt-num">2</span> いくらです</div>
+                                <div class="q-option"><span class="opt-num">3</span> ください</div>
+                                <div class="q-option"><span class="opt-num">4</span> たかいです</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">Section 2: Grammar <span class="section-jp">ぶんぽう</span></div>
+                        <div class="part-label">Part A: Grammar — Choose the best option for the blank</div>
+
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">12</span>「せんこうは　なんですか。」「れきし（　　　）。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ます</div>
+                                <div class="q-option"><span class="opt-num">2</span> です</div>
+                                <div class="q-option"><span class="opt-num">3</span> の</div>
+                                <div class="q-option"><span class="opt-num">4</span> は</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">13</span>「この　ペンは　スミスさんのですか。」「いいえ、スミスさん（　　　）じゃないです。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> の</div>
+                                <div class="q-option"><span class="opt-num">2</span> は</div>
+                                <div class="q-option"><span class="opt-num">3</span> も</div>
+                                <div class="q-option"><span class="opt-num">4</span> が</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">14</span>「トイレは　どこですか。」「（　　　）です。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> これ</div>
+                                <div class="q-option"><span class="opt-num">2</span> それ</div>
+                                <div class="q-option"><span class="opt-num">3</span> あそこ</div>
+                                <div class="q-option"><span class="opt-num">4</span> あの</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">15</span>わたしは　にほんじん（　　　）ありません。ちゅうごくじんです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> が</div>
+                                <div class="q-option"><span class="opt-num">2</span> は</div>
+                                <div class="q-option"><span class="opt-num">3</span> も</div>
+                                <div class="q-option"><span class="opt-num">4</span> では</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">16</span>この　じしょは　やまださん（　　　）です。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> は</div>
+                                <div class="q-option"><span class="opt-num">2</span> の</div>
+                                <div class="q-option"><span class="opt-num">3</span> を</div>
+                                <div class="q-option"><span class="opt-num">4</span> に</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">17</span>やまださんは　せんせいです。たなかさん（　　　）せんせいです。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> の</div>
+                                <div class="q-option"><span class="opt-num">2</span> は</div>
+                                <div class="q-option"><span class="opt-num">3</span> も</div>
+                                <div class="q-option"><span class="opt-num">4</span> を</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">18</span>「（　　　）の　かばんですか。」「わたしのです。」</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> だれ</div>
+                                <div class="q-option"><span class="opt-num">2</span> なに</div>
+                                <div class="q-option"><span class="opt-num">3</span> どこ</div>
+                                <div class="q-option"><span class="opt-num">4</span> いくら</div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part B: Sentence Composition — Which word goes in the <span class="star">★</span> position?</div>
+
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">19</span>この ＿＿ <span class="star">★</span> ＿＿ ＿＿ か。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> です</div>
+                                <div class="q-option"><span class="opt-num">2</span> は</div>
+                                <div class="q-option"><span class="opt-num">3</span> なん</div>
+                                <div class="q-option"><span class="opt-num">4</span> ほん</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">20</span>わたしは ＿＿ ＿＿ <span class="star">★</span> ＿＿ です。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> の</div>
+                                <div class="q-option"><span class="opt-num">2</span> だいがく</div>
+                                <div class="q-option"><span class="opt-num">3</span> がくせい</div>
+                                <div class="q-option"><span class="opt-num">4</span> にほん</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">Section 3: Reading <span class="section-jp">どっかい</span></div>
+
+                        <div class="reading-passage">
+                            <div class="passage-label">Passage A — New classmate</div>
+                            わたしは　リンです。ちゅうごくじんです。にほんの　だいがくで　ビジネスを　べんきょうします。わたしの　ともだちは　パクさんです。パクさんは　かんこくじんです。パクさんの　せんこうは　こくさいかんけいです。パクさんも　にほんごの　クラスに　います。
+                        </div>
+
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">21</span>リンさんの　せんこうは　なんですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> こくさいかんけい</div>
+                                <div class="q-option"><span class="opt-num">2</span> ビジネス</div>
+                                <div class="q-option"><span class="opt-num">3</span> にほんご</div>
+                                <div class="q-option"><span class="opt-num">4</span> けいざい</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="4">
+                            <div class="q-stem"><span class="q-number">22</span>パクさんは　なにじんですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ちゅうごくじん</div>
+                                <div class="q-option"><span class="opt-num">2</span> にほんじん</div>
+                                <div class="q-option"><span class="opt-num">3</span> アメリカじん</div>
+                                <div class="q-option"><span class="opt-num">4</span> かんこくじん</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="1">
+                            <div class="q-stem"><span class="q-number">23</span>ただしいのは　どれですか。（Which is correct?）</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> リンさんと　パクさんは　にほんごの　クラスに　います</div>
+                                <div class="q-option"><span class="opt-num">2</span> リンさんは　かんこくじんです</div>
+                                <div class="q-option"><span class="opt-num">3</span> パクさんの　せんこうは　ビジネスです</div>
+                                <div class="q-option"><span class="opt-num">4</span> リンさんと　パクさんは　ちゅうごくじんです</div>
+                            </div>
+                        </div>
+
+                        <div class="reading-passage">
+                            <div class="passage-label">Passage B — Buying a gift</div>
+                            メアリー：すみません、あの　かさは　いくらですか。<br>
+                            みせの ひと：あれは　にせん えんです。<br>
+                            メアリー：じゃあ、その　ぼうしは？<br>
+                            みせの ひと：これは　さんぜん えんです。<br>
+                            メアリー：ぼうしは　ちょっと　たかいですね。かさを　ください。<br>
+                            みせの ひと：はい、にせん えんです。
+                        </div>
+
+                        <div class="question-block" data-answer="3">
+                            <div class="q-stem"><span class="q-number">24</span>メアリーさんは　なにを　かいましたか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> ぼうし</div>
+                                <div class="q-option"><span class="opt-num">2</span> ぼうしと　かさ</div>
+                                <div class="q-option"><span class="opt-num">3</span> かさ</div>
+                                <div class="q-option"><span class="opt-num">4</span> かいませんでした</div>
+                            </div>
+                        </div>
+                        <div class="question-block" data-answer="2">
+                            <div class="q-stem"><span class="q-number">25</span>ぼうしは　いくらですか。</div>
+                            <div class="q-options">
+                                <div class="q-option"><span class="opt-num">1</span> にせん えん</div>
+                                <div class="q-option"><span class="opt-num">2</span> さんぜん えん</div>
+                                <div class="q-option"><span class="opt-num">3</span> ごせん えん</div>
+                                <div class="q-option"><span class="opt-num">4</span> いちまん えん</div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">Section 4: Listening <span class="section-jp">ちょうかい</span></div>
+                        <div class="part-label">Part A: Task-based — Listen to the conversation, then answer the question</div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="3" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">26</span>おとこの　ひとは　なにを　のみますか。</div>
+                                <div class="listen-context">A man and woman are ordering at a cafe.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examB_q26')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> ミルク</div>
+                                    <div class="q-option"><span class="opt-num">2</span> ジュース</div>
+                                    <div class="q-option"><span class="opt-num">3</span> コーヒー</div>
+                                    <div class="q-option"><span class="opt-num">4</span> コーラ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="1" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">27</span>おんなの　ひとの　おとうさんの　しごとは　なんですか。</div>
+                                <div class="listen-context">Two classmates are talking about their families.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examB_q27')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> エンジニア</div>
+                                    <div class="q-option"><span class="opt-num">2</span> いしゃ</div>
+                                    <div class="q-option"><span class="opt-num">3</span> せんせい</div>
+                                    <div class="q-option"><span class="opt-num">4</span> べんごし</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="part-label">Part B: Key-point — Listen and choose the best answer to the question</div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="4" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">28</span>おんなの　ひとの　でんわばんごうは　なんですか。</div>
+                                <div class="listen-context">A student is giving her phone number.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examB_q28')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> ０９０ の　さん いち よん ろく</div>
+                                    <div class="q-option"><span class="opt-num">2</span> ０９０ の　さん よん いち ろく</div>
+                                    <div class="q-option"><span class="opt-num">3</span> ０９０ の　よん さん ろく いち</div>
+                                    <div class="q-option"><span class="opt-num">4</span> ０９０ の　さん いち ろく よん</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="2" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">29</span>ノートは　いくらですか。</div>
+                                <div class="listen-context">A student is buying school supplies.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examB_q29')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> ひゃく えん</div>
+                                    <div class="q-option"><span class="opt-num">2</span> にひゃく えん</div>
+                                    <div class="q-option"><span class="opt-num">3</span> さんびゃく えん</div>
+                                    <div class="q-option"><span class="opt-num">4</span> ごひゃく えん</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-block">
+                            <div class="question-block" data-answer="3" style="padding:0;border:none;">
+                                <div class="q-stem"><span class="q-number">30</span>いま　なんじですか。</div>
+                                <div class="listen-context">Two people are checking the time.</div>
+                                <button class="play-btn" onclick="playAudio(this, 'examB_q30')">
+                                    <span class="play-icon">▶</span> Play Audio
+                                </button>
+                                <div class="speed-controls">
+                                    <button class="speed-btn" onclick="setSpeed(this, 0.6)">Slow</button>
+                                    <button class="speed-btn active" onclick="setSpeed(this, 0.85)">Normal</button>
+                                </div>
+                                <div class="q-options" style="margin-top:14px;">
+                                    <div class="q-option"><span class="opt-num">1</span> ごぜん　くじ</div>
+                                    <div class="q-option"><span class="opt-num">2</span> ごご　くじ</div>
+                                    <div class="q-option"><span class="opt-num">3</span> ごぜん　くじはん</div>
+                                    <div class="q-option"><span class="opt-num">4</span> ごご　くじはん</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="listen-note">Audio uses your browser's Japanese text-to-speech. If no sound plays, check your device volume or try Chrome/Edge for best Japanese voice support.</div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- LOCKED CHAPTERS                              -->
+        <!-- ============================================ -->
+        <div class="chapter-section chapter-locked" id="ch3">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 3: Making a Date</div>
+                    <div class="chapter-meta">Includes Chapters 1–3 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 3</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch4">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 4: The First Date</div>
+                    <div class="chapter-meta">Includes Chapters 1–4 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 4</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch5">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 5: A Trip to Okinawa</div>
+                    <div class="chapter-meta">Includes Chapters 1–5 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 5</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch6">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 6: A Day in Robert's Life</div>
+                    <div class="chapter-meta">Includes Chapters 1–6 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 6</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch7">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 7: Family Picture</div>
+                    <div class="chapter-meta">Includes Chapters 1–7 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 7</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch8">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 8: Barbecue</div>
+                    <div class="chapter-meta">Includes Chapters 1–8 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 8</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch9">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 9: Kabuki</div>
+                    <div class="chapter-meta">Includes Chapters 1–9 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 9</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch10">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 10: Winter Vacation Plans</div>
+                    <div class="chapter-meta">Includes Chapters 1–10 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 10</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch11">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 11: After the Holiday</div>
+                    <div class="chapter-meta">Includes Chapters 1–11 · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Questions will be added when you reach Chapter 11</div>
+            </div>
+        </div>
+
+        <div class="chapter-section chapter-locked" id="ch12">
+            <div class="chapter-header" onclick="toggleChapter(this)">
+                <div>
+                    <div class="chapter-title">Chapter 12: Feeling Ill</div>
+                    <div class="chapter-meta">Includes Chapters 1–12 · Full N5 Mock Exam · Coming soon</div>
+                </div>
+                <div class="chapter-toggle">▶</div>
+            </div>
+            <div class="chapter-body">
+                <div class="lock-msg">🔒 Complete mock JLPT N5 exam — all chapters</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleChapter(header) {
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
+        }
+
+        function toggleExamSub(event, header) {
+            // Don't toggle if clicking the answer switch
+            if (event.target.closest('.answer-toggle')) return;
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
+        }
+
+        function toggleAnswers(sectionId, show) {
+            var section = document.getElementById(sectionId);
+            var blocks = section.querySelectorAll('.question-block');
+            blocks.forEach(function(block) {
+                var answer = parseInt(block.getAttribute('data-answer'));
+                var options = block.querySelectorAll('.q-option');
+                options.forEach(function(opt, idx) {
+                    if (show && (idx + 1) === answer) {
+                        opt.classList.add('correct');
+                    } else {
+                        opt.classList.remove('correct');
+                    }
+                });
+            });
+        }
+
+        /* ===== Listening: Web Speech API ===== */
+        var currentSpeed = 0.85;
+        var currentUtterance = null;
+
+        var dialogues = {
+            // EXAM A
+            examA_q26: [
+                {speaker:'女', text:'すみません、この かさは いくらですか。'},
+                {speaker:'店', text:'それは にせん えんです。'},
+                {speaker:'女', text:'じゃあ、この かさを ください。'},
+                {speaker:'店', text:'はい、にせん えんです。ありがとうございます。'}
+            ],
+            examA_q27: [
+                {speaker:'女', text:'はじめまして。わたしは リンです。せんこうは ビジネスです。'},
+                {speaker:'男', text:'はじめまして。ぼくは たなかです。せんこうは けいざいです。どうぞ よろしく。'},
+                {speaker:'女', text:'よろしく おねがいします。'}
+            ],
+            examA_q28: [
+                {speaker:'男', text:'すみません、としょかんは どこですか。'},
+                {speaker:'女', text:'としょかんですか。あそこです。'},
+                {speaker:'男', text:'あそこですか。ありがとうございます。'},
+                {speaker:'女', text:'いいえ。'}
+            ],
+            examA_q29: [
+                {speaker:'男', text:'すみません、この とけいは いくらですか。'},
+                {speaker:'店', text:'それは さんぜん えんです。'},
+                {speaker:'男', text:'さんぜん えんですか。じゃあ、これを ください。'}
+            ],
+            examA_q30: [
+                {speaker:'男', text:'はじめまして。わたしは スミスです。アメリカじんです。'},
+                {speaker:'女', text:'はじめまして。わたしは キムです。かんこくじんです。にほんの だいがくの がくせいです。'},
+                {speaker:'男', text:'そうですか。わたしも がくせいです。どうぞ よろしく。'}
+            ],
+            // EXAM B
+            examB_q26: [
+                {speaker:'女', text:'なにを のみますか。'},
+                {speaker:'男', text:'そうですね。コーヒーを おねがいします。'},
+                {speaker:'女', text:'わたしは ジュースに します。'}
+            ],
+            examB_q27: [
+                {speaker:'男', text:'おとうさんの しごとは なんですか。'},
+                {speaker:'女', text:'ちちは エンジニアです。'},
+                {speaker:'男', text:'そうですか。わたしの ちちは いしゃです。'}
+            ],
+            examB_q28: [
+                {speaker:'男', text:'でんわばんごうを おねがいします。'},
+                {speaker:'女', text:'はい、ぜろ きゅう ぜろ の さん いち ろく よん です。'},
+                {speaker:'男', text:'ぜろ きゅう ぜろ の さん いち ろく よん ですね。ありがとうございます。'}
+            ],
+            examB_q29: [
+                {speaker:'男', text:'すみません、この ノートは いくらですか。'},
+                {speaker:'店', text:'にひゃく えんです。'},
+                {speaker:'男', text:'じゃあ、これを ください。'}
+            ],
+            examB_q30: [
+                {speaker:'男', text:'いま なんじですか。'},
+                {speaker:'女', text:'ごぜん くじはんです。'},
+                {speaker:'男', text:'くじはんですか。ありがとうございます。'}
+            ]
+        };
+
+        function getJapaneseVoice() {
+            var voices = speechSynthesis.getVoices();
+            // Prefer specific Japanese voices
+            var preferred = ['Google 日本語', 'Kyoko', 'O-Ren', 'Otoya', 'Microsoft Nanami', 'ja-JP'];
+            for (var p = 0; p < preferred.length; p++) {
+                for (var v = 0; v < voices.length; v++) {
+                    if (voices[v].name.indexOf(preferred[p]) !== -1 || voices[v].lang.indexOf('ja') !== -1) {
+                        return voices[v];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function playAudio(btn, dialogueKey) {
+            // Stop any currently playing audio
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                // Reset all play buttons
+                document.querySelectorAll('.play-btn').forEach(function(b) {
+                    b.classList.remove('playing');
+                    b.querySelector('.play-icon').textContent = '▶';
+                });
+            }
+
+            var lines = dialogues[dialogueKey];
+            if (!lines) return;
+
+            btn.classList.add('playing');
+            btn.querySelector('.play-icon').textContent = '⏹';
+
+            var voice = getJapaneseVoice();
+            var lineIndex = 0;
+
+            function speakNext() {
+                if (lineIndex >= lines.length) {
+                    btn.classList.remove('playing');
+                    btn.querySelector('.play-icon').textContent = '▶';
+                    return;
+                }
+
+                var utt = new SpeechSynthesisUtterance(lines[lineIndex].text);
+                utt.lang = 'ja-JP';
+                utt.rate = currentSpeed;
+                utt.pitch = lines[lineIndex].speaker === '女' ? 1.3 : 0.9;
+                if (voice) utt.voice = voice;
+
+                utt.onend = function() {
+                    lineIndex++;
+                    // Small pause between lines
+                    setTimeout(speakNext, 500);
+                };
+                utt.onerror = function() {
+                    btn.classList.remove('playing');
+                    btn.querySelector('.play-icon').textContent = '▶';
+                };
+
+                currentUtterance = utt;
+                speechSynthesis.speak(utt);
+            }
+
+            speakNext();
+        }
+
+        function setSpeed(btn, speed) {
+            currentSpeed = speed;
+            var controls = btn.parentElement;
+            controls.querySelectorAll('.speed-btn').forEach(function(b) {
+                b.classList.remove('active');
+            });
+            btn.classList.add('active');
+        }
+
+        // Preload voices (Chrome loads them asynchronously)
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = function() {};
+        }
+        speechSynthesis.getVoices();
+    </script>
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12-Week Study Plan - Japanese Study Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        /* Navigation */
+        nav { margin-bottom: 30px; }
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #2b6cb0;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover { background-color: #4299e1; }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .page-header-left h1 {
+            color: #2b6cb0;
+            font-size: 2.5em;
+            margin-bottom: 4px;
+        }
+        .page-header-left p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1em;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            align-self: center;
+            text-transform: uppercase;
+        }
+        .status-badge.on-track { background: #c6f6d5; color: #22543d; }
+        .status-badge.catch-up { background: #fefcbf; color: #744210; }
+        .status-badge.behind   { background: #fed7d7; color: #9b2c2c; }
+
+        /* Daily routine box */
+        .routine-header-box {
+            background: white;
+            padding: 24px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        .routine-header-box h3 {
+            color: #2b6cb0;
+            font-size: 1.2em;
+            margin-bottom: 16px;
+        }
+        .routine-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .routine-box {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #4299e1;
+        }
+        .routine-box strong { color: #2b6cb0; }
+        .routine-box ul { margin-left: 20px; margin-top: 8px; }
+        .routine-box li { margin-bottom: 5px; }
+
+        /* Toggle all */
+        .toggle-all-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .toggle-all-buttons button {
+            padding: 6px 16px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #4a5568;
+            transition: background 0.2s ease;
+        }
+        .toggle-all-buttons button:hover { background: #edf2f7; }
+
+        /* Week cards */
+        .study-plan-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .study-plan-card h2 {
+            color: white;
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+            padding: 12px 16px;
+            margin: -24px -24px 0 -24px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.3em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+            transition: background 0.35s ease;
+        }
+
+        .study-plan-card h2 .week-title-text { flex: 1; }
+
+        /* Completed header */
+        .study-plan-card.completed h2 {
+            background: linear-gradient(135deg, #718096 0%, #a0aec0 100%);
+        }
+
+        /* Checkbox */
+        .week-checkbox {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            appearance: none;
+            -webkit-appearance: none;
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .week-checkbox:checked {
+            background: rgba(255,255,255,0.9);
+            border-color: rgba(255,255,255,0.9);
+        }
+        .week-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 800;
+            color: #718096;
+        }
+        .study-plan-card.completed .week-checkbox:checked::after {
+            color: #718096;
+        }
+
+        .toggle-arrow {
+            display: inline-block;
+            font-size: 1.1em;
+            min-width: 18px;
+        }
+
+        .section-content {
+            padding: 20px 24px 24px 24px;
+        }
+        .section-content.collapsed { display: none; }
+        .section-content p { margin-bottom: 10px; }
+        .section-content strong { color: #2b6cb0; }
+        .section-content ul { margin: 8px 0 12px 30px; }
+        .section-content li { margin-bottom: 6px; }
+
+        /* Week date range label */
+        .week-dates {
+            font-size: 0.78em;
+            opacity: 0.85;
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        /* Milestone box */
+        .milestone {
+            background: #ebf8ff;
+            border-left: 3px solid #2b6cb0;
+            padding: 10px 14px;
+            border-radius: 0 5px 5px 0;
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+        .milestone strong { color: #2b6cb0; }
+
+        /* Progress bar */
+        .progress-bar-container {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .page-header { flex-direction: column; }
+            .page-header-left h1 { font-size: 2em; }
+            .routine-grid { grid-template-columns: 1fr; }
+            .study-plan-card { padding: 16px; }
+            .study-plan-card h2 { margin: -16px -16px 0 -16px; font-size: 1.1em; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud_sync.js"></script>
+</head>
+<body>
+<div class="container">
+    <nav><a href="index.html">← Home</a></nav>
+
+    <!-- Page Header with status badge -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <h1>12-Week Study Plan</h1>
+            <p>JLPT N5 — Target: Sunday 5 July 2026</p>
+        </div>
+        <span class="status-badge" id="status-badge">on-track</span>
+    </div>
+
+    <!-- Overall progress bar -->
+    <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
+    <!-- Daily Routine Templates -->
+    <div class="routine-header-box">
+        <h3>Daily Routine Templates</h3>
+        <div class="routine-grid">
+            <div class="routine-box">
+                <strong>Weekday (45-60 min)</strong>
+                <ul>
+                    <li>5-10 min: Anki / flashcard review</li>
+                    <li>20-30 min: Genki chapter work (or kanji from week 3+)</li>
+                    <li>15 min: Listening practice (from week 6+)</li>
+                </ul>
+            </div>
+            <div class="routine-box">
+                <strong>Weekend (1.5-2 hours)</strong>
+                <ul>
+                    <li>10-15 min: Anki review</li>
+                    <li>30-40 min: Genki + full exercises</li>
+                    <li>15-20 min: Reading (NHK Easy / simple passages)</li>
+                    <li>15-20 min: Listening practice</li>
+                    <li>30 min: Practice tests (from week 9+)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle buttons -->
+    <div class="toggle-all-buttons">
+        <button onclick="expandAll()">Expand All</button>
+        <button onclick="collapseAll()">Collapse All</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- WEEK 1 — Apr 13 – Apr 19 -->
+    <!-- ============================================================ -->
+    <div class="study-plan-card" data-week="1">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 1: Hiragana Lockdown + Genki Ch 1 <span class="week-dates">(Apr 13 – Apr 19)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="1" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Master all remaining hiragana (combos, handakuten) and complete Genki I Chapter 1.</p>
+            <ul>
+                <li>Drill the 49 hiragana still in "studying" — ya/ra/wa rows, ん, handakuten (pa row), all combo sounds (きゃ, しゃ, ちゃ, etc.)</li>
+                <li>Clear up the 5 amber characters: ぬ, ほ, ぜ, ぢ, づ</li>
+                <li>Complete Genki I Ch 1: greetings, self-introductions, は particle, です/じゃないです</li>
+                <li>Start Anki deck — add 8-10 new words per day from Genki vocab lists</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> Read any hiragana character on sight. ~60 vocab words. Can introduce yourself in Japanese.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 2 — Apr 20 – Apr 26 -->
+    <div class="study-plan-card" data-week="2">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 2: Katakana Blitz + Genki Ch 2 <span class="week-dates">(Apr 20 – Apr 26)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="2" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Learn all katakana (basic 46 + dakuten + combos). Complete Genki I Chapter 2.</p>
+            <ul>
+                <li>Katakana basic rows (ア–ン) — use same drill method that worked for hiragana</li>
+                <li>Katakana dakuten + handakuten + combos</li>
+                <li>Genki I Ch 2: これ/それ/あれ, の particle, も particle, numbers, prices</li>
+                <li>Practice reading katakana loan words (コーヒー, テレビ, パソコン, etc.)</li>
+                <li>Continue Anki: 8-10 new words/day</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> Read both kana scripts fluently. ~120 vocab words. Can ask/answer basic questions about things and prices.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 3 — Apr 27 – May 3 -->
+    <div class="study-plan-card" data-week="3">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 3: First Kanji + Genki Ch 3 <span class="week-dates">(Apr 27 – May 3)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="3" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Begin kanji study (first ~15 kanji). Complete Genki I Chapter 3.</p>
+            <ul>
+                <li>Start N5 kanji: 一 二 三 四 五 六 七 八 九 十 百 千 万 円 日</li>
+                <li>Genki I Ch 3: verb types (u/ru/irregular), を particle, で particle, に (destination), frequency adverbs</li>
+                <li>Practice writing basic sentences with particles: [place]で[activity]をします</li>
+                <li>Anki: continue 8-10 new words/day + add kanji cards</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~180 vocab. Recognise 15 kanji. Can describe daily activities using verbs and particles.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 4 — May 4 – May 10 -->
+    <div class="study-plan-card" data-week="4">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 4: Verb Conjugation + Genki Ch 4 <span class="week-dates">(May 4 – May 10)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="4" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Verb conjugation (past tense, negatives). Genki I Chapter 4. Kanji batch 2.</p>
+            <ul>
+                <li>Genki I Ch 4: past tense (ました/ませんでした), time expressions, も with verbs</li>
+                <li>Drill verb conjugation patterns — present/past, positive/negative</li>
+                <li>Kanji batch 2 (~15 more): 月 火 水 木 金 土 年 時 間 分 半 今 何 人 本</li>
+                <li>Anki: 10 new words/day — you need to start pushing harder here</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~250 vocab, ~30 kanji. Can talk about past events. Conjugate verbs in 4 forms.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 5 — May 11 – May 17 -->
+    <div class="study-plan-card" data-week="5">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 5: Adjectives + Counters + Genki Ch 5 <span class="week-dates">(May 11 – May 17)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="5" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> い/な adjectives, counters. Genki I Chapter 5. Kanji batch 3.</p>
+            <ul>
+                <li>Genki I Ch 5: い-adjectives and な-adjectives (present and past), すき/きらい, counters (つ, 人, 枚)</li>
+                <li>Drill adjective conjugation: おおきい→おおきくない→おおきかった→おおきくなかった</li>
+                <li>Kanji batch 3 (~15 more): 大 小 中 上 下 山 川 田 学 校 先 生 私 友 母</li>
+                <li>Weekend: review all Genki Ch 1-5 grammar points — catch anything slipping</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~320 vocab, ~45 kanji. Can describe people, places, and preferences using adjectives.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 6 — May 18 – May 24 -->
+    <div class="study-plan-card" data-week="6">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 6: Te-form + Listening Kickoff + Genki Ch 6 <span class="week-dates">(May 18 – May 24)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="6" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Te-form (the big one). Start daily listening practice. Genki I Chapter 6.</p>
+            <ul>
+                <li>Genki I Ch 6: て-form, ている (ongoing actions), requests (てください)</li>
+                <li>Memorise te-form rules — this is critical, drill until automatic</li>
+                <li>Start 15 min daily listening: Genki audio, JapanesePod101 beginner, or Nihongo con Teppei</li>
+                <li>Kanji batch 4 (~13 more): 父 子 女 男 目 口 手 足 車 電 話 食 飲</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~400 vocab, ~58 kanji. Can make requests, describe ongoing actions. Te-form is second nature.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 7 — May 25 – May 31 -->
+    <div class="study-plan-card" data-week="7">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 7: Short Forms + Genki Ch 7-8 <span class="week-dates">(May 25 – May 31)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="7" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Short/plain forms, casual speech. Push through two Genki chapters this week.</p>
+            <ul>
+                <li>Genki I Ch 7: short forms (dictionary, ない, past), と思う, と言う, casual speech</li>
+                <li>Genki I Ch 8: short form + noun clauses, てあげる/もらう/くれる, comparisons</li>
+                <li>This is a heavy week — use weekday sessions for Ch 7, weekend for Ch 8</li>
+                <li>Kanji batch 5 (~15 more): 読 書 見 聞 言 行 来 出 入 休 買 新 古 長 高</li>
+                <li>Continue listening practice (15 min/day)</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~480 vocab, ~73 kanji. Can use casual and polite forms. Understand giving/receiving.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 8 — Jun 1 – Jun 7 -->
+    <div class="study-plan-card" data-week="8">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 8: Want/Desire + Genki Ch 9-10 <span class="week-dates">(Jun 1 – Jun 7)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="8" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Another double-chapter week. たい form, ことがある, と conditional.</p>
+            <ul>
+                <li>Genki I Ch 9: past experience (ことがある), comparison with より, superlatives (一番)</li>
+                <li>Genki I Ch 10: たい (want to), たり…たりする, ～ことができる (ability)</li>
+                <li>Kanji push — finish remaining N5 kanji (~30 more): 安 白 百 千 万 外 国 名 前 後 午 毎 週 道 駅 etc.</li>
+                <li>Weekend: read a short NHK Easy article start to finish</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~570 vocab, ~103 kanji (all N5 kanji!). Can express desires, experiences, abilities.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 9 — Jun 8 – Jun 14 -->
+    <div class="study-plan-card" data-week="9">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 9: Genki Ch 11-12 + First Practice Test <span class="week-dates">(Jun 8 – Jun 14)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="9" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Final Genki chapters for N5 scope. First full practice test.</p>
+            <ul>
+                <li>Genki I Ch 11: ～たいと思っている, ～てほしい, ～ないでください</li>
+                <li>Genki I Ch 12: ～んです, ～すぎる, ～ほうがいい, ～ので/から</li>
+                <li>Vocab blitz: 15 new words/day — you need ~700 by end of this week</li>
+                <li>Weekend: take your FIRST full N5 practice test (timed). Score it honestly.</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~700 vocab, all 103 kanji solid. Practice test taken — identify your weak sections (vocab/grammar/reading/listening).</div>
+        </div>
+    </div>
+
+    <!-- WEEK 10 — Jun 15 – Jun 21 -->
+    <div class="study-plan-card" data-week="10">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 10: Weak-Spot Assault <span class="week-dates">(Jun 15 – Jun 21)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="10" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Attack whatever the practice test exposed. Fill vocab gaps.</p>
+            <ul>
+                <li>Review practice test results — rank your weakest areas and focus sessions there</li>
+                <li>Grammar weak? Re-drill the Genki exercises for those chapters</li>
+                <li>Listening weak? Double listening time to 30 min/day</li>
+                <li>Reading weak? One NHK Easy article per day, look up every word you don't know</li>
+                <li>Vocab push: 12-15 new words/day, heavy Anki reviews</li>
+                <li>Weekend: second practice test — compare score to week 9</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> ~780 vocab. Practice test #2 should show clear improvement over #1. Gap areas narrowing.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 11 — Jun 22 – Jun 28 -->
+    <div class="study-plan-card" data-week="11">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 11: Exam Simulation Mode <span class="week-dates">(Jun 22 – Jun 28)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="11" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Simulate real exam conditions. Build stamina and timing.</p>
+            <ul>
+                <li>Timed section drills — practise each JLPT section under time pressure</li>
+                <li>Vocab/kanji: maintenance only (Anki reviews, no new cards)</li>
+                <li>Grammar review: one quick pass through all Genki grammar points</li>
+                <li>Listen to full-length N5 listening sections back-to-back</li>
+                <li>Weekend: full timed practice exam #3 under strict conditions (no phone, no pausing)</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> 800+ vocab. Scoring 70%+ on practice tests. Comfortable with exam timing.</div>
+        </div>
+    </div>
+
+    <!-- WEEK 12 — Jun 29 – Jul 5 -->
+    <div class="study-plan-card" data-week="12">
+        <h2>
+            <span class="toggle-arrow">▶</span>
+            <span class="week-title-text">Week 12: Final Week — Stay Sharp, Don't Cram <span class="week-dates">(Jun 29 – Jul 5)</span></span>
+            <input type="checkbox" class="week-checkbox" data-week="12" title="Mark complete">
+        </h2>
+        <div class="section-content collapsed">
+            <p><strong>Focus:</strong> Light review. Confidence building. Rest before exam day.</p>
+            <ul>
+                <li>Mon-Wed: light Anki reviews + one listening session per day. No new material.</li>
+                <li>Thu: quick scan of grammar cheat sheet — refresh any tricky points</li>
+                <li>Fri: one final practice test if you want, or just relax</li>
+                <li>Sat (Jul 4): rest. Prepare your exam materials (pencils, eraser, watch, photo ID). Get to bed early.</li>
+                <li>Sun (Jul 5): EXAM DAY. Trust your preparation. You've put in the work.</li>
+            </ul>
+            <div class="milestone"><strong>Checkpoint:</strong> You're ready. 800+ vocab, 103 kanji, all Genki I grammar, dozens of practice hours. Go get it.</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ── Week start dates (Monday of each week) ──
+    const WEEK_STARTS = [
+        new Date('2026-04-13'), // Week 1
+        new Date('2026-04-20'), // Week 2
+        new Date('2026-04-27'), // Week 3
+        new Date('2026-05-04'), // Week 4
+        new Date('2026-05-11'), // Week 5
+        new Date('2026-05-18'), // Week 6
+        new Date('2026-05-25'), // Week 7
+        new Date('2026-06-01'), // Week 8
+        new Date('2026-06-08'), // Week 9
+        new Date('2026-06-15'), // Week 10
+        new Date('2026-06-22'), // Week 11
+        new Date('2026-06-29'), // Week 12
+    ];
+
+    const STORAGE_KEY = 'study_plan_completed';
+
+    // Load saved state
+    function loadCompleted() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        } catch(e) { return {}; }
+    }
+
+    function saveCompleted(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    // Figure out which week we should be on (1-indexed)
+    function getCurrentWeek() {
+        const now = new Date();
+        now.setHours(0,0,0,0);
+        for (let i = WEEK_STARTS.length - 1; i >= 0; i--) {
+            if (now >= WEEK_STARTS[i]) return i + 1;
+        }
+        return 1;
+    }
+
+    // Update the status badge
+    function updateStatus() {
+        const completed = loadCompleted();
+        const currentWeek = getCurrentWeek();
+
+        // Count how many weeks up to (currentWeek - 1) are completed
+        let shouldBeCompleted = currentWeek - 1; // previous weeks should be done
+        let actuallyCompleted = 0;
+        for (let w = 1; w <= shouldBeCompleted; w++) {
+            if (completed[w]) actuallyCompleted++;
+        }
+
+        const behind = shouldBeCompleted - actuallyCompleted;
+        const badge = document.getElementById('status-badge');
+
+        if (behind <= 0) {
+            badge.textContent = 'on-track';
+            badge.className = 'status-badge on-track';
+        } else if (behind === 1) {
+            badge.textContent = 'catch-up';
+            badge.className = 'status-badge catch-up';
+        } else {
+            badge.textContent = 'tf are you doing';
+            badge.className = 'status-badge behind';
+        }
+
+        // Update progress bar
+        let totalCompleted = 0;
+        for (let w = 1; w <= 12; w++) {
+            if (completed[w]) totalCompleted++;
+        }
+        const pct = Math.round((totalCompleted / 12) * 100);
+        document.getElementById('progress-fill').style.width = pct + '%';
+    }
+
+    // Apply completed state to cards
+    function applyCompletedState() {
+        const completed = loadCompleted();
+        document.querySelectorAll('.week-checkbox').forEach(function(cb) {
+            const week = cb.getAttribute('data-week');
+            if (completed[week]) {
+                cb.checked = true;
+                cb.closest('.study-plan-card').classList.add('completed');
+            }
+        });
+        updateStatus();
+    }
+
+    // Checkbox change handler
+    document.querySelectorAll('.week-checkbox').forEach(function(cb) {
+        cb.addEventListener('click', function(e) {
+            e.stopPropagation(); // don't toggle the collapsible
+        });
+        cb.addEventListener('change', function(e) {
+            const week = this.getAttribute('data-week');
+            const card = this.closest('.study-plan-card');
+            const completed = loadCompleted();
+
+            if (this.checked) {
+                completed[week] = true;
+                card.classList.add('completed');
+            } else {
+                delete completed[week];
+                card.classList.remove('completed');
+            }
+
+            saveCompleted(completed);
+            updateStatus();
+        });
+    });
+
+    // Toggle collapsible sections
+    document.querySelectorAll('.study-plan-card h2').forEach(function(header) {
+        header.addEventListener('click', function(e) {
+            // Don't toggle if clicking the checkbox
+            if (e.target.classList.contains('week-checkbox')) return;
+            const content = this.nextElementSibling;
+            const arrow = this.querySelector('.toggle-arrow');
+            content.classList.toggle('collapsed');
+            arrow.textContent = content.classList.contains('collapsed') ? '▶' : '▼';
+        });
+    });
+
+    function expandAll() {
+        document.querySelectorAll('.section-content').forEach(c => c.classList.remove('collapsed'));
+        document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▼');
+    }
+
+    function collapseAll() {
+        document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+        document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▶');
+    }
+
+    // Init
+    applyCompletedState();
+</script>
+</body>
+</html>

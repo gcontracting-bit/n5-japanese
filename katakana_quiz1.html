@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katakana Quiz 1 — April 16, 2026</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 24px; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { color: #e94560; font-size: 1.9em; margin-bottom: 4px; }
+.subtitle { color: #888; margin-bottom: 28px; font-size: 0.95em; }
+.section-title { font-size: 1.3em; font-weight: 700; color: #e94560; margin: 32px 0 8px 0; padding-bottom: 6px; border-bottom: 2px solid #e9456040; }
+.section-desc { color: #999; font-size: 0.85em; margin-bottom: 20px; }
+.quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.quiz-card { background: #16213e; border: 2px solid #0f3460; border-radius: 10px; padding: 14px 8px; text-align: center; cursor: pointer; transition: transform 0.15s; }
+.quiz-card:hover { transform: scale(1.04); border-color: #e94560; }
+.card-num { font-size: 0.72em; color: #666; margin-bottom: 6px; }
+.card-kana { font-size: 3.5rem; font-weight: 600; line-height: 1.1; color: #fff; }
+.answer { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid #0f3460; color: #63b3ed; font-size: 0.95em; line-height: 1.35; font-weight: 600; }
+.quiz-card.revealed .answer { display: block; }
+.quiz-card.revealed .card-kana { color: #ecc94b; }
+.toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+button { background: #e94560; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; }
+button:hover { background: #d63651; }
+button.secondary { background: #0f3460; }
+button.secondary:hover { background: #1a4a80; }
+.score-bar { margin-top: 24px; padding: 16px; background: #16213e; border-radius: 10px; border: 2px solid #0f3460; display: none; }
+.score-bar.visible { display: block; }
+.score-text { font-size: 1.3em; font-weight: 700; color: #ecc94b; }
+.score-detail { color: #888; font-size: 0.85em; margin-top: 4px; }
+.legend { color: #888; font-size: 0.8em; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Katakana Quiz 1</h1>
+<p class="subtitle">30 items · tap a card to reveal the answer · first katakana session!</p>
+
+<div class="toolbar">
+<button onclick="revealAll()">Reveal all</button>
+<button class="secondary" onclick="hideAll()">Hide all</button>
+<button class="secondary" onclick="shuffle()">Shuffle</button>
+</div>
+
+<div class="section-title">Katakana → Romaji (1–30)</div>
+<p class="section-desc">Read each katakana character aloud, then tap to check. Characters: ア行, カ行, サ行, タ行.</p>
+<div class="quiz-grid" id="quiz"></div>
+
+<p class="legend">Katakana Quiz 1 — ア イ ウ エ オ カ キ ク ケ コ サ シ ス セ ソ タ チ ツ テ ト</p>
+</div>
+
+<script>
+const items = [
+  {n:1,  kana:'ア', ans:'a'},
+  {n:2,  kana:'キ', ans:'ki'},
+  {n:3,  kana:'ス', ans:'su'},
+  {n:4,  kana:'テ', ans:'te'},
+  {n:5,  kana:'オ', ans:'o'},
+  {n:6,  kana:'ケ', ans:'ke'},
+  {n:7,  kana:'ソ', ans:'so'},
+  {n:8,  kana:'チ', ans:'chi / ti'},
+  {n:9,  kana:'ウ', ans:'u'},
+  {n:10, kana:'コ', ans:'ko'},
+  {n:11, kana:'サ', ans:'sa'},
+  {n:12, kana:'ツ', ans:'tsu / tu'},
+  {n:13, kana:'エ', ans:'e'},
+  {n:14, kana:'カ', ans:'ka'},
+  {n:15, kana:'シ', ans:'shi / si'},
+  {n:16, kana:'ト', ans:'to'},
+  {n:17, kana:'イ', ans:'i'},
+  {n:18, kana:'ク', ans:'ku'},
+  {n:19, kana:'セ', ans:'se'},
+  {n:20, kana:'タ', ans:'ta'},
+  {n:21, kana:'ソ', ans:'so'},
+  {n:22, kana:'シ', ans:'shi / si'},
+  {n:23, kana:'ツ', ans:'tsu / tu'},
+  {n:24, kana:'ケ', ans:'ke'},
+  {n:25, kana:'ア', ans:'a'},
+  {n:26, kana:'チ', ans:'chi / ti'},
+  {n:27, kana:'ク', ans:'ku'},
+  {n:28, kana:'エ', ans:'e'},
+  {n:29, kana:'カ', ans:'ka'},
+  {n:30, kana:'ト', ans:'to'}
+];
+
+function render(list) {
+  const grid = document.getElementById('quiz');
+  grid.innerHTML = '';
+  list.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.onclick = () => card.classList.toggle('revealed');
+    card.innerHTML = `
+      <div class="card-num">#${item.n}</div>
+      <div class="card-kana">${item.kana}</div>
+      <div class="answer">${item.ans}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function revealAll() {
+  document.querySelectorAll('.quiz-card').forEach(c => c.classList.add('revealed'));
+}
+function hideAll() {
+  document.querySelectorAll('.quiz-card').forEach(c => c.classList.remove('revealed'));
+}
+function shuffle() {
+  const shuffled = [...items].sort(() => Math.random() - 0.5);
+  shuffled.forEach((item, i) => item.n = i + 1);
+  render(shuffled);
+}
+
+render(items);
+</script>
+</body>
+</html>

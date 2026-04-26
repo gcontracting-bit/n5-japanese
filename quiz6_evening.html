@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evening Quiz 6 — April 13, 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 24px;
+        }
+        .container { max-width: 860px; margin: 0 auto; }
+        h1 { color: #e94560; font-size: 1.8em; margin-bottom: 4px; }
+        .subtitle { color: #888; margin-bottom: 32px; font-size: 0.95em; }
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #e94560;
+            margin: 32px 0 8px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e9456040;
+        }
+        .section-desc {
+            color: #999;
+            font-size: 0.85em;
+            margin-bottom: 20px;
+        }
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .quiz-card {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 10px;
+            padding: 14px 8px;
+            text-align: center;
+            transition: transform 0.15s;
+        }
+        .quiz-card:hover { transform: scale(1.04); border-color: #e94560; }
+        .quiz-card.amber { border-color: #ecc94b; background: #1a1a0e; }
+        .card-num {
+            font-size: 0.7em;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .card-kana {
+            font-size: 2.8rem;
+            font-weight: 600;
+            line-height: 1.1;
+            color: #fff;
+        }
+        .amber-tag {
+            display: inline-block;
+            background: #ecc94b30;
+            color: #ecc94b;
+            font-size: 0.6em;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .instructions {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            border-left: 4px solid #e94560;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        nav { margin-bottom: 24px; }
+        nav a {
+            display: inline-block;
+            padding: 8px 14px;
+            background: #e94560;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        nav a:hover { background: #c73e54; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav><a href="index.html">&larr; Dashboard</a></nav>
+    <h1>Evening Quiz 6</h1>
+    <p class="subtitle">April 13, 2026 &mdash; Kana → Romaji &mdash; 50 Questions</p>
+
+    <div class="instructions">
+        Read each kana and type the romaji. All 56 learned hiragana appear at least once. Amber characters appear twice for extra practice. Gold border = amber status.
+    </div>
+
+    <div class="section-title">Kana → Romaji (1–50)</div>
+
+    <div class="quiz-grid">
+        <!-- Amber chars first pass woven in early -->
+        <div class="quiz-card"><div class="card-num">1</div><div class="card-kana">そ</div></div>
+        <div class="quiz-card amber"><div class="card-num">2</div><div class="card-kana">ぬ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">3</div><div class="card-kana">き</div></div>
+        <div class="quiz-card"><div class="card-num">4</div><div class="card-kana">で</div></div>
+        <div class="quiz-card amber"><div class="card-num">5</div><div class="card-kana">ほ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">6</div><div class="card-kana">が</div></div>
+        <div class="quiz-card"><div class="card-num">7</div><div class="card-kana">う</div></div>
+        <div class="quiz-card amber"><div class="card-num">8</div><div class="card-kana">ぜ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">9</div><div class="card-kana">と</div></div>
+        <div class="quiz-card"><div class="card-num">10</div><div class="card-kana">ば</div></div>
+        <div class="quiz-card amber"><div class="card-num">11</div><div class="card-kana">ぢ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">12</div><div class="card-kana">め</div></div>
+        <div class="quiz-card"><div class="card-num">13</div><div class="card-kana">さ</div></div>
+        <div class="quiz-card amber"><div class="card-num">14</div><div class="card-kana">づ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">15</div><div class="card-kana">け</div></div>
+        <div class="quiz-card"><div class="card-num">16</div><div class="card-kana">ひ</div></div>
+        <div class="quiz-card"><div class="card-num">17</div><div class="card-kana">お</div></div>
+        <div class="quiz-card"><div class="card-num">18</div><div class="card-kana">ぐ</div></div>
+        <div class="quiz-card"><div class="card-num">19</div><div class="card-kana">た</div></div>
+        <div class="quiz-card"><div class="card-num">20</div><div class="card-kana">に</div></div>
+        <div class="quiz-card"><div class="card-num">21</div><div class="card-kana">ぶ</div></div>
+        <div class="quiz-card"><div class="card-num">22</div><div class="card-kana">あ</div></div>
+        <div class="quiz-card"><div class="card-num">23</div><div class="card-kana">し</div></div>
+        <div class="quiz-card"><div class="card-num">24</div><div class="card-kana">ご</div></div>
+        <div class="quiz-card"><div class="card-num">25</div><div class="card-kana">ふ</div></div>
+        <div class="quiz-card"><div class="card-num">26</div><div class="card-kana">ち</div></div>
+        <div class="quiz-card"><div class="card-num">27</div><div class="card-kana">だ</div></div>
+        <div class="quiz-card"><div class="card-num">28</div><div class="card-kana">む</div></div>
+        <div class="quiz-card"><div class="card-num">29</div><div class="card-kana">い</div></div>
+        <div class="quiz-card"><div class="card-num">30</div><div class="card-kana">げ</div></div>
+        <div class="quiz-card"><div class="card-num">31</div><div class="card-kana">ね</div></div>
+        <div class="quiz-card"><div class="card-num">32</div><div class="card-kana">か</div></div>
+        <div class="quiz-card"><div class="card-num">33</div><div class="card-kana">ど</div></div>
+        <div class="quiz-card"><div class="card-num">34</div><div class="card-kana">び</div></div>
+        <div class="quiz-card"><div class="card-num">35</div><div class="card-kana">え</div></div>
+        <div class="quiz-card"><div class="card-num">36</div><div class="card-kana">す</div></div>
+        <div class="quiz-card"><div class="card-num">37</div><div class="card-kana">ま</div></div>
+        <div class="quiz-card"><div class="card-num">38</div><div class="card-kana">つ</div></div>
+        <div class="quiz-card"><div class="card-num">39</div><div class="card-kana">ぎ</div></div>
+        <div class="quiz-card"><div class="card-num">40</div><div class="card-kana">の</div></div>
+        <div class="quiz-card"><div class="card-num">41</div><div class="card-kana">べ</div></div>
+        <div class="quiz-card"><div class="card-num">42</div><div class="card-kana">こ</div></div>
+        <div class="quiz-card"><div class="card-num">43</div><div class="card-kana">ざ</div></div>
+        <div class="quiz-card"><div class="card-num">44</div><div class="card-kana">み</div></div>
+        <div class="quiz-card"><div class="card-num">45</div><div class="card-kana">も</div></div>
+        <!-- Amber chars second pass -->
+        <div class="quiz-card amber"><div class="card-num">46</div><div class="card-kana">ほ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card amber"><div class="card-num">47</div><div class="card-kana">ぬ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card amber"><div class="card-num">48</div><div class="card-kana">づ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card amber"><div class="card-num">49</div><div class="card-kana">ぜ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card amber"><div class="card-num">50</div><div class="card-kana">ぢ</div><div class="amber-tag">amber</div></div>
+    </div>
+
+    <div class="instructions">
+        Reply with your 50 answers and I'll grade them and update your scores!
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kana Score Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            padding: 24px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #2b6cb0; font-size: 2em; margin-bottom: 6px; }
+        .subtitle { color: #666; margin-bottom: 28px; font-size: 1em; }
+        nav { margin-bottom: 24px; }
+        nav a {
+            display: inline-block;
+            padding: 8px 14px;
+            background: #2b6cb0;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        nav a:hover { background: #4299e1; }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+            background: white;
+            padding: 14px 18px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.88em;
+            font-weight: 500;
+        }
+        .dot {
+            width: 13px; height: 13px; border-radius: 50%;
+        }
+        .dot.green  { background: #48bb78; }
+        .dot.amber  { background: #ecc94b; }
+        .dot.red    { background: #fc8181; }
+        .dot.blue   { background: #63b3ed; }
+        .dot.grey   { background: #cbd5e0; }
+
+        /* Summary stats */
+        .stats {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 14px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            text-align: center;
+            min-width: 100px;
+        }
+        .stat-card .num { font-size: 1.8em; font-weight: 700; }
+        .stat-card .lbl { font-size: 0.78em; color: #666; margin-top: 2px; }
+        .stat-card.green .num { color: #48bb78; }
+        .stat-card.amber .num { color: #d69e2e; }
+        .stat-card.red   .num { color: #e53e3e; }
+        .stat-card.blue  .num { color: #3182ce; }
+
+        /* Section header */
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #2b6cb0;
+            margin: 20px 0 12px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #bee3f8;
+        }
+
+        /* Kana grid */
+        .kana-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .kana-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 6px 14px;
+            border-radius: 8px;
+            position: relative;
+            min-height: 70px;
+            cursor: default;
+            transition: transform 0.15s;
+        }
+        .kana-cell:hover { transform: scale(1.06); }
+        .kana-char { font-size: 1.7rem; font-weight: 600; line-height: 1; }
+        .kana-rom  { font-size: 0.62rem; font-weight: 500; margin-top: 3px; color: #555; }
+
+        /* Streak pips */
+        .pips {
+            position: absolute;
+            bottom: 4px;
+            display: flex;
+            gap: 2px;
+        }
+        .pip {
+            width: 4px; height: 4px; border-radius: 50%; background: #cbd5e0;
+        }
+        .pip.filled { background: #4a5568; }
+
+        /* Cell status colours */
+        .kana-cell.green { background: linear-gradient(135deg,#f0fff4,#c6f6d5); border: 2px solid #48bb78; }
+        .kana-cell.amber { background: linear-gradient(135deg,#fffff0,#fefcbf); border: 2px solid #ecc94b; }
+        .kana-cell.red   { background: linear-gradient(135deg,#fff5f5,#fed7d7); border: 2px solid #fc8181; }
+        .kana-cell.blue  { background: linear-gradient(135deg,#ebf8ff,#bee3f8); border: 2px solid #63b3ed; }
+        .kana-cell.grey  { background: #f7fafc; border: 2px solid #e2e8f0; opacity: 0.5; }
+
+        /* Updated timestamp */
+        .updated { font-size: 0.8em; color: #999; margin-top: 30px; text-align: right; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav><a href="index.html">← Dashboard</a></nav>
+    <h1>Kana Score Dashboard</h1>
+    <p class="subtitle">Quiz performance tracker — updated after each daily quiz</p>
+
+    <div class="legend">
+        <div class="legend-item"><span class="dot green"></span> Mastered (green)</div>
+        <div class="legend-item"><span class="dot amber"></span> Learning — 1 wrong (amber)</div>
+        <div class="legend-item"><span class="dot red"></span> Needs work — 2 wrongs (red)</div>
+        <div class="legend-item"><span class="dot blue"></span> Studying, not yet tested (blue)</div>
+        <div class="legend-item"><span class="dot grey"></span> Not learned yet (grey)</div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="section-title">Hiragana</div>
+    <div class="kana-grid" id="hiragana-grid"></div>
+
+    <div class="section-title">Katakana</div>
+    <div class="kana-grid" id="katakana-grid"></div>
+
+    <p class="updated" id="updated-ts"></p>
+</div>
+
+<script>
+// ── SCORE DATA — auto-updated after each quiz ──────────────────────────────
+const hiraganaScores = {
+  'あ':{s:'green',k:0},  'い':{s:'green',k:0},  'う':{s:'green',k:0},
+  'え':{s:'green',k:0},  'お':{s:'green',k:0},
+  'か':{s:'green',k:0},  'き':{s:'amber',k:4},  'く':{s:'green',k:0},  'け':{s:'green',k:0},  'こ':{s:'green',k:0},
+  'が':{s:'green',k:0},  'ぎ':{s:'green',k:0},  'ぐ':{s:'green',k:0},
+  'げ':{s:'green',k:0},  'ご':{s:'green',k:0},
+  'さ':{s:'green',k:0},  'し':{s:'green',k:0},  'す':{s:'amber',k:0},
+  'せ':{s:'amber',k:2},  'そ':{s:'green',k:0},
+  'た':{s:'green',k:0},  'ち':{s:'green',k:0},  'つ':{s:'green',k:0},
+  'て':{s:'green',k:0},  'と':{s:'green',k:0},
+  'な':{s:'green',k:0},  'に':{s:'green',k:0},  'ぬ':{s:'amber',k:0},
+  'ね':{s:'red',k:0},  'の':{s:'green',k:0},
+  'は':{s:'green',k:0},  'ひ':{s:'green',k:0},  'ふ':{s:'green',k:0},
+  'へ':{s:'green',k:0},  'ほ':{s:'green',k:0},
+  'ざ':{s:'green',k:0},  'じ':{s:'green',k:0},  'ず':{s:'green',k:0},
+  'ぜ':{s:'red',k:0},  'ぞ':{s:'green',k:0},
+  'だ':{s:'green',k:0},  'ぢ':{s:'green',k:0},  'づ':{s:'green',k:0},
+  'で':{s:'amber',k:0},  'ど':{s:'green',k:0},
+  'ば':{s:'green',k:0},  'び':{s:'green',k:0},  'ぶ':{s:'green',k:0},
+  'べ':{s:'green',k:2},  'ぼ':{s:'green',k:0},
+  'ぱ':{s:'green',k:0},  'ぴ':{s:'green',k:0},  'ぷ':{s:'green',k:0},
+  'ぺ':{s:'green',k:0},  'ぽ':{s:'green',k:0},
+  'ま':{s:'green',k:0},  'み':{s:'green',k:0},  'む':{s:'green',k:0},
+  'め':{s:'green',k:0},  'も':{s:'green',k:0},
+  'や':{s:'green',k:0},  'ゆ':{s:'green',k:0},  'よ':{s:'green',k:0},
+  'ら':{s:'green',k:0},  'り':{s:'green',k:0},  'る':{s:'green',k:0},
+  'れ':{s:'amber',k:1},  'ろ':{s:'green',k:0},
+  'わ':{s:'green',k:0},  'を':{s:'green',k:0},  'ん':{s:'green',k:0},
+  // Combination sounds (youon)
+  'きゃ':{s:'green',k:0},'きゅ':{s:'green',k:0},'きょ':{s:'green',k:0},
+  'しゃ':{s:'green',k:0},'しゅ':{s:'green',k:0},'しょ':{s:'green',k:0},
+  'ちゃ':{s:'green',k:0},'ちゅ':{s:'green',k:0},'ちょ':{s:'green',k:0},
+  'にゃ':{s:'green',k:0},'にゅ':{s:'green',k:0},'にょ':{s:'green',k:0},
+  'ひゃ':{s:'green',k:0},'ひゅ':{s:'green',k:0},'ひょ':{s:'green',k:0},
+  'みゃ':{s:'green',k:0},'みゅ':{s:'green',k:0},'みょ':{s:'green',k:0},
+  'りゃ':{s:'green',k:0},'りゅ':{s:'green',k:0},'りょ':{s:'green',k:0},
+  'ぎゃ':{s:'green',k:0},'ぎゅ':{s:'green',k:0},'ぎょ':{s:'green',k:0},
+  'じゃ':{s:'green',k:0},'じゅ':{s:'amber',k:0},'じょ':{s:'green',k:0},
+  'びゃ':{s:'amber',k:2},'びゅ':{s:'amber',k:2},'びょ':{s:'green',k:0},
+  'ぴゃ':{s:'green',k:0},'ぴゅ':{s:'green',k:0},'ぴょ':{s:'green',k:0}
+};
+
+const katakanaScores = {
+  'ア':{s:'green',k:0},'イ':{s:'green',k:0},'ウ':{s:'green',k:0},'エ':{s:'green',k:0},'オ':{s:'green',k:0},
+  'カ':{s:'green',k:0},'キ':{s:'green',k:0},'ク':{s:'green',k:0},'ケ':{s:'green',k:0},'コ':{s:'green',k:0},
+  'ガ':{s:'green',k:0},'ギ':{s:'green',k:0},'グ':{s:'green',k:0},'ゲ':{s:'green',k:0},'ゴ':{s:'green',k:0},
+  'サ':{s:'green',k:0},'シ':{s:'amber',k:4},'ス':{s:'green',k:0},'セ':{s:'green',k:0},'ソ':{s:'green',k:0},
+  'タ':{s:'green',k:0},'チ':{s:'green',k:0},'ツ':{s:'green',k:0},'テ':{s:'green',k:0},'ト':{s:'green',k:0},
+  'ザ':{s:'green',k:0},'ジ':{s:'green',k:0},'ゼ':{s:'green',k:0},
+  'ダ':{s:'green',k:0},'ヂ':{s:'green',k:0},'ヅ':{s:'green',k:0},'デ':{s:'green',k:0},'ド':{s:'green',k:0},
+  'ナ':{s:'green',k:0},'ニ':{s:'green',k:0},'ヌ':{s:'green',k:0},'ネ':{s:'amber',k:2},'ノ':{s:'green',k:0},
+  'ハ':{s:'green',k:0},'ヒ':{s:'green',k:0},'フ':{s:'green',k:0},'ヘ':{s:'green',k:0},'ホ':{s:'green',k:0},
+  'バ':{s:'green',k:0},'ビ':{s:'green',k:0},'ブ':{s:'green',k:0},'ベ':{s:'green',k:0},'ボ':{s:'green',k:0},
+  'パ':{s:'green',k:0},'ピ':{s:'green',k:0},'プ':{s:'green',k:0},'ペ':{s:'green',k:0},'ポ':{s:'green',k:0},
+  'マ':{s:'amber',k:3},'ミ':{s:'green',k:0},'ム':{s:'green',k:0},'メ':{s:'green',k:0},'モ':{s:'green',k:0},
+  'ヤ':{s:'green',k:0},'ユ':{s:'green',k:0},'ヨ':{s:'green',k:0},
+  'ラ':{s:'red',k:4},'リ':{s:'green',k:0},'ル':{s:'green',k:0},'レ':{s:'green',k:0},'ロ':{s:'green',k:0},
+  'ワ':{s:'red',k:4},'ヲ':{s:'green',k:0},'ン':{s:'green',k:0},
+  // Katakana youon combos — introduced 2026-04-22 PM
+  'キャ':{s:'green',k:0},'キュ':{s:'green',k:0},'キョ':{s:'green',k:0},
+  'シャ':{s:'green',k:0},'シュ':{s:'green',k:0},'ショ':{s:'green',k:0},
+  'チャ':{s:'green',k:0},'チュ':{s:'green',k:0},'チョ':{s:'green',k:0},
+  'ニャ':{s:'green',k:0},'ニュ':{s:'green',k:0},'ニョ':{s:'green',k:0},
+  'ヒャ':{s:'green',k:0},'ヒュ':{s:'green',k:0},'ヒョ':{s:'green',k:0},
+  'ミャ':{s:'green',k:0},'ミュ':{s:'green',k:0},
+  'リャ':{s:'green',k:0},'リュ':{s:'green',k:0},'リョ':{s:'green',k:0},
+  'ギャ':{s:'green',k:0},'ギョ':{s:'green',k:0},
+  'ジャ':{s:'red',k:2},'ジュ':{s:'red',k:2},'ジョ':{s:'red',k:2},
+  'ビャ':{s:'green',k:0},'ビュ':{s:'green',k:0},'ビョ':{s:'green',k:0},
+  'ピャ':{s:'green',k:0},'ピョ':{s:'green',k:0}
+};
+const kanjiScores    = {};
+
+// ── Full character list with romanisations (for display) ──────────────────
+const hiraganaList = [
+  {c:'あ',r:'a'},{c:'い',r:'i'},{c:'う',r:'u'},{c:'え',r:'e'},{c:'お',r:'o'},
+  {c:'か',r:'ka'},{c:'き',r:'ki'},{c:'く',r:'ku'},{c:'け',r:'ke'},{c:'こ',r:'ko'},
+  {c:'が',r:'ga'},{c:'ぎ',r:'gi'},{c:'ぐ',r:'gu'},{c:'げ',r:'ge'},{c:'ご',r:'go'},
+  {c:'さ',r:'sa'},{c:'し',r:'shi'},{c:'す',r:'su'},{c:'せ',r:'se'},{c:'そ',r:'so'},
+  {c:'た',r:'ta'},{c:'ち',r:'chi'},{c:'つ',r:'tsu'},{c:'て',r:'te'},{c:'と',r:'to'},
+  {c:'な',r:'na'},{c:'に',r:'ni'},{c:'ぬ',r:'nu'},{c:'ね',r:'ne'},{c:'の',r:'no'},
+  {c:'は',r:'ha'},{c:'ひ',r:'hi'},{c:'ふ',r:'fu'},{c:'へ',r:'he'},{c:'ほ',r:'ho'},
+  {c:'ざ',r:'za'},{c:'じ',r:'ji'},{c:'ず',r:'zu'},{c:'ぜ',r:'ze'},{c:'ぞ',r:'zo'},
+  {c:'だ',r:'da'},{c:'ぢ',r:'di'},{c:'づ',r:'du'},{c:'で',r:'de'},{c:'ど',r:'do'},
+  {c:'ば',r:'ba'},{c:'び',r:'bi'},{c:'ぶ',r:'bu'},{c:'べ',r:'be'},{c:'ぼ',r:'bo'},
+  {c:'ぱ',r:'pa'},{c:'ぴ',r:'pi'},{c:'ぷ',r:'pu'},{c:'ぺ',r:'pe'},{c:'ぽ',r:'po'},
+  {c:'ま',r:'ma'},{c:'み',r:'mi'},{c:'む',r:'mu'},{c:'め',r:'me'},{c:'も',r:'mo'},
+  {c:'や',r:'ya'},{c:'ゆ',r:'yu'},{c:'よ',r:'yo'},
+  {c:'ら',r:'ra'},{c:'り',r:'ri'},{c:'る',r:'ru'},{c:'れ',r:'re'},{c:'ろ',r:'ro'},
+  {c:'わ',r:'wa'},{c:'を',r:'wo'},{c:'ん',r:'n'},
+  // Combination sounds (youon) — all grey until studied
+  {c:'きゃ',r:'kya'},{c:'きゅ',r:'kyu'},{c:'きょ',r:'kyo'},
+  {c:'しゃ',r:'sha'},{c:'しゅ',r:'shu'},{c:'しょ',r:'sho'},
+  {c:'ちゃ',r:'cha'},{c:'ちゅ',r:'chu'},{c:'ちょ',r:'cho'},
+  {c:'にゃ',r:'nya'},{c:'にゅ',r:'nyu'},{c:'にょ',r:'nyo'},
+  {c:'ひゃ',r:'hya'},{c:'ひゅ',r:'hyu'},{c:'ひょ',r:'hyo'},
+  {c:'みゃ',r:'mya'},{c:'みゅ',r:'myu'},{c:'みょ',r:'myo'},
+  {c:'りゃ',r:'rya'},{c:'りゅ',r:'ryu'},{c:'りょ',r:'ryo'},
+  {c:'ぎゃ',r:'gya'},{c:'ぎゅ',r:'gyu'},{c:'ぎょ',r:'gyo'},
+  {c:'じゃ',r:'ja'}, {c:'じゅ',r:'ju'}, {c:'じょ',r:'jo'},
+  {c:'びゃ',r:'bya'},{c:'びゅ',r:'byu'},{c:'びょ',r:'byo'},
+  {c:'ぴゃ',r:'pya'},{c:'ぴゅ',r:'pyu'},{c:'ぴょ',r:'pyo'}
+];
+
+function makePips(streak, needed) {
+  let html = '';
+  for (let i = 0; i < needed; i++) {
+    html += `<span class="pip${i < streak ? ' filled' : ''}"></span>`;
+  }
+  return html;
+}
+
+function buildGrid(containerId, list, scores) {
+  const grid = document.getElementById(containerId);
+  if (!list.length) {
+    grid.innerHTML = '<p style="color:#999;font-size:0.9em;padding:8px 0">Not started yet</p>';
+    return;
+  }
+  list.forEach(({c, r}) => {
+    const entry = scores[c] || {s:'grey', k:0};
+    const status = entry.s;
+    const streak = entry.k || 0;
+    const needed = (status === 'red') ? 5 : (status === 'amber') ? 5 : 0;
+    const cell = document.createElement('div');
+    cell.className = `kana-cell ${status}`;
+    cell.title = `${c} (${r}) — ${status}${streak > 0 ? ', streak: ' + streak : ''}`;
+    cell.innerHTML = `
+      <span class="kana-char">${c}</span>
+      <span class="kana-rom">${r}</span>
+      ${needed > 0 ? `<div class="pips">${makePips(streak, needed)}</div>` : ''}
+    `;
+    grid.appendChild(cell);
+  });
+}
+
+function buildStats(scores) {
+  const counts = {green:0, amber:0, red:0, blue:0, grey:0};
+  Object.values(scores).forEach(v => { if (counts[v.s] !== undefined) counts[v.s]++; });
+  const container = document.getElementById('stats');
+  const labels = {green:'Mastered', amber:'Learning', red:'Needs work', blue:'Studying', grey:'Not learned'};
+  Object.entries(counts).forEach(([status, n]) => {
+    if (n === 0) return;
+    container.innerHTML += `
+      <div class="stat-card ${status}">
+        <div clas

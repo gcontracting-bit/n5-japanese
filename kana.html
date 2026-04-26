@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiragana & Katakana Reference</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        nav {
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #2b6cb0;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #4299e1;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #2b6cb0;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-card h2 {
+            color: white;
+            padding: 12px 16px;
+            margin: -24px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.4em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .section-card.hiragana h2 {
+            background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+        }
+
+        .section-card.katakana h2 {
+            background: linear-gradient(135deg, #6b46c1 0%, #9f7aea 100%);
+        }
+
+        .toggle-arrow {
+            display: inline-block;
+            min-width: 20px;
+            font-size: 1.2em;
+        }
+
+        .section-card h2:hover {
+            opacity: 0.9;
+        }
+
+        .section-content {
+            display: none;
+            padding: 20px 24px 24px 24px;
+        }
+
+        .section-content.expanded {
+            display: block;
+        }
+
+        /* Progress Bar Styles */
+        .progress-bar-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill-blue {
+            height: 100%;
+            background: linear-gradient(90deg, #2b6cb0, #4299e1);
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .progress-fill-purple {
+            height: 100%;
+            background: linear-gradient(90deg, #6b46c1, #9f7aea);
+            border-radius: 10px;
+            width: 54%;
+        }
+
+        /* Sub-Heading Styles */
+        .sub-heading {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .sub-heading.blue {
+            color: #2b6cb0;
+            border-bottom-color: #2b6cb0;
+        }
+
+        .sub-heading.purple {
+            color: #6b46c1;
+            border-bottom-color: #6b46c1;
+        }
+
+        /* Progress Box */
+        .progress-box {
+            background: white;
+            padding: 24px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+
+        /* Grid Styles */
+        .kana-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 0.6rem;
+            margin-bottom: 20px;
+        }
+
+
+        .kana-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            aspect-ratio: 1 / 1;
+            min-height: 65px;
+            position: relative;
+        }
+
+
+        .kana-character {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .kana-cell.combo {
+            padding: 0.4rem;
+        }
+
+        .kana-cell.combo .kana-character {
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .kana-cell.combo .kana-reading {
+            font-size: 0.5rem;
+        }
+
+        .kana-reading {
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        /* Streak Pips */
+        .streak-pips {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 4px;
+            position: absolute;
+            bottom: 3px;
+        }
+
+        .pip {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #cbd5e0;
+        }
+
+        .pip.filled {
+            background: #2d3748;
+        }
+
+        /* Status Colors */
+        .kana-cell.green {
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            border: 2px solid #48bb78;
+        }
+
+        .kana-cell.amber {
+            background: linear-gradient(135deg, #fffff0 0%, #fefcbf 100%);
+            border: 2px solid #ecc94b;
+        }
+
+        .kana-cell.red {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 2px solid #fc8181;
+        }
+
+        .kana-cell.blue {
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            border: 2px solid #4299e1;
+        }
+
+        .kana-cell.grey {
+            background: #edf2f7;
+            border: 2px solid #cbd5e0;
+            color: #a0aec0;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 2rem;
+            margin: 20px 0 20px 0;
+            flex-wrap: wrap;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            min-width: 30px;
+        }
+
+        .stat.mastered .stat-value { color: #48bb78; }
+        .stat.learning .stat-value { color: #ecc94b; }
+        .stat.needs-work .stat-value { color: #fc8181; }
+        .stat.studying .stat-value { color: #4299e1; }
+        .stat.not-started .stat-value { color: #a0aec0; }
+
+        /* Special Rules Section */
+        .special-rules {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .rules-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .rule-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #2b6cb0;
+        }
+
+        .rule-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: #2b6cb0;
+        }
+
+        .rule-card p {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0;
+            }
+
+            .kana-grid {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            }
+
+
+            .kana-cell {
+                min-height: 55px;
+            }
+
+            .kana-character {
+                font-size: 1.3rem;
+            }
+
+            .kana-reading {
+                font-size: 0.6rem;
+            }
+
+            .stats-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        /* Toggle All Buttons */
+        .toggle-all-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .toggle-all-buttons button {
+            padding: 6px 16px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #4a5568;
+            transition: background 0.2s ease;
+        }
+
+        .toggle-all-buttons button:hover {
+            background: #edf2f7;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud_sync.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html">← Home</a>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Hiragana & Katakana</h1>
+            <p>JLPT N5 Kana Reference</p>
+        </div>
+
+        <!-- Progress Box -->
+        <div class="progress-box">
+            <div class="progress-bar-container">
+                <div class="progress-bar-label">
+                    <span>Hiragana Progress</span>
+                    <span>104/104 (100%)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill-blue"></div>
+                </div>
+            </div>
+            <div class="progress-bar-container" style="margin-top: 16px;">
+                <div class="progress-bar-label">
+                    <span>Katakana Progress</span>
+                    <span>86/104 (83%)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill-purple"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle All Buttons -->
+        <div class="toggle-all-buttons">
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+        </div>
+
+        <!-- HIRAGANA SECTION (MERGED) -->
+        <div class="section-card hiragana">
+            <h2 onclick="toggleSection(this)">
+                <span class="toggle-arrow">▶</span>
+                <span>Hiragana</span>
+            </h2>
+            <div class="section-content">
+                <!-- Basic Hiragana -->
+                <h3 class="sub-heading blue">Basic (46)</h3>
+                <div class="kana-grid">
+                    <!-- A Row -->
+                    <div class="kana-cell green"><div class="kana-character">あ</div><div class="kana-reading">a</div></div>
+                    <div class="kana-cell green"><div class="kana-character">か</div><div class="kana-reading">ka</div></div>
+                    <div class="kana-cell green"><div class="kana-character">さ</div><div class="kana-reading">sa</div></div>
+                    <div class="kana-cell green"><div class="kana-character">た</div><div class="kana-reading">ta</div></div>
+                    <div class="kana-cell green"><div class="kana-character">な</div><div class="kana-reading">na</div></div>
+                    <div class="kana-cell green"><div class="kana-character">は</div><div class="kana-reading">ha</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ま</div><div class="kana-reading">ma</div></div>
+                    <div class="kana-cell green"><div class="kana-character">や</div><div class="kana-reading">ya</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ら</div><div class="kana-reading">ra</div></div>
+                    <div class="kana-cell green"><div class="kana-character">わ</div><div class="kana-reading">wa</div></div>
+
+                    <!-- I Row -->
+                    <div class="kana-cell green"><div class="kana-character">い</div><div class="kana-reading">i</div></div>
+                    <div class="kana-cell green"><div class="kana-character">き</div><div class="kana-reading">ki</div></div>
+                    <div class="kana-cell green"><div class="kana-character">し</div><div class="kana-reading">shi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ち</div><div class="kana-reading">chi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">に</div><div class="kana-reading">ni</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ひ</div><div class="kana-reading">hi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">み</div><div class="kana-reading">mi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">り</div><div class="kana-reading">ri</div></div>
+
+                    <!-- U Row -->
+                    <div class="kana-cell green"><div class="kana-character">う</div><div class="kana-reading">u</div></div>
+                    <div class="kana-cell green"><div class="kana-character">く</div><div class="kana-reading">ku</div></div>
+                    <div class="kana-cell green"><div class="kana-character">す</div><div class="kana-reading">su</div></div>
+                    <div class="kana-cell green"><div class="kana-character">つ</div><div class="kana-reading">tsu</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">ぬ</div><div class="kana-reading">nu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ふ</div><div class="kana-reading">fu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">む</div><div class="kana-reading">mu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ゆ</div><div class="kana-reading">yu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">る</div><div class="kana-reading">ru</div></div>
+
+                    <!-- E Row -->
+                    <div class="kana-cell green"><div class="kana-character">え</div><div class="kana-reading">e</div></div>
+                    <div class="kana-cell green"><div class="kana-character">け</div><div class="kana-reading">ke</div></div>
+                    <div class="kana-cell green"><div class="kana-character">せ</div><div class="kana-reading">se</div></div>
+                    <div class="kana-cell green"><div class="kana-character">て</div><div class="kana-reading">te</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ね</div><div class="kana-reading">ne</div></div>
+                    <div class="kana-cell green"><div class="kana-character">へ</div><div class="kana-reading">he</div></div>
+                    <div class="kana-cell green"><div class="kana-character">め</div><div class="kana-reading">me</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">れ</div><div class="kana-reading">re</div></div>
+
+                    <!-- O Row -->
+                    <div class="kana-cell green"><div class="kana-character">お</div><div class="kana-reading">o</div></div>
+                    <div class="kana-cell green"><div class="kana-character">こ</div><div class="kana-reading">ko</div></div>
+                    <div class="kana-cell green"><div class="kana-character">そ</div><div class="kana-reading">so</div></div>
+                    <div class="kana-cell green"><div class="kana-character">と</div><div class="kana-reading">to</div></div>
+                    <div class="kana-cell green"><div class="kana-character">の</div><div class="kana-reading">no</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ほ</div><div class="kana-reading">ho</div></div>
+                    <div class="kana-cell green"><div class="kana-character">も</div><div class="kana-reading">mo</div></div>
+                    <div class="kana-cell green"><div class="kana-character">よ</div><div class="kana-reading">yo</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ろ</div><div class="kana-reading">ro</div></div>
+                    <div class="kana-cell green"><div class="kana-character">を</div><div class="kana-reading">wo</div></div>
+
+                    <!-- N -->
+                    <div class="kana-cell green"><div class="kana-character">ん</div><div class="kana-reading">n</div></div>
+                </div>
+
+                <!-- Dakuten & Handakuten Hiragana -->
+                <h3 class="sub-heading blue">Dakuten & Handakuten (25)</h3>
+                <div class="kana-grid">
+                    <!-- Dakuten: G Row -->
+                    <div class="kana-cell green"><div class="kana-character">が</div><div class="kana-reading">ga</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぎ</div><div class="kana-reading">gi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぐ</div><div class="kana-reading">gu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">げ</div><div class="kana-reading">ge</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ご</div><div class="kana-reading">go</div></div>
+
+                    <!-- Dakuten: Z Row -->
+                    <div class="kana-cell green"><div class="kana-character">ざ</div><div class="kana-reading">za</div></div>
+                    <div class="kana-cell green"><div class="kana-character">じ</div><div class="kana-reading">ji</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ず</div><div class="kana-reading">zu</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">ぜ</div><div class="kana-reading">ze</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぞ</div><div class="kana-reading">zo</div></div>
+
+                    <!-- Dakuten: D Row -->
+                    <div class="kana-cell green"><div class="kana-character">だ</div><div class="kana-reading">da</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぢ</div><div class="kana-reading">di</div></div>
+                    <div class="kana-cell green"><div class="kana-character">づ</div><div class="kana-reading">du</div></div>
+                    <div class="kana-cell green"><div class="kana-character">で</div><div class="kana-reading">de</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ど</div><div class="kana-reading">do</div></div>
+
+                    <!-- Dakuten: B Row -->
+                    <div class="kana-cell green"><div class="kana-character">ば</div><div class="kana-reading">ba</div></div>
+                    <div class="kana-cell green"><div class="kana-character">び</div><div class="kana-reading">bi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぶ</div><div class="kana-reading">bu</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">べ</div><div class="kana-reading">be</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぼ</div><div class="kana-reading">bo</div></div>
+
+                    <!-- Handakuten: P Row -->
+                    <div class="kana-cell green"><div class="kana-character">ぱ</div><div class="kana-reading">pa</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぴ</div><div class="kana-reading">pi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぷ</div><div class="kana-reading">pu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぺ</div><div class="kana-reading">pe</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ぽ</div><div class="kana-reading">po</div></div>
+                </div>
+
+                <!-- Combination Sounds Hiragana -->
+                <h3 class="sub-heading blue">Combination Sounds (33)</h3>
+                <div class="kana-grid">
+                    <!-- K-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">きゃ</div><div class="kana-reading">kya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">きゅ</div><div class="kana-reading">kyu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">きょ</div><div class="kana-reading">kyo</div></div>
+
+                    <!-- S-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">しゃ</div><div class="kana-reading">sha</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">しゅ</div><div class="kana-reading">shu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">しょ</div><div class="kana-reading">sho</div></div>
+
+                    <!-- T-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ちゃ</div><div class="kana-reading">cha</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ちゅ</div><div class="kana-reading">chu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ちょ</div><div class="kana-reading">cho</div></div>
+
+                    <!-- N-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">にゃ</div><div class="kana-reading">nya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">にゅ</div><div class="kana-reading">nyu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">にょ</div><div class="kana-reading">nyo</div></div>
+
+                    <!-- H-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ひゃ</div><div class="kana-reading">hya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ひゅ</div><div class="kana-reading">hyu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ひょ</div><div class="kana-reading">hyo</div></div>
+
+                    <!-- M-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">みゃ</div><div class="kana-reading">mya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">みゅ</div><div class="kana-reading">myu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">みょ</div><div class="kana-reading">myo</div></div>
+
+                    <!-- R-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">りゃ</div><div class="kana-reading">rya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">りゅ</div><div class="kana-reading">ryu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">りょ</div><div class="kana-reading">ryo</div></div>
+
+                    <!-- G-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ぎゃ</div><div class="kana-reading">gya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ぎゅ</div><div class="kana-reading">gyu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ぎょ</div><div class="kana-reading">gyo</div></div>
+
+                    <!-- J-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">じゃ</div><div class="kana-reading">ja</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">じゅ</div><div class="kana-reading">ju</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">じょ</div><div class="kana-reading">jo</div></div>
+
+                    <!-- B-row combinations -->
+                    <div class="kana-cell amber combo"><div class="kana-character">びゃ</div><div class="kana-reading">bya</div></div>
+                    <div class="kana-cell amber combo"><div class="kana-character">びゅ</div><div class="kana-reading">byu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">びょ</div><div class="kana-reading">byo</div></div>
+
+                    <!-- P-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ぴゃ</div><div class="kana-reading">pya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ぴゅ</div><div class="kana-reading">pyu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ぴょ</div><div class="kana-reading">pyo</div></div>
+                </div>
+
+                <!-- Combined Stats Row for Hiragana -->
+                <div class="stats-row">
+                    <div class="stat mastered">
+                        <span class="stat-label">Mastered:</span>
+                        <span class="stat-value">104</span>
+                    </div>
+                    <div class="stat learning">
+                        <span class="stat-label">Learning:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat needs-work">
+                        <span class="stat-label">Needs Work:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat studying">
+                        <span class="stat-label">Studying:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat not-started">
+                        <span class="stat-label">Not Started:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KATAKANA SECTION (MERGED) -->
+        <div class="section-card katakana">
+            <h2 onclick="toggleSection(this)">
+                <span class="toggle-arrow">▶</span>
+                <span>Katakana</span>
+            </h2>
+            <div class="section-content">
+                <!-- Basic Katakana -->
+                <h3 class="sub-heading purple">Basic (46)</h3>
+                <div class="kana-grid">
+                    <!-- A Row -->
+                    <div class="kana-cell green"><div class="kana-character">ア</div><div class="kana-reading">a</div></div>
+                    <div class="kana-cell green"><div class="kana-character">カ</div><div class="kana-reading">ka</div></div>
+                    <div class="kana-cell green"><div class="kana-character">サ</div><div class="kana-reading">sa</div></div>
+                    <div class="kana-cell green"><div class="kana-character">タ</div><div class="kana-reading">ta</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ナ</div><div class="kana-reading">na</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ハ</div><div class="kana-reading">ha</div></div>
+                    <div class="kana-cell green"><div class="kana-character">マ</div><div class="kana-reading">ma</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ヤ</div><div class="kana-reading">ya</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">ラ</div><div class="kana-reading">ra</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">ワ</div><div class="kana-reading">wa</div></div>
+
+                    <!-- I Row -->
+                    <div class="kana-cell green"><div class="kana-character">イ</div><div class="kana-reading">i</div></div>
+                    <div class="kana-cell green"><div class="kana-character">キ</div><div class="kana-reading">ki</div></div>
+                    <div class="kana-cell green"><div class="kana-character">シ</div><div class="kana-reading">shi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">チ</div><div class="kana-reading">chi</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ニ</div><div class="kana-reading">ni</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ヒ</div><div class="kana-reading">hi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ミ</div><div class="kana-reading">mi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">リ</div><div class="kana-reading">ri</div></div>
+
+                    <!-- U Row -->
+                    <div class="kana-cell green"><div class="kana-character">ウ</div><div class="kana-reading">u</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ク</div><div class="kana-reading">ku</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ス</div><div class="kana-reading">su</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">ツ</div><div class="kana-reading">tsu</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ヌ</div><div class="kana-reading">nu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">フ</div><div class="kana-reading">fu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ム</div><div class="kana-reading">mu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ユ</div><div class="kana-reading">yu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ル</div><div class="kana-reading">ru</div></div>
+
+                    <!-- E Row -->
+                    <div class="kana-cell green"><div class="kana-character">エ</div><div class="kana-reading">e</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ケ</div><div class="kana-reading">ke</div></div>
+                    <div class="kana-cell green"><div class="kana-character">セ</div><div class="kana-reading">se</div></div>
+                    <div class="kana-cell green"><div class="kana-character">テ</div><div class="kana-reading">te</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ネ</div><div class="kana-reading">ne</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ヘ</div><div class="kana-reading">he</div></div>
+                    <div class="kana-cell green"><div class="kana-character">メ</div><div class="kana-reading">me</div></div>
+                    <div class="kana-cell green"><div class="kana-character">レ</div><div class="kana-reading">re</div></div>
+
+                    <!-- O Row -->
+                    <div class="kana-cell green"><div class="kana-character">オ</div><div class="kana-reading">o</div></div>
+                    <div class="kana-cell green"><div class="kana-character">コ</div><div class="kana-reading">ko</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ソ</div><div class="kana-reading">so</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ト</div><div class="kana-reading">to</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ノ</div><div class="kana-reading">no</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ホ</div><div class="kana-reading">ho</div></div>
+                    <div class="kana-cell green"><div class="kana-character">モ</div><div class="kana-reading">mo</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ヨ</div><div class="kana-reading">yo</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ロ</div><div class="kana-reading">ro</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ヲ</div><div class="kana-reading">wo</div></div>
+
+                    <!-- N -->
+                    <div class="kana-cell green"><div class="kana-character">ン</div><div class="kana-reading">n</div></div>
+                </div>
+
+                <!-- Dakuten & Handakuten Katakana -->
+                <h3 class="sub-heading purple">Dakuten & Handakuten (25)</h3>
+                <div class="kana-grid">
+                    <!-- Dakuten: G Row -->
+                    <div class="kana-cell green"><div class="kana-character">ガ</div><div class="kana-reading">ga</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ギ</div><div class="kana-reading">gi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">グ</div><div class="kana-reading">gu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ゲ</div><div class="kana-reading">ge</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ゴ</div><div class="kana-reading">go</div></div>
+
+                    <!-- Dakuten: Z Row -->
+                    <div class="kana-cell grey"><div class="kana-character">ザ</div><div class="kana-reading">za</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ジ</div><div class="kana-reading">ji</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ズ</div><div class="kana-reading">zu</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ゼ</div><div class="kana-reading">ze</div></div>
+                    <div class="kana-cell grey"><div class="kana-character">ゾ</div><div class="kana-reading">zo</div></div>
+
+                    <!-- Dakuten: D Row -->
+                    <div class="kana-cell green"><div class="kana-character">ダ</div><div class="kana-reading">da</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ヂ</div><div class="kana-reading">di</div></div>
+                    <div class="kana-cell amber"><div class="kana-character">ヅ</div><div class="kana-reading">du</div></div>
+                    <div class="kana-cell green"><div class="kana-character">デ</div><div class="kana-reading">de</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ド</div><div class="kana-reading">do</div></div>
+
+                    <!-- Dakuten: B Row -->
+                    <div class="kana-cell green"><div class="kana-character">バ</div><div class="kana-reading">ba</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ビ</div><div class="kana-reading">bi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ブ</div><div class="kana-reading">bu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ベ</div><div class="kana-reading">be</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ボ</div><div class="kana-reading">bo</div></div>
+
+                    <!-- Handakuten: P Row -->
+                    <div class="kana-cell green"><div class="kana-character">パ</div><div class="kana-reading">pa</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ピ</div><div class="kana-reading">pi</div></div>
+                    <div class="kana-cell green"><div class="kana-character">プ</div><div class="kana-reading">pu</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ペ</div><div class="kana-reading">pe</div></div>
+                    <div class="kana-cell green"><div class="kana-character">ポ</div><div class="kana-reading">po</div></div>
+                </div>
+
+                <!-- Combination Sounds Katakana -->
+                <h3 class="sub-heading purple">Combination Sounds (33)</h3>
+                <div class="kana-grid">
+                    <!-- K-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">キャ</div><div class="kana-reading">kya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">キュ</div><div class="kana-reading">kyu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">キョ</div><div class="kana-reading">kyo</div></div>
+
+                    <!-- S-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">シャ</div><div class="kana-reading">sha</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">シュ</div><div class="kana-reading">shu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ショ</div><div class="kana-reading">sho</div></div>
+
+                    <!-- T-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">チャ</div><div class="kana-reading">cha</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">チュ</div><div class="kana-reading">chu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">チョ</div><div class="kana-reading">cho</div></div>
+
+                    <!-- N-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ニャ</div><div class="kana-reading">nya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ニュ</div><div class="kana-reading">nyu</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ニョ</div><div class="kana-reading">nyo</div></div>
+
+                    <!-- H-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ヒャ</div><div class="kana-reading">hya</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ヒュ</div><div class="kana-reading">hyu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ヒョ</div><div class="kana-reading">hyo</div></div>
+
+                    <!-- M-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ミャ</div><div class="kana-reading">mya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ミュ</div><div class="kana-reading">myu</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ミョ</div><div class="kana-reading">myo</div></div>
+
+                    <!-- R-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">リャ</div><div class="kana-reading">rya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">リュ</div><div class="kana-reading">ryu</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">リョ</div><div class="kana-reading">ryo</div></div>
+
+                    <!-- G-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ギャ</div><div class="kana-reading">gya</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ギュ</div><div class="kana-reading">gyu</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ギョ</div><div class="kana-reading">gyo</div></div>
+
+                    <!-- J-row combinations -->
+                    <div class="kana-cell amber combo"><div class="kana-character">ジャ</div><div class="kana-reading">ja</div></div>
+                    <div class="kana-cell amber combo"><div class="kana-character">ジュ</div><div class="kana-reading">ju</div></div>
+                    <div class="kana-cell amber combo"><div class="kana-character">ジョ</div><div class="kana-reading">jo</div></div>
+
+                    <!-- B-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ビャ</div><div class="kana-reading">bya</div></div>
+                    <div class="kana-cell green combo"><div class="kana-character">ビュ</div><div class="kana-reading">byu</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ビョ</div><div class="kana-reading">byo</div></div>
+
+                    <!-- P-row combinations -->
+                    <div class="kana-cell green combo"><div class="kana-character">ピャ</div><div class="kana-reading">pya</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ピュ</div><div class="kana-reading">pyu</div></div>
+                    <div class="kana-cell grey combo"><div class="kana-character">ピョ</div><div class="kana-reading">pyo</div></div>
+                </div>
+
+                <!-- Combined Stats Row for Katakana -->
+                <div class="stats-row">
+                    <div class="stat mastered">
+                        <span class="stat-label">Mastered:</span>
+                        <span class="stat-value">79</span>
+                    </div>
+                    <div class="stat learning">
+                        <span class="stat-label">Learning:</span>
+                        <span class="stat-value">7</span>
+                    </div>
+                    <div class="stat needs-work">
+                        <span class="stat-label">Needs Work:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat studying">
+                        <span class="stat-label">Studying:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat not-started">
+                        <span class="stat-label">Not Started:</span>
+                        <span class="stat-value">18</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SPECIAL RULES SECTION -->
+        <div class="special-rules">
+            <h2 class="rules-header">Special Rules</h2>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <h3>Long Vowels</h3>
+                    <p><strong>Hiragana:</strong> Written by adding the vowel character. Example: おかあさん (okaasan - mother)</p>
+                    <p style="margin-top: 0.8rem;"><strong>Katakana:</strong> Use the prolongation mark ー. Example: コーヒー (koohii - coffee)</p>
+                </div>
+                <div class="rule-card">
+                    <h3>Double Consonants (っ/ッ)</h3>
+                    <p>Small つ (hiragana) or ツ (katakana) doubles the following consonant, creating a pause.</p>
+                    <p style="margin-top: 0.8rem;">Examples: きっぷ (kippu - ticket), マッチ (macchi - match)</p>
+                </div>
+                <div class="rule-card">
+                    <h3>Small ya/yu/yo</h3>
+                    <p>Written half-size (ゃゅょ in hiragana, ャュョ in katakana) to form combination sounds.</p>
+                    <p style="margin-top: 0.8rem;">Example: きょう (kyou - today)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('.toggle-arrow');
+
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                arrow.textContent = '▶';
+            } else {
+                content.classList.add('expanded');
+                arrow.textContent = '▼';
+            }
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('expanded'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▼');
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.remove('expanded'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▶');
+        }
+
+        // ============ APPLY FLASHCARD QUIZ SCORES ============
+        function applyKanaScores() {
+            let kanaScores;
+            try { kanaScores = JSON.parse(localStorage.getItem('kana_scores') || '{}'); }
+            catch(e) { return; }
+
+            // Migration: fix old data — positive streaks below 3 → bump to 3,
+            // streak 0 with total > 0 → treat as first wrong (-1)
+            let migrated = false;
+            Object.keys(kanaScores).forEach(function(k) {
+                if (kanaScores[k].streak > 0 && kanaScores[k].streak < 3) {
+                    kanaScores[k].streak = 3;
+                    migrated = true;
+                } else if (kanaScores[k].streak === 0 && kanaScores[k].total > 0) {
+                    kanaScores[k].streak = -1;
+                    migrated = true;
+                }
+            });
+            if (migrated) localStorage.setItem('kana_scores', JSON.stringify(kanaScores));
+
+            const hasScores = Object.keys(kanaScores).length > 0;
+
+            const sections = document.querySelectorAll('.section-card');
+
+            sections.forEach(section => {
+                const cells = section.querySelectorAll('.kana-cell');
+                let mastered = 0, learning = 0, needsWork = 0, studying = 0, notStarted = 0;
+
+                cells.forEach(cell => {
+                    const charEl = cell.querySelector('.kana-character');
+                    if (!charEl) return;
+                    const char = charEl.textContent.trim();
+                    const score = hasScores ? kanaScores[char] : null;
+
+                    if (score) {
+                        cell.classList.remove('green', 'amber', 'red', 'blue', 'grey');
+                        // positive streak = green, -1 = first wrong (amber), -2 or worse = red
+                        if (score.streak >= 1) {
+                            cell.classList.add('green');
+                            mastered++;
+                        } else if (score.streak === -1) {
+                            cell.classList.add('amber');
+                            learning++;
+                        } else {
+                            cell.classList.add('red');
+                            needsWork++;
+                        }
+                    } else {
+                        // No quiz data — keep existing hardcoded class
+                        if (cell.classList.contains('green')) mastered++;
+                        else if (cell.classList.contains('amber')) learning++;
+                        else if (cell.classList.contains('red')) needsWork++;
+                        else if (cell.classList.contains('blue')) studying++;
+                        else notStarted++;
+                    }
+                });
+
+                // Update stats row
+                const statsRow = section.querySelector('.stats-row');
+                if (statsRow) {
+                    const vals = statsRow.querySelectorAll('.stat-value');
+                    if (vals.length >= 5) {
+                        vals[0].textContent = mastered;
+                        vals[1].textContent = learning;
+                        vals[2].textContent = needsWork;
+                        vals[3].textContent = studying;
+                        vals[4].textContent = notStarted;
+                    }
+                }
+
+                // Update progress bar
+                const total = cells.length;
+                const knownCount = mastered + learning;
+                const pct = total > 0 ? Math.round((knownCount / total) * 100) : 0;
+
+                const isHiragana = section.classList.contains('hiragana');
+                const fillClass = isHiragana ? '.progress-fill-blue' : '.progress-fill-purple';
+                const progressBox = document.querySelector('.progress-box');
+                if (progressBox) {
+                    const containers = progressBox.querySelectorAll('.progress-bar-container');
+                    const idx = isHiragana ? 0 : 1;
+                    if (containers[idx]) {
+                        const fill = containers[idx].querySelector(fillClass);
+                        const label = containers[idx].querySelector('.progress-bar-label');
+                        if (fill) fill.style.width = pct + '%';
+                        if (label) {
+                            const spans = label.querySelectorAll('span');
+                            if (spans[1]) spans[1].textContent = knownCount + '/' + total + ' (' + pct + '%)';
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', applyKanaScores);
+    </script>
+</body>
+</html>

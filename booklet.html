@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish-English-Japanese Comparison Booklet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        nav {
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #434190;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #667eea;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #434190;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Section Cards */
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: white;
+            background: linear-gradient(135deg, #434190 0%, #667eea 100%);
+            padding: 12px 16px;
+            margin: -24px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.4em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        section h2:hover {
+            opacity: 0.9;
+        }
+
+        .toggle-arrow {
+            display: inline-block;
+            font-size: 1.2em;
+            min-width: 20px;
+        }
+
+        .section-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 32px 24px 24px 24px;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            padding: 0 24px;
+        }
+
+        section h3 {
+            color: #667eea;
+            font-size: 1.15em;
+            margin: 20px 0 10px 0;
+        }
+
+        section p {
+            margin-bottom: 15px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        thead {
+            background-color: #eef0fb;
+            border-bottom: 2px solid #434190;
+        }
+
+        th {
+            color: #434190;
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f6fc;
+        }
+
+        /* Examples */
+        .example {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .example p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .example strong {
+            color: #434190;
+        }
+
+        .romaji {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Note */
+        .note {
+            background-color: #eff5ff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #434190;
+            border-radius: 4px;
+        }
+
+        .note strong {
+            color: #434190;
+        }
+
+        /* Comparison Highlight */
+        .comparison-highlight {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-highlight div {
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .comparison-highlight strong {
+            color: #434190;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Advantage List */
+        .advantage-list ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .advantage-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .advantage-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Challenge List */
+        .challenge-list ol {
+            margin-left: 2rem;
+        }
+
+        .challenge-list li {
+            margin: 0.75rem 0;
+            color: #333;
+        }
+
+        /* Resource Grid */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-top: 4px solid #667eea;
+        }
+
+        .resource-card h4 {
+            color: #434190;
+            margin-bottom: 0.75rem;
+        }
+
+        .resource-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resource-card li {
+            padding: 0.25rem 0;
+        }
+
+        .resource-card li::before {
+            content: "→ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .comparison-highlight {
+                grid-template-columns: 1fr;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            td, th {
+                padding: 0.5rem;
+            }
+
+            section {
+                padding: 16px;
+            }
+
+            section h2 {
+                margin: -16px -16px 16px -16px;
+                font-size: 1.2em;
+            }
+        }
+
+        /* Toggle All Buttons */
+        .toggle-all-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .toggle-all-buttons button {
+            padding: 6px 16px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #4a5568;
+            transition: background 0.2s ease;
+        }
+
+        .toggle-all-buttons button:hover {
+            background: #edf2f7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html">← Home</a>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>English · Spanish · Japanese</h1>
+            <p>A Learner's Comparison Booklet — JLPT N5 & N4 Edition</p>
+        </div>
+
+        <!-- Toggle All Buttons -->
+        <div class="toggle-all-buttons">
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+        </div>
+
+        <!-- Section 1: At a Glance -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                1. At a Glance
+            </h2>
+            <div class="section-content collapsed">
+                <p>Quick comparison of fundamental linguistic features:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>English</th>
+                            <th>Spanish</th>
+                            <th>Japanese</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Language Family</strong></td>
+                            <td>Germanic</td>
+                            <td>Romance</td>
+                            <td>Japonic</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Word Order</strong></td>
+                            <td>SVO (strict)</td>
+                            <td>SVO (flexible)</td>
+                            <td>SOV (strict)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Writing System</strong></td>
+                            <td>Latin alphabet</td>
+                            <td>Latin alphabet</td>
+                            <td>Hiragana + Katakana + Kanji</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gender</strong></td>
+                            <td>None</td>
+                            <td>Yes (masc/fem)</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Verb Conjugation</strong></td>
+                            <td>Simple</td>
+                            <td>Complex</td>
+                            <td>Moderate — no person distinction</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subject Required</strong></td>
+                            <td>Always</td>
+                            <td>Often dropped</td>
+                            <td>Usually dropped</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Articles</strong></td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plurals</strong></td>
+                            <td>Add -s/-es</td>
+                            <td>Add -s/-es</td>
+                            <td>No plural forms</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prepositions/Particles</strong></td>
+                            <td>Before noun</td>
+                            <td>Before noun</td>
+                            <td>After noun</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 2: Word Order -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                2. Word Order: The Classic Example
+            </h2>
+            <div class="section-content collapsed">
+                <p>Let's see how the same sentence structures across all three languages:</p>
+
+                <div class="example">
+                    <p><strong>English (SVO):</strong> I eat sushi.</p>
+                    <p><strong>Spanish (SVO):</strong> Yo como sushi. <span class="romaji">(I eat sushi.)</span></p>
+                    <p><strong>Japanese (SOV):</strong> 私は寿司を食べます。<span class="romaji">(Watashi wa sushi wo tabemasu.)</span></p>
+                </div>
+
+                <div class="note">
+                    <strong>Note for Spanish speakers:</strong> You already drop subjects ('Como sushi' works fine). Japanese does the same — it just moves the verb to the end. The particle system does the heavy lifting that word order provides in English.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Particles vs. Prepositions -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                3. Particles vs. Prepositions
+            </h2>
+            <div class="section-content collapsed">
+                <p>Japanese uses particles (助詞 - joshi) instead of prepositions. They come AFTER the noun and define its role:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Particle</th>
+                            <th>English</th>
+                            <th>Spanish</th>
+                            <th>Japanese Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Topic</strong></td>
+                            <td>は (wa)</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>猫は (neko WA) — as for cats</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subject</strong></td>
+                            <td>が (ga)</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>猫が (neko GA) — the cat (does)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Direct Object</strong></td>
+                            <td>を (wo)</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>魚を食べる (sakana WO taberu) — eat fish</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Location</strong></td>
+                            <td>で (de)</td>
+                            <td>at / in</td>
+                            <td>en</td>
+                            <td>公園で (kouen DE) — at the park</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Direction</strong></td>
+                            <td>に (ni)</td>
+                            <td>to</td>
+                            <td>a</td>
+                            <td>学校に (gakkou NI) — to school</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Time</strong></td>
+                            <td>に (ni)</td>
+                            <td>at / on</td>
+                            <td>a / en</td>
+                            <td>3時に (sanji NI) — at 3 o'clock</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Means/Instrument</strong></td>
+                            <td>で (de)</td>
+                            <td>by / with</td>
+                            <td>en / con</td>
+                            <td>電車で (densha DE) — by train</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Possession</strong></td>
+                            <td>の (no)</td>
+                            <td>of / 's</td>
+                            <td>de</td>
+                            <td>猫の本 (neko NO hon) — cat's book</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Companion</strong></td>
+                            <td>と (to)</td>
+                            <td>with</td>
+                            <td>con</td>
+                            <td>友達と (tomodachi TO) — with a friend</td>
+                        </tr>
+                        <tr>
+                            <td><strong>From (origin)</strong></td>
+                            <td>から (kara)</td>
+                            <td>from</td>
+                            <td>de / desde</td>
+                            <td>東京から (Tokyo KARA) — from Tokyo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Until / Up to</strong></td>
+                            <td>まで (made)</td>
+                            <td>until</td>
+                            <td>hasta</td>
+                            <td>5時まで (goji MADE) — until 5 o'clock</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Also / Too</strong></td>
+                            <td>も (mo)</td>
+                            <td>also / too</td>
+                            <td>también</td>
+                            <td>私も (watashi MO) — I also</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 4: Verbs and Conjugation -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                4. Verbs and Conjugation
+            </h2>
+            <div class="section-content collapsed">
+                <p>Japanese doesn't conjugate verbs by person. The same form works for I, you, he, she, we, they:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tense</th>
+                            <th>English</th>
+                            <th>Spanish</th>
+                            <th>Japanese</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Past</strong></td>
+                            <td>I ate sushi</td>
+                            <td>Comí sushi</td>
+                            <td>寿司を食べました (sushi wo tabemashita)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Present</strong></td>
+                            <td>I eat sushi</td>
+                            <td>Como sushi</td>
+                            <td>寿司を食べます (sushi wo tabemasu)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Negative</strong></td>
+                            <td>I don't eat</td>
+                            <td>No como</td>
+                            <td>食べません (tabemasen)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Past Negative</strong></td>
+                            <td>I didn't eat</td>
+                            <td>No comí</td>
+                            <td>食べませんでした (tabemasen deshita)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note">
+                    <strong>Major advantage:</strong> You don't need to memorize person variations (como, comes, comemos, coméis, comen). One form for all!
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Nouns -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                5. Nouns: No Gender, No Plurals, No Articles
+            </h2>
+            <div class="section-content collapsed">
+                <p>Japanese simplifies nouns compared to both English and Spanish:</p>
+
+                <div class="comparison-highlight">
+                    <div>
+                        <strong>English:</strong>
+                        <p>a cat, cats, the cat, the cats</p>
+                    </div>
+                    <div>
+                        <strong>Spanish:</strong>
+                        <p>un gato, gatos, el gato, los gatos</p>
+                    </div>
+                    <div>
+                        <strong>Japanese:</strong>
+                        <p>猫 (neko) — "cat" covers all of these</p>
+                    </div>
+                </div>
+
+                <p>Whether it's one cat, multiple cats, "the cat," or "a cat," you use the same word: 猫 (neko).</p>
+            </div>
+        </section>
+
+        <!-- Section 6: Dropping the Subject -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                6. Dropping the Subject
+            </h2>
+            <div class="section-content collapsed">
+                <p>Japanese, like Spanish, freely omits the subject when context is clear:</p>
+
+                <div class="example">
+                    <p><strong>English:</strong> "I eat sushi." (subject required)</p>
+                    <p><strong>Spanish:</strong> "Como sushi." (subject optional)</p>
+                    <p><strong>Japanese:</strong> "寿司を食べます。" (Sushi wo tabemasu.) (subject optional)</p>
+                </div>
+
+                <div class="note">
+                    <strong>For Spanish speakers:</strong> This is familiar territory! Japanese particles do the same job as Spanish verb endings — they clarify relationships even without an explicit subject.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Negation -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                7. Negation
+            </h2>
+            <div class="section-content collapsed">
+                <p>Three different strategies across the languages:</p>
+
+                <div class="comparison-highlight">
+                    <div>
+                        <strong>English:</strong>
+                        <p>Helper verb + base form<br>"I don't eat"</p>
+                    </div>
+                    <div>
+                        <strong>Spanish:</strong>
+                        <p>"no" before the verb<br>"No como"</p>
+                    </div>
+                    <div>
+                        <strong>Japanese:</strong>
+                        <p>Verb ending changes<br>"食べません"<br>(tabemasen)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Forming Questions -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                8. Forming Questions
+            </h2>
+            <div class="section-content collapsed">
+                <p>Japanese has an easy rule: add か (ka) to the end of the sentence. No word order change needed:</p>
+
+                <div class="example">
+                    <p><strong>Statement:</strong> 寿司を食べます。(Sushi wo tabemasu.) — "I eat sushi."</p>
+                    <p><strong>Question:</strong> 寿司を食べますか？(Sushi wo tabemasu ka?) — "Do you eat sushi?"</p>
+                </div>
+
+                <div class="note">
+                    <strong>Compare:</strong> English requires word order change ("I eat sushi" → "Do I eat sushi?"). Spanish uses intonation or adds "¿" at the start. Japanese just adds a particle!
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: Common Phrases -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                9. Common Phrases
+            </h2>
+            <div class="section-content collapsed">
+                <p>Essential expressions for daily use:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>English</th>
+                            <th>Spanish</th>
+                            <th>Japanese</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Hello</td>
+                            <td>Hola</td>
+                            <td>こんにちは (Konnichiwa)</td>
+                        </tr>
+                        <tr>
+                            <td>Thank you</td>
+                            <td>Gracias</td>
+                            <td>ありがとうございます (Arigatou gozaimasu)</td>
+                        </tr>
+                        <tr>
+                            <td>I don't understand</td>
+                            <td>No entiendo</td>
+                            <td>わかりません (Wakarimasen)</td>
+                        </tr>
+                        <tr>
+                            <td>How much?</td>
+                            <td>¿Cuánto cuesta?</td>
+                            <td>いくらですか？(Ikura desu ka?)</td>
+                        </tr>
+                        <tr>
+                            <td>My name is ___</td>
+                            <td>Me llamo ___</td>
+                            <td>私の名前は___です (Watashi no namae wa ___ desu)</td>
+                        </tr>
+                        <tr>
+                            <td>Nice to meet you</td>
+                            <td>Mucho gusto</td>
+                            <td>はじめまして (Hajimemashite)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 10: Your Bilingual Advantages -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                10. Your Bilingual Advantages
+            </h2>
+            <div class="section-content collapsed">
+                <p>As an English-Spanish speaker, you already have mental frameworks that transfer to Japanese:</p>
+
+                <div class="advantage-list">
+                    <ul>
+                        <li><strong>From Spanish:</strong> Subject-dropping comes naturally to you — Japanese does this too.</li>
+                        <li><strong>From Spanish:</strong> No future tense marker — Spanish "ir + a" or simple present handles it; Japanese does the same.</li>
+                        <li><strong>From Spanish:</strong> Verbs carry weight; word order is flexible — Japanese relies on particles instead.</li>
+                        <li><strong>From English:</strong> No grammatical gender — Japanese, like English, has no masculine/feminine nouns.</li>
+                        <li><strong>From English:</strong> No articles — Japanese is like this; you won't need to learn rules about "el/la/un/una".</li>
+                        <li><strong>Japanese bonuses:</strong> Consistent pronunciation — every kana and kanji sounds the same every time.</li>
+                        <li><strong>Japanese bonuses:</strong> No person conjugation — one verb form works for I/you/he/she/we/they.</li>
+                        <li><strong>Japanese bonuses:</strong> No plurals — never worry about singular vs. plural forms.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 11: The Biggest Challenges -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                11. The Biggest Challenges
+            </h2>
+            <div class="section-content collapsed">
+                <p>Be aware of these structural differences as you study:</p>
+
+                <div class="challenge-list">
+                    <ol>
+                        <li><strong>Word order (SOV):</strong> The verb comes at the end. This is the opposite of both English and Spanish.</li>
+                        <li><strong>Three writing systems:</strong> Hiragana, katakana, and kanji — you'll need to learn all three to read fluently.</li>
+                        <li><strong>は (wa) vs. が (ga):</strong> Both mark the subject, but they have subtle differences in meaning and use.</li>
+                        <li><strong>Counter words:</strong> Japanese has different counters for different objects (3 books, 3 people, 3 flat things all use different counters).</li>
+                        <li><strong>Te-form:</strong> A versatile verb form used for linking clauses and creating conditional/sequential meaning.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 12: Free Resources -->
+        <section>
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                12. Free Resources
+            </h2>
+            <div class="section-content collapsed">
+                <p>Here are the key tools to accelerate your Japanese learning:</p>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <h4>Grammar</h4>
+                        <ul>
+                            <li>Tae Kim's Guide</li>
+                            <li>JLPT Sensei</li>
+                            <li>JapaneseTest4You</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>Vocabulary & Kanji</h4>
+                        <ul>
+                            <li>Anki</li>
+                            <li>Jisho</li>
+                            <li>WaniKani</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>Practice Tests</h4>
+                        <ul>
+                            <li>Official JLPT</li>
+                            <li>JLPT Sensei</li>
+                            <li>JLPT Hero</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>Listening</h4>
+                        <ul>
+                            <li>NHK Web Easy</li>
+                            <li>Japanese Ammo with Misa</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>Apps</h4>
+                        <ul>
+                            <li>Duolingo</li>
+                            <li>Bunpo</li>
+                            <li>Renshuu</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>Community</h4>
+                        <ul>
+                            <li>r/LearnJapanese</li>
+                            <li>HelloTalk</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Japanese Study Dashboard — Comparison Booklet Edition</p>
+            <p>Last updated: 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle section collapse/expand
+        document.querySelectorAll('section h2').forEach(header => {
+            header.addEventListener('click', function() {
+                const section = this.closest('section');
+                const content = section.querySelector('.section-content');
+                const arrow = this.querySelector('.toggle-arrow');
+
+                content.classList.toggle('collapsed');
+                arrow.textContent = content.classList.contains('collapsed') ? '▶' : '▼';
+            });
+        });
+
+        function expandAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.remove('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▼');
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▶');
+        }
+    </script>
+</body>
+</html>

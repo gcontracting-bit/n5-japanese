@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Checklist - Japanese Study Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #2c7a7b;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #38b2ac;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #2c7a7b;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Cards */
+        .grammar-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .grammar-card h2 {
+            color: white;
+            background: linear-gradient(135deg, #2c7a7b 0%, #38b2ac 100%);
+            padding: 12px 16px;
+            margin: -24px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.4em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .toggle-arrow {
+            display: inline-block;
+            font-size: 1.2em;
+            min-width: 20px;
+        }
+
+        .section-content {
+            padding: 20px 24px 24px 24px;
+        }
+
+        .section-content.collapsed {
+            display: none;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        thead {
+            background-color: #e0f2f1;
+            border-bottom: 2px solid #2c7a7b;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            color: #2c7a7b;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f9f9;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Japanese text styling */
+        .jp {
+            font-size: 1.1em;
+            color: #2c7a7b;
+            font-weight: 500;
+        }
+
+        .example {
+            color: #555;
+            font-style: italic;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Toggle All Buttons */
+        .toggle-all-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .toggle-all-buttons button {
+            padding: 6px 16px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #4a5568;
+            transition: background 0.2s ease;
+        }
+
+        .toggle-all-buttons button:hover {
+            background: #edf2f7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.95em;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+
+            .page-header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html">← Home</a>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Grammar Checklist</h1>
+            <p>JLPT N5 Essential Grammar Patterns</p>
+        </div>
+
+        <!-- Toggle All Buttons -->
+        <div class="toggle-all-buttons">
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+        </div>
+
+        <!-- Section 1: Sentence Structure & Particles -->
+        <div class="grammar-card">
+            <h2 onclick="toggleSection(this)"><span class="toggle-arrow">▶</span>1. Sentence Structure & Particles</h2>
+            <div class="section-content collapsed">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="jp">は (wa)</span></td>
+                        <td>Topic marker</td>
+                        <td><span class="example">私は学生です。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">が (ga)</span></td>
+                        <td>Subject marker</td>
+                        <td><span class="example">雨がふっています。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">を (wo)</span></td>
+                        <td>Direct object</td>
+                        <td><span class="example">本を読みます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">に (ni)</span></td>
+                        <td>Location/time/direction</td>
+                        <td><span class="example">七時に起きます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">で (de)</span></td>
+                        <td>Place of action/means</td>
+                        <td><span class="example">バスで行きます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">へ (e)</span></td>
+                        <td>Direction</td>
+                        <td><span class="example">学校へ行きます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">と (to)</span></td>
+                        <td>With/and/quotation</td>
+                        <td><span class="example">友だちと行きます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">も (mo)</span></td>
+                        <td>Also/too</td>
+                        <td><span class="example">私も行きます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">の (no)</span></td>
+                        <td>Possessive</td>
+                        <td><span class="example">私の本。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">から (kara)</span></td>
+                        <td>From</td>
+                        <td><span class="example">九時からです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">まで (made)</span></td>
+                        <td>Until</td>
+                        <td><span class="example">五時までです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">や (ya)</span></td>
+                        <td>And (non-exhaustive)</td>
+                        <td><span class="example">りんごやみかん。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Section 2: Copula & Existence -->
+        <div class="grammar-card">
+            <h2 onclick="toggleSection(this)"><span class="toggle-arrow">▶</span>2. Copula & Existence</h2>
+            <div class="section-content collapsed">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="jp">です (desu)</span></td>
+                        <td>Is/am/are</td>
+                        <td><span class="example">学生です。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">じゃないです</span></td>
+                        <td>Is not</td>
+                        <td><span class="example">学生じゃないです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">でした (deshita)</span></td>
+                        <td>Was</td>
+                        <td><span class="example">学生でした。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">あります (arimasu)</span></td>
+                        <td>Exists (things)</td>
+                        <td><span class="example">本があります。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">います (imasu)</span></td>
+                        <td>Exists (people)</td>
+                        <td><span class="example">猫がいます。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Section 3: Verb Forms -->
+        <div class="grammar-card">
+            <h2 onclick="toggleSection(this)"><span class="toggle-arrow">▶</span>3. Verb Forms</h2>
+            <div class="section-content collapsed">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="jp">〜ます</span></td>
+                        <td>Polite present/future</td>
+                        <td><span class="example">食べます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ません</span></td>
+                        <td>Polite negative</td>
+                        <td><span class="example">食べません。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ました</span></td>
+                        <td>Polite past</td>
+                        <td><span class="example">食べました。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ませんでした</span></td>
+                        <td>Polite past negative</td>
+                        <td><span class="example">食べませんでした。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜て (-te form)</span></td>
+                        <td>Connecting</td>
+                        <td><span class="example">食べて、飲んで。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜てください</span></td>
+                        <td>Please do</td>
+                        <td><span class="example">見てください。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ないでください</span></td>
+                        <td>Please don't</td>
+                        <td><span class="example">触らないでください。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ています</span></td>
+                        <td>Is doing (progressive)</td>
+                        <td><span class="example">食べています。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ましょう</span></td>
+                        <td>Let's</td>
+                        <td><span class="example">行きましょう。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ませんか</span></td>
+                        <td>Won't you?</td>
+                        <td><span class="example">行きませんか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜たいです</span></td>
+                        <td>Want to</td>
+                        <td><span class="example">食べたいです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜たことがあります</span></td>
+                        <td>Have done</td>
+                        <td><span class="example">寿司を食べたことがあります。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜ながら</span></td>
+                        <td>While doing</td>
+                        <td><span class="example">音楽を聞きながら勉強します。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜に行きます</span></td>
+                        <td>Go to do</td>
+                        <td><span class="example">食べに行きます。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Section 4: Adjectives -->
+        <div class="grammar-card">
+            <h2 onclick="toggleSection(this)"><span class="toggle-arrow">▶</span>4. Adjectives</h2>
+            <div class="section-content collapsed">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="jp">い-adj + です</span></td>
+                        <td>Polite present</td>
+                        <td><span class="example">高いです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">い → くないです</span></td>
+                        <td>Negative</td>
+                        <td><span class="example">高くないです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">い → かったです</span></td>
+                        <td>Past</td>
+                        <td><span class="example">高かったです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">い → くなかった</span></td>
+                        <td>Past negative</td>
+                        <td><span class="example">高くなかったです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">な-adj + です</span></td>
+                        <td>Polite present</td>
+                        <td><span class="example">静かです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">な-adj + じゃない</span></td>
+                        <td>Negative</td>
+                        <td><span class="example">静かじゃないです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">な-adj + でした</span></td>
+                        <td>Past</td>
+                        <td><span class="example">静かでした。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">〜のほうが + adj</span></td>
+                        <td>More than</td>
+                        <td><span class="example">これのほうが安いです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">一番 + adj</span></td>
+                        <td>Most</td>
+                        <td><span class="example">一番大きいです。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Section 5: Questions & Requests -->
+        <div class="grammar-card">
+            <h2 onclick="toggleSection(this)"><span class="toggle-arrow">▶</span>5. Questions & Requests</h2>
+            <div class="section-content collapsed">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="jp">か (ka)</span></td>
+                        <td>Question marker</td>
+                        <td><span class="example">学生ですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">何 (nani/nan)</span></td>
+                        <td>What?</td>
+                        <td><span class="example">何ですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">だれ (dare)</span></td>
+                        <td>Who?</td>
+                        <td><span class="example">だれですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">どこ (doko)</span></td>
+                        <td>Where?</td>
+                        <td><span class="example">どこですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">いつ (itsu)</span></td>
+                        <td>When?</td>
+                        <td><span class="example">いつですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">どう (dou)</span></td>
+                        <td>How?</td>
+                        <td><span class="example">どうですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">どうして</span></td>
+                        <td>Why?</td>
+                        <td><span class="example">どうしてですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">いくら</span></td>
+                        <td>How much?</td>
+                        <td><span class="example">いくらですか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">いくつ</span></td>
+                        <td>How many?</td>
+                        <td><span class="example">いくつありますか。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">どのくらい</span></td>
+                        <td>How long?</td>
+                        <td><span class="example">どのくらいかかりますか。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Section 6: Connectors & Other Patterns -->
+        <div class="grammar-card">
+            <h2 onclick="toggleSection(this)"><span class="toggle-arrow">▶</span>6. Connectors & Other Patterns</h2>
+            <div class="section-content collapsed">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="jp">が (connector)</span></td>
+                        <td>But</td>
+                        <td><span class="example">日本語は難しいですが、おもしろいです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">から (reason)</span></td>
+                        <td>Because</td>
+                        <td><span class="example">雨だから、行きません。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">ので</span></td>
+                        <td>So/therefore</td>
+                        <td><span class="example">雨なので、傘を持っていきます。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">とき</span></td>
+                        <td>When</td>
+                        <td><span class="example">子どものとき。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">前に</span></td>
+                        <td>Before</td>
+                        <td><span class="example">寝る前に。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">後で</span></td>
+                        <td>After</td>
+                        <td><span class="example">食べた後で。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">と思います</span></td>
+                        <td>I think that</td>
+                        <td><span class="example">おいしいと思います。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">でしょう</span></td>
+                        <td>Probably</td>
+                        <td><span class="example">明日は暑いでしょう。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">ね</span></td>
+                        <td>Right?</td>
+                        <td><span class="example">いい天気ですね。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">よ</span></td>
+                        <td>Emphasis</td>
+                        <td><span class="example">おいしいですよ。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Section 7: Useful Sentence Patterns -->
+        <div class="grammar-card">
+            <h2 onclick="toggleSection(this)"><span class="toggle-arrow">▶</span>7. Useful Sentence Patterns</h2>
+            <div class="section-content collapsed">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="jp">Nounが好きです</span></td>
+                        <td>Like</td>
+                        <td><span class="example">音楽が好きです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">Nounが上手です</span></td>
+                        <td>Good at</td>
+                        <td><span class="example">日本語が上手です。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">Nounがあります/います</span></td>
+                        <td>There is</td>
+                        <td><span class="example">時間があります。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">Nounがほしいです</span></td>
+                        <td>Want</td>
+                        <td><span class="example">水がほしいです。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">Nounになります</span></td>
+                        <td>Become</td>
+                        <td><span class="example">先生になります。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">まだ + 〜ていません</span></td>
+                        <td>Haven't yet</td>
+                        <td><span class="example">まだ食べていません。</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="jp">もう + past</span></td>
+                        <td>Already</td>
+                        <td><span class="example">もう食べました。</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleSection(el) {
+            const content = el.nextElementSibling;
+            const arrow = el.querySelector('.toggle-arrow');
+            content.classList.toggle('collapsed');
+            arrow.textContent = content.classList.contains('collapsed') ? '▶' : '▼';
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.remove('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▼');
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▶');
+        }
+    </script>
+</body>
+</html>

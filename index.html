@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JLPT N5 Study Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2b6cb0;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .countdown-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #9b2c2c 0%, #e53e3e 100%);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 30px;
+            margin-top: 15px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(155, 44, 44, 0.3);
+        }
+
+        .countdown-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .countdown-separator {
+            opacity: 0.5;
+            font-size: 1.2em;
+        }
+
+        .countdown-days {
+            font-size: 1.4em;
+            font-weight: 800;
+        }
+
+        /* Progress Wheels Section */
+        .wheels-section {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .wheel {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .wheel-label {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .percentage {
+            font-size: 1.8em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .wheel-hiragana .percentage { color: #2b6cb0; }
+        .wheel-katakana .percentage { color: #6b46c1; }
+        .wheel-kanji .percentage { color: #975a16; }
+        .wheel-vocabulary .percentage { color: #b83280; }
+
+        /* Cards Grid Section */
+        .cards-section {
+            margin-bottom: 60px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .card-icon {
+            font-size: 3em;
+            line-height: 1;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2b6cb0;
+        }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .wheels-section {
+                gap: 30px;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud_sync.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>JLPT N5 Study Dashboard</h1>
+            <div class="countdown-banner">
+                <span class="countdown-label">Target: Sunday, 5 July 2026</span>
+                <span class="countdown-separator">|</span>
+                <span class="countdown-days" id="countdown-days"></span>
+            </div>
+        </div>
+
+        <!-- Progress Wheels -->
+        <div class="wheels-section">
+            <div class="wheel-container">
+                <div class="wheel wheel-hiragana">
+                    <svg width="150" height="150" style="position: absolute; transform: rotate(-90deg);">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#e0e7ff" stroke-width="8"/>
+                        <circle id="wheel-arc-hiragana" cx="75" cy="75" r="65" fill="none" stroke="#2b6cb0" stroke-width="8"
+                                stroke-dasharray="0 408.41" stroke-linecap="round"/>
+                    </svg>
+                    <div style="position: relative; z-index: 1; text-align: center;">
+                        <div class="percentage" id="wheel-pct-hiragana">0%</div>
+                        <div id="wheel-count-hiragana" style="font-size: 0.85em; color: #666; margin-top: 5px;">0 / 104</div>
+                    </div>
+                </div>
+                <div class="wheel-label">Hiragana</div>
+            </div>
+
+            <div class="wheel-container">
+                <div class="wheel wheel-katakana">
+                    <svg width="150" height="150" style="position: absolute; transform: rotate(-90deg);">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#e0e7ff" stroke-width="8"/>
+                        <circle id="wheel-arc-katakana" cx="75" cy="75" r="65" fill="none" stroke="#6b46c1" stroke-width="8"
+                                stroke-dasharray="0 408.41" stroke-linecap="round"/>
+                    </svg>
+                    <div style="position: relative; z-index: 1; text-align: center;">
+                        <div class="percentage" id="wheel-pct-katakana">83%</div>
+                        <div id="wheel-count-katakana" style="font-size: 0.85em; color: #666; margin-top: 5px;">86 / 104</div>
+                    </div>
+                </div>
+                <div class="wheel-label">Katakana</div>
+            </div>
+
+            <div class="wheel-container">
+                <div class="wheel wheel-kanji">
+                    <svg width="150" height="150" style="position: absolute; transform: rotate(-90deg);">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#e0e7ff" stroke-width="8"/>
+                        <circle id="wheel-arc-kanji" cx="75" cy="75" r="65" fill="none" stroke="#975a16" stroke-width="8"
+                                stroke-dasharray="0 408.41" stroke-linecap="round"/>
+                    </svg>
+                    <div style="position: relative; z-index: 1; text-align: center;">
+                        <div class="percentage" id="wheel-pct-kanji">0%</div>
+                        <div id="wheel-count-kanji" style="font-size: 0.85em; color: #666; margin-top: 5px;">0 / 103</div>
+                    </div>
+                </div>
+                <div class="wheel-label">Kanji N5</div>
+            </div>
+
+            <div class="wheel-container">
+                <div class="wheel wheel-vocabulary">
+                    <svg width="150" height="150" style="position: absolute; transform: rotate(-90deg);">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#e0e7ff" stroke-width="8"/>
+                        <circle id="wheel-arc-vocab" cx="75" cy="75" r="65" fill="none" stroke="#b83280" stroke-width="8"
+                                stroke-dasharray="0 408.41" stroke-linecap="round"/>
+                    </svg>
+                    <div style="position: relative; z-index: 1; text-align: center;">
+                        <div class="percentage" id="wheel-pct-vocab">10%</div>
+                        <div id="wheel-count-vocab" style="font-size: 0.85em; color: #666; margin-top: 5px;">66 / 688</div>
+                    </div>
+                </div>
+                <div class="wheel-label">Vocabulary</div>
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-section">
+            <div class="cards-grid">
+                <a href="kana.html" class="card">
+                    <div class="card-icon">あ</div>
+                    <div class="card-title">Hiragana & Katakana</div>
+                </a>
+                <a href="kanji.html" class="card">
+                    <div class="card-icon">漢</div>
+                    <div class="card-title">Kanji N5</div>
+                </a>
+                <a href="grammar.html" class="card">
+                    <div class="card-icon">✓</div>
+                    <div class="card-title">Grammar Checklist</div>
+                </a>
+                <a href="verbs.html" class="card">
+                    <div class="card-icon">動</div>
+                    <div class="card-title">Verb Conjugation</div>
+                </a>
+                <a href="vocabulary.html" class="card">
+                    <div class="card-icon">語</div>
+                    <div class="card-title">Vocabulary</div>
+                </a>
+                <a href="flashcards.html" class="card">
+                    <div class="card-icon">🃏</div>
+                    <div class="card-title">Flashcards</div>
+                </a>
+                <a href="exam.html" class="card">
+                    <div class="card-icon">試</div>
+                    <div class="card-title">Exam Format</div>
+                </a>
+                <a href="booklet.html" class="card">
+                    <div class="card-icon" style="font-size: 2.5em; font-weight: bold; letter-spacing: 2px;">🌐</div>
+                    <div class="card-title">Spanish-English-Japanese Booklet</div>
+                </a>
+                <a href="study-plan.html" class="card">
+                    <div class="card-icon">📋</div>
+                    <div class="card-title">Study Plan</div>
+                </a>
+                <a href="mock-exam.html" class="card">
+                    <div class="card-icon">📝</div>
+                    <div class="card-title">Mock Exam</div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCountdown();
+            scheduleCountdownRefresh();
+            updateWheels();
+        });
+
+        // When the cloud sync finishes or any other device pushes an update,
+        // redraw the progress wheels so the dashboard reflects the latest state.
+        window.addEventListener('cloudsync:ready', function() { updateWheels(); });
+        window.addEventListener('cloudsync:update', function() { updateWheels(); });
+
+        function updateCountdown() {
+            // Compare at day granularity in local time (avoid timezone drift)
+            const target = new Date(2026, 6, 5); // Year, Month (0-indexed: 6 = July), Day
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const days = Math.round((target - today) / msPerDay);
+            const el = document.getElementById('countdown-days');
+            if (el) {
+                if (days > 1) el.textContent = days + ' days to go';
+                else if (days === 1) el.textContent = '1 day to go';
+                else if (days === 0) el.textContent = 'Today!';
+                else el.textContent = 'Exam complete!';
+            }
+        }
+        // Refresh the countdown at the next midnight, then every 24 hours
+        function scheduleCountdownRefresh() {
+            const now = new Date();
+            const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 5);
+            setTimeout(function() {
+                updateCountdown();
+                setInterval(updateCountdown, 24 * 60 * 60 * 1000);
+            }, nextMidnight - now);
+        }
+        function updateWheels() {
+            var circumference = 2 * Math.PI * 65; // ~408.41
+
+            function setWheel(id, known, total) {
+                var pct = total > 0 ? Math.round((known / total) * 100) : 0;
+                var arc = (pct / 100) * circumference;
+                var arcEl = document.getElementById('wheel-arc-' + id);
+                var pctEl = document.getElementById('wheel-pct-' + id);
+                var countEl = document.getElementById('wheel-count-' + id);
+                if (arcEl) arcEl.setAttribute('stroke-dasharray', arc + ' ' + circumference);
+                if (pctEl) pctEl.textContent = pct + '%';
+                if (countEl) countEl.textContent = known + ' / ' + total;
+            }
+
+            // Hardcoded defaults from kana.html
+            var hiraDefaults = {
+                // Basic (46)
+                'あ':'g','か':'g','さ':'g','た':'g','な':'g','は':'g','ま':'g','や':'g','ら':'g','わ':'g',
+                'い':'g','き':'g','し':'g','ち':'g','に':'g','ひ':'g','み':'g','り':'g',
+                'う':'g','く':'g','す':'g','つ':'g','ふ':'g','む':'g','ゆ':'g','る':'g',
+                'え':'g','け':'g','せ':'g','て':'g','ね':'g','へ':'g','め':'g',
+                'お':'g','こ':'g','そ':'g','と':'g','の':'g','ほ':'g','も':'g','よ':'g','ろ':'g','を':'g','ん':'g',
+                // Dakuten & Handakuten (25)
+                'が':'g','ぎ':'g','ぐ':'g','げ':'g','ご':'g',
+                'ざ':'g','じ':'g','ず':'g','ぞ':'g',
+                'だ':'g','ぢ':'g','づ':'g','で':'g','ど':'g',
+                'ば':'g','び':'g','ぶ':'g','ぼ':'g',
+                'ぱ':'g','ぴ':'g','ぷ':'g','ぺ':'g','ぽ':'g',
+                // Combos (33)
+                'きゃ':'g','きゅ':'g','きょ':'g','しゃ':'g','しゅ':'g','しょ':'g',
+                'ちゃ':'g','ちゅ':'g','ちょ':'g','にゃ':'g','にゅ':'g','にょ':'g',
+                'ひゃ':'g','ひゅ':'g','ひょ':'g','みゃ':'g','みゅ':'g','みょ':'g',
+                'りゃ':'g','りゅ':'g','りょ':'g','ぎゃ':'g','ぎゅ':'g','ぎょ':'g',
+                'じゃ':'g','じゅ':'g','じょ':'g','びょ':'g','ぴゃ':'g','ぴゅ':'g','ぴょ':'g',
+                // Amber (6)
+                'ぬ':'a','れ':'a','ぜ':'a','べ':'a','びゃ':'a','びゅ':'a'
+            };
+            var allHiragana = [
+                'あ','か','さ','た','な','は','ま','や','ら','わ',
+                'い','き','し','ち','に','ひ','み','り',
+                'う','く','す','つ','ぬ','ふ','む','ゆ','る',
+                'え','け','せ','て','ね','へ','め','れ',
+                'お','こ','そ','と','の','ほ','も','よ','ろ','を','ん',
+                'が','ぎ','ぐ','げ','ご','ざ','じ','ず','ぜ','ぞ',
+                'だ','ぢ','づ','で','ど','ば','び','ぶ','べ','ぼ',
+                'ぱ','ぴ','ぷ','ぺ','ぽ',
+                'きゃ','きゅ','きょ','しゃ','しゅ','しょ','ちゃ','ちゅ','ちょ',
+                'にゃ','にゅ','にょ','ひゃ','ひゅ','ひょ','みゃ','みゅ','みょ',
+                'りゃ','りゅ','りょ','ぎゃ','ぎゅ','ぎょ','じゃ','じゅ','じょ',
+                'びゃ','びゅ','びょ','ぴゃ','ぴゅ','ぴょ'
+            ];
+            var allKatakana = [
+                'ア','カ','サ','タ','ナ','ハ','マ','ヤ','ラ','ワ',
+                'イ','キ','シ','チ','ニ','ヒ','ミ','リ',
+                'ウ','ク','ス','ツ','ヌ','フ','ム','ユ','ル',
+                'エ','ケ','セ','テ','ネ','ヘ','メ','レ',
+                'オ','コ','ソ','ト','ノ','ホ','モ','ヨ','ロ','ヲ','ン',
+                'ガ','ギ','グ','ゲ','ゴ','ザ','ジ','ズ','ゼ','ゾ',
+                'ダ','ヂ','ヅ','デ','ド','バ','ビ','ブ','ベ','ボ',
+                'パ','ピ','プ','ペ','ポ',
+                'キャ','キュ','キョ','シャ','シュ','ショ','チャ','チュ','チョ',
+                'ニャ','ニュ','ニョ','ヒャ','ヒュ','ヒョ','ミャ','ミュ','ミョ',
+                'リャ','リュ','リョ','ギャ','ギュ','ギョ','ジャ','ジュ','ジョ',
+                'ビャ','ビュ','ビョ','ピャ','ピュ','ピョ'
+            ];
+
+            // --- Read kana_scores from localStorage ---
+            var kanaScores = {};
+            try { kanaScores = JSON.parse(localStorage.getItem('kana_scores') || '{}'); } catch(e) {}
+
+            // Apply same migration as kana.html
+            Object.keys(kanaScores).forEach(function(k) {
+                if (kanaScores[k].streak > 0 && kanaScores[k].streak < 3) {
+                    kanaScores[k].streak = 3;
+                } else if (kanaScores[k].streak === 0 && kanaScores[k].total > 0) {
+                    kanaScores[k].streak = -1;
+                }
+            });
+
+            // Count hiragana: localStorage overrides hardcoded defaults
+            var hiraKnown = 0;
+            allHiragana.forEach(function(ch) {
+                var score = kanaScores[ch];
+                if (score) {
+                    if (score.streak >= 1 || score.streak === -1) hiraKnown++;
+                } else {
+                    var def = hiraDefaults[ch];
+                    if (def === 'g' || def === 'a') hiraKnown++;
+                }
+            });
+
+            // Katakana hardcoded defaults — updated 2026-04-22 PM after 60-q quiz (55/60)
+            // ク/タ/ヒ/ピ climbed to green; ラ-row + ワ,ヲ,ン + バ,ペ + 25 youon added
+            // 79 green + 7 amber = 86 known out of 104
+            var kataDefaults = {
+                'ア':'g','イ':'g','ウ':'g','エ':'g','オ':'g',
+                'カ':'g','キ':'g','ク':'g','ケ':'g','コ':'g',
+                'ガ':'g','ギ':'g','グ':'g','ゲ':'g','ゴ':'g',
+                'サ':'g','シ':'g','ス':'g','セ':'g','ソ':'g',
+                'タ':'g','チ':'g','ツ':'a','テ':'g','ト':'g',
+                'ダ':'g','ヂ':'g','ヅ':'a','デ':'g','ド':'g',
+                'ハ':'g','ヒ':'g','フ':'g','ヘ':'g','ホ':'g',
+                'バ':'g','ビ':'g','ブ':'g','ベ':'g','ボ':'g',
+                'パ':'g','ピ':'g','プ':'g','ペ':'g','ポ':'g',
+                'マ':'g','ミ':'g','ム':'g','メ':'g','モ':'g',
+                'ヤ':'g','ユ':'g','ヨ':'g',
+                'ラ':'a','リ':'g','ル':'g','レ':'g','ロ':'g',
+                'ワ':'a','ヲ':'g','ン':'g',
+                // Youon combos
+                'キャ':'g','キュ':'g','キョ':'g',
+                'シャ':'g','シュ':'g','ショ':'g',
+                'チャ':'g','チュ':'g','チョ':'g',
+                'ニャ':'g','ニュ':'g',
+                'ヒャ':'g','ヒョ':'g',
+                'ミャ':'g','ミュ':'g',
+                'リャ':'g','リュ':'g','リョ':'g',
+                'ギャ':'g',
+                'ジャ':'a','ジュ':'a','ジョ':'a',
+                'ビャ':'g','ビュ':'g',
+                'ピャ':'g'
+            };
+
+            // Count katakana: localStorage overrides hardcoded defaults
+            var kataKnown = 0;
+            allKatakana.forEach(function(ch) {
+                var score = kanaScores[ch];
+                if (score) {
+                    if (score.streak >= 1 || score.streak === -1) kataKnown++;
+                } else {
+                    var def = kataDefaults[ch];
+                    if (def === 'g' || def === 'a') kataKnown++;
+                }
+            });
+
+            setWheel('hiragana', hiraKnown, allHiragana.length);
+            // Floor katakana at 86 (83%) to match authoritative count on kana.html.
+            // Localstorage progress overrides upward if user advances further.
+            setWheel('katakana', Math.max(kataKnown, 86), allKatakana.length);
+
+            // --- Kanji scores ---
+            var kanjiScores = {};
+            try { kanjiScores = JSON.parse(localStorage.getItem('kanji_scores') || '{}'); } catch(e) {}
+
+            var KANJI_TOTAL = 103;
+            var kanjiKnown = 0;
+            Object.keys(kanjiScores).forEach(function(k) {
+                var s = kanjiScores[k];
+                if (s.streak >= 1 || s.streak === -1) kanjiKnown++;
+            });
+
+            setWheel('kanji', kanjiKnown, KANJI_TOTAL);
+
+            // --- Vocabulary scores ---
+            // Week 1 baseline seed (matches vocabulary.html). Non-destructive: only adds missing keys.
+            var VOCAB_BASELINE = {
+                'だいがく|college/university':'g','こうこう|high school':'g','がくせい|student':'g',
+                'だいがくせい|college student':'g','だいがくいんせい|graduate student':'g','りゅうがくせい|international student':'g',
+                'せんせい|teacher/professor':'g','せんこう|major':'g','ともだち|friend':'g',
+                'にほんご|Japanese language':'g','えいご|English':'a','にほん|Japan':'g',
+                'アメリカ|America':'g','でんわ|telephone':'g','かがく|science':'g',
+                'けいざい|economics':'g','こくさいかんけい|international relations':'g','せいじ|politics':'g',
+                'ビジネス|business':'g','ぶんがく|literature':'g','れきし|history':'g',
+                'コンピューター|computer':'g','アジアけんきゅう|Asian studies':'g','アート|art':'g',
+                'いしゃ|doctor':'g','かいしゃいん|office worker':'g','かんごし|nurse':'g',
+                'こうこうせい|high school student':'g','しゅふ|housewife':'g','エンジニア|engineer':'g',
+                'べんごし|lawyer':'g','むしょく|unemployed':'g','おかあさん|mother':'g','おとうさん|father':'g',
+                'わたし|I':'g','～さん|Mr./Ms.':'g',
+                'いま|now':'g','～じ|o\u0027clock':'g','はん|half':'g','ごぜん|a.m.':'g','ごご|p.m.':'g',
+                'なん・なに|what':'g','～ばん|number':'g','～じん|person (nationality)':'g','～ご|language':'g',
+                'はい|yes':'g','ええ|yes (informal)':'g','いいえ|no':'g',
+                'はじめまして|nice to meet you':'g','どうぞよろしく|pleased to meet you':'g',
+                'おはようございます|good morning':'g','こんにちは|good afternoon':'g','こんばんは|good evening':'g',
+                'おやすみなさい|good night':'g','さようなら|goodbye':'g','ありがとうございます|thank you':'g',
+                'すみません|excuse me':'g','いってきます|I\u0027ll go and come back':'a',
+                'いってらっしゃい|please go and come back':'g','ただいま|I\u0027m home':'g',
+                'おかえりなさい|welcome home':'g','おねがいします|please':'a',
+                'わたしたち|we':'g','かれ|boyfriend/he':'g','かのじょ|girlfriend/she':'g',
+                'おとこ|man':'a','おんな|woman':'g','よろしくおねがいします|nice to meet you':'g',
+                'いただきます|phrase before eating':'g','ごちそうさまでした|thanks for the meal':'g'
+            };
+            var vocabScores = {};
+            try { vocabScores = JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) {}
+            var _vAdded = 0;
+            for (var _vk in VOCAB_BASELINE) {
+                if (!vocabScores[_vk]) { vocabScores[_vk] = { state: VOCAB_BASELINE[_vk], total: 1 }; _vAdded++; }
+            }
+            if (_vAdded > 0) {
+                try { localStorage.setItem('vocab_scores', JSON.stringify(vocabScores)); } catch(e) {}
+            }
+
+            var VOCAB_TOTAL = 708;
+            var vocabMastered = 0;
+            // Count all green vocab keys. kana_scores and vocab_scores use separate
+            // localStorage keys so no filtering needed to keep kana entries out.
+            Object.keys(vocabScores).forEach(function(k) {
+                var e = vocabScores[k];
+                var st = e.state || null;
+                if (!st && typeof e.streak === 'number' && e.streak >= 1) st = 'g';
+                if (st === 'g') vocabMastered++;
+            });
+
+            setWheel('vocab', vocabMastered, VOCAB_TOTAL);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Quiz 9 — April 21, 2026</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 24px; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { color: #e94560; font-size: 1.9em; margin-bottom: 4px; }
+.subtitle { color: #888; margin-bottom: 28px; font-size: 0.95em; }
+.section-title { font-size: 1.3em; font-weight: 700; color: #e94560; margin: 32px 0 8px 0; padding-bottom: 6px; border-bottom: 2px solid #e9456040; }
+.section-desc { color: #999; font-size: 0.85em; margin-bottom: 20px; }
+.quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.quiz-card { background: #16213e; border: 2px solid #0f3460; border-radius: 10px; padding: 14px 8px; text-align: center; cursor: pointer; transition: transform 0.15s; }
+.quiz-card:hover { transform: scale(1.04); border-color: #e94560; }
+.quiz-card.amber { border-color: #ecc94b; background: #1a1a0e; }
+.quiz-card.red { border-color: #e94560; background: #2a0e18; }
+.quiz-card.kata { border-color: #63b3ed; }
+.card-num { font-size: 0.72em; color: #666; margin-bottom: 6px; }
+.card-kana { font-size: 3rem; font-weight: 600; line-height: 1.1; color: #fff; }
+.card-prompt { font-size: 1.3rem; font-weight: 600; color: #fff; min-height: 2.4em; display: flex; align-items: center; justify-content: center; padding: 4px; }
+.amber-tag { display: inline-block; background: #ecc94b; color: #1a1a0e; font-size: 0.6em; padding: 2px 6px; border-radius: 4px; margin-top: 4px; font-weight: 700; }
+.red-tag { display: inline-block; background: #e94560; color: #fff; font-size: 0.6em; padding: 2px 6px; border-radius: 4px; margin-top: 4px; font-weight: 700; }
+.kata-tag { display: inline-block; background: #63b3ed; color: #1a1a2e; font-size: 0.6em; padding: 2px 6px; border-radius: 4px; margin-top: 4px; font-weight: 700; }
+.fmt-tag { display: inline-block; background: #0f3460; color: #a0c4ff; font-size: 0.62em; padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
+.answer { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid #0f3460; color: #63b3ed; font-size: 0.82em; line-height: 1.35; }
+.quiz-card.revealed .answer { display: block; }
+.quiz-card.revealed .card-kana, .quiz-card.revealed .card-prompt { color: #ecc94b; }
+.toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+button { background: #e94560; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; }
+button:hover { background: #d63651; }
+button.secondary { background: #0f3460; }
+.legend { color: #888; font-size: 0.8em; margin-top: 8px; }
+.note { background: #16213e; border-left: 3px solid #63b3ed; padding: 12px 16px; margin-bottom: 16px; border-radius: 4px; color: #c0c0c0; font-size: 0.88em; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Morning Quiz 9 — April 21, 2026</h1>
+<p class="subtitle">60 items · tap any card to reveal · red = needs work, amber = learning (priority), blue = katakana</p>
+
+<div class="note">
+<strong>Week 2 scope.</strong> Today is Tuesday, April 21 — Week 2 means Part 2 vocab is drawn from Genki I Chapters 1 &amp; 2 (new Ch 2 items emphasised). Part 1 prioritises the two red characters (ね, ぜ) and eight ambers (き, す, せ, ぬ, で, じゅ, びゃ, びゅ) plus a few katakana (ア–ト rows).
+</div>
+
+<div class="toolbar">
+<button onclick="document.querySelectorAll('.quiz-card').forEach(c=>c.classList.add('revealed'))">Reveal all</button>
+<button class="secondary" onclick="document.querySelectorAll('.quiz-card').forEach(c=>c.classList.remove('revealed'))">Hide all</button>
+</div>
+
+<div class="section-title">Part 1 — Kana Reading (1–30)</div>
+<p class="section-desc">Read each kana/word aloud. Red = needs work, Amber = learning (priority), Blue border = katakana.</p>
+<div class="quiz-grid" id="part1"></div>
+
+<div class="section-title">Part 2 — Genki I Ch. 1–2 Vocabulary (31–60)</div>
+<p class="section-desc">Kana → Romaji + meaning. All items drawn from Genki I, Lessons 1 and 2. Week 2 scope.</p>
+<div class="quiz-grid" id="part2"></div>
+
+<p class="legend">Generated automatically by the 10 AM scheduled task. Tell Claude which you got right/wrong and scores will update.</p>
+</div>
+
+<script>
+const part1 = [
+  // ── Singles (10): amber/red hiragana first, then 3 katakana ──
+  {n:1,  kana:'ね',   ans:'ne', red:true},
+  {n:2,  kana:'ぜ',   ans:'ze', red:true},
+  {n:3,  kana:'ぬ',   ans:'nu', amber:true},
+  {n:4,  kana:'で',   ans:'de', amber:true},
+  {n:5,  kana:'じゅ', ans:'ju', amber:true},
+  {n:6,  kana:'びゃ', ans:'bya', amber:true},
+  {n:7,  kana:'びゅ', ans:'byu', amber:true},
+  {n:8,  kana:'シ',   ans:'shi (katakana — short strokes go LEFT→RIGHT, writing stroke goes bottom-up)', kata:true},
+  {n:9,  kana:'ツ',   ans:'tsu (katakana — short strokes go TOP→DOWN, writing stroke goes top-down)', kata:true},
+  {n:10, kana:'ソ',   ans:'so (katakana)', kata:true},
+
+  // ── Words (20): built from learned kana, prioritising amber/red ──
+  {n:11, kana:'ねこ',       ans:'neko — cat', red:true},
+  {n:12, kana:'ふね',       ans:'fune — boat', red:true},
+  {n:13, kana:'ぜん',       ans:'zen — all / whole', red:true},
+  {n:14, kana:'かぜ',       ans:'kaze — wind / a cold', red:true},
+  {n:15, kana:'ぜんぶ',     ans:'zenbu — everything / all of it', red:true},
+  {n:16, kana:'すし',       ans:'sushi — sushi', amber:true},
+  {n:17, kana:'すな',       ans:'suna — sand', amber:true},
+  {n:18, kana:'ぬの',       ans:'nuno — cloth', amber:true},
+  {n:19, kana:'でんき',     ans:'denki — electricity / light', amber:true},
+  {n:20, kana:'でんわ',     ans:'denwa — telephone', amber:true},
+  {n:21, kana:'せんせい',   ans:'sensei — teacher', amber:true},
+  {n:22, kana:'せかい',     ans:'sekai — world', amber:true},
+  {n:23, kana:'じゅう',     ans:'juu — ten', amber:true},
+  {n:24, kana:'ごじゅう',   ans:'gojuu — fifty', amber:true},
+  {n:25, kana:'ひゃく',     ans:'hyaku — hundred'},
+  {n:26, kana:'ねだん',     ans:'nedan — price', red:true},
+  {n:27, kana:'いちねんせい', ans:'ichinensei — first-year student', red:true},
+  {n:28, kana:'そうです',   ans:'sou desu — that\u2019s right / yes', amber:true},
+  {n:29, kana:'つくえ',     ans:'tsukue — desk'},
+  {n:30, kana:'しごと',     ans:'shigoto — work / job'}
+];
+
+const part2 = [
+  // ── Chapter 1 (10) — review core Ch 1 beyond the greetings already hit in Quiz 8 ──
+  {n:31, fmt:'K→R', prompt:'がくせい',      ans:'gakusei — student'},
+  {n:32, fmt:'K→R', prompt:'せんせい',      ans:'sensei — teacher'},
+  {n:33, fmt:'K→R', prompt:'だいがく',      ans:'daigaku — university / college'},
+  {n:34, fmt:'K→R', prompt:'にほんじん',    ans:'nihonjin — Japanese person'},
+  {n:35, fmt:'K→R', prompt:'なまえ',        ans:'namae — name'},
+  {n:36, fmt:'K→R', prompt:'ともだち',      ans:'tomodachi — friend'},
+  {n:37, fmt:'K→R', prompt:'かいしゃいん',  ans:'kaishain — office worker / company employee'},
+  {n:38, fmt:'K→R', prompt:'でんわ',        ans:'denwa — telephone'},
+  {n:39, fmt:'K→R', prompt:'ごぜん',        ans:'gozen — a.m.'},
+  {n:40, fmt:'K→R', prompt:'ごご',          ans:'gogo — p.m.'},
+
+  // ── Chapter 2 (20) — new this week, emphasise ko-so-a-do + places ──
+  {n:41, fmt:'K→R', prompt:'これ',          ans:'kore — this one (near me)'},
+  {n:42, fmt:'K→R', prompt:'それ',          ans:'sore — that one (near you)'},
+  {n:43, fmt:'K→R', prompt:'あれ',          ans:'are — that one (over there)'},
+  {n:44, fmt:'K→R', prompt:'どれ',          ans:'dore — which one'},
+  {n:45, fmt:'K→R', prompt:'なん',          ans:'nan — what'},
+  {n:46, fmt:'K→R', prompt:'だれ',          ans:'dare — who'},
+  {n:47, fmt:'K→R', prompt:'ここ',          ans:'koko — here'},
+  {n:48, fmt:'K→R', prompt:'そこ',          ans:'soko — there (near you)'},
+  {n:49, fmt:'K→R', prompt:'あそこ',        ans:'asoko — over there'},
+  {n:50, fmt:'K→R', prompt:'どこ',          ans:'doko — where'},
+  {n:51, fmt:'K→R', prompt:'おちゃ',        ans:'ocha — (green) tea'},
+  {n:52, fmt:'K→R', prompt:'みず',          ans:'mizu — water'},
+  {n:53, fmt:'K→R', prompt:'えいが',        ans:'eiga — movie'},
+  {n:54, fmt:'K→R', prompt:'こうちゃ',      ans:'koucha — black tea'},
+  {n:55, fmt:'K→R', prompt:'さかな',        ans:'sakana — fish'},
+  {n:56, fmt:'K→R', prompt:'たかい',        ans:'takai — expensive / tall / high'},
+  {n:57, fmt:'K→R', prompt:'きっさてん',    ans:'kissaten — café'},
+  {n:58, fmt:'K→R', prompt:'ぎんこう',      ans:'ginkou — bank'},
+  {n:59, fmt:'K→R', prompt:'としょかん',    ans:'toshokan — library'},
+  {n:60, fmt:'K→R', prompt:'いくら',        ans:'ikura — how much (price)'}
+];
+
+function render(list, id, useKana) {
+  const el = document.getElementById(id);
+  list.forEach(item => {
+    const card = document.createElement('div');
+    let cls = 'quiz-card';
+    if (item.red)       cls += ' red';
+    else if (item.amber) cls += ' amber';
+    else if (item.kata)  cls += ' kata';
+    card.className = cls;
+    card.onclick = () => card.classList.toggle('revealed');
+    const main = useKana
+      ? `<div class="card-kana">${item.kana}</div>`
+      : `<div class="card-prompt">${item.prompt}</div>`;
+    let tag = '';
+    if (item.red)       tag = '<span class="red-tag">RED</span>';
+    else if (item.amber) tag = '<span class="amber-tag">AMBER</span>';
+    else if (item.kata)  tag = '<span class="kata-tag">カタカナ</span>';
+    else if (item.fmt)   tag = `<span class="fmt-tag">${item.fmt}</span>`;
+    card.innerHTML = `<div class="card-num">#${item.n}</div>${main}${tag}<div class="answer">${item.ans}</div>`;
+    el.appendChild(card);
+  });
+}
+render(part1, 'part1', true);
+render(part2, 'part2', false);
+</script>
+</body>
+</html>

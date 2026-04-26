@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evening Quiz 6b — April 13, 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 24px;
+        }
+        .container { max-width: 860px; margin: 0 auto; }
+        h1 { color: #e94560; font-size: 1.8em; margin-bottom: 4px; }
+        .subtitle { color: #888; margin-bottom: 32px; font-size: 0.95em; }
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #e94560;
+            margin: 32px 0 8px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e9456040;
+        }
+        .section-desc {
+            color: #999;
+            font-size: 0.85em;
+            margin-bottom: 20px;
+        }
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .quiz-card {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 10px;
+            padding: 14px 8px;
+            text-align: center;
+            transition: transform 0.15s;
+        }
+        .quiz-card:hover { transform: scale(1.04); border-color: #e94560; }
+        .quiz-card.amber { border-color: #ecc94b; background: #1a1a0e; }
+        .quiz-card.new { border-color: #63b3ed; background: #0e1a2e; }
+        .card-num { font-size: 0.7em; color: #666; margin-bottom: 6px; }
+        .card-kana { font-size: 2.8rem; font-weight: 600; line-height: 1.1; color: #fff; }
+        .amber-tag {
+            display: inline-block;
+            background: #ecc94b30;
+            color: #ecc94b;
+            font-size: 0.6em;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .new-tag {
+            display: inline-block;
+            background: #63b3ed30;
+            color: #63b3ed;
+            font-size: 0.6em;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .instructions {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            border-left: 4px solid #e94560;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        nav { margin-bottom: 24px; }
+        nav a {
+            display: inline-block; padding: 8px 14px; background: #e94560;
+            color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em;
+        }
+        nav a:hover { background: #c73e54; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav><a href="index.html">&larr; Dashboard</a></nav>
+    <h1>Evening Quiz 6b</h1>
+    <p class="subtitle">April 13, 2026 &mdash; Kana → Romaji &mdash; 50 Questions (with combo sounds!)</p>
+
+    <div class="instructions">
+        Gold border = amber (needs practice). Blue border = combo sounds (new!). Read each kana and type the romaji.
+    </div>
+
+    <div class="section-title">Single Kana — Amber + Catch-up (1–17)</div>
+    <div class="section-desc">Amber characters plus the 10 that were missed last round, and 3 recently promoted.</div>
+
+    <div class="quiz-grid">
+        <div class="quiz-card amber"><div class="card-num">1</div><div class="card-kana">ほ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">2</div><div class="card-kana">く</div></div>
+        <div class="quiz-card amber"><div class="card-num">3</div><div class="card-kana">ぬ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">4</div><div class="card-kana">て</div></div>
+        <div class="quiz-card amber"><div class="card-num">5</div><div class="card-kana">ぜ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">6</div><div class="card-kana">な</div></div>
+        <div class="quiz-card amber"><div class="card-num">7</div><div class="card-kana">べ</div><div class="amber-tag">amber</div></div>
+        <div class="quiz-card"><div class="card-num">8</div><div class="card-kana">は</div></div>
+        <div class="quiz-card"><div class="card-num">9</div><div class="card-kana">せ</div></div>
+        <div class="quiz-card"><div class="card-num">10</div><div class="card-kana">へ</div></div>
+        <div class="quiz-card"><div class="card-num">11</div><div class="card-kana">じ</div></div>
+        <div class="quiz-card"><div class="card-num">12</div><div class="card-kana">ず</div></div>
+        <div class="quiz-card"><div class="card-num">13</div><div class="card-kana">ぞ</div></div>
+        <div class="quiz-card"><div class="card-num">14</div><div class="card-kana">ぼ</div></div>
+        <div class="quiz-card"><div class="card-num">15</div><div class="card-kana">ぢ</div></div>
+        <div class="quiz-card"><div class="card-num">16</div><div class="card-kana">づ</div></div>
+        <div class="quiz-card"><div class="card-num">17</div><div class="card-kana">ふ</div></div>
+    </div>
+
+    <div class="section-title">Combination Sounds — きゃ きゅ きょ etc. (18–50)</div>
+    <div class="section-desc">All 33 youon (combo sounds). These are new — give it your best shot!</div>
+
+    <div class="quiz-grid">
+        <div class="quiz-card new"><div class="card-num">18</div><div class="card-kana">きゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">19</div><div class="card-kana">しゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">20</div><div class="card-kana">ちょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">21</div><div class="card-kana">にゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">22</div><div class="card-kana">ひゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">23</div><div class="card-kana">みょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">24</div><div class="card-kana">りゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">25</div><div class="card-kana">ぎゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">26</div><div class="card-kana">じょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">27</div><div class="card-kana">びゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">28</div><div class="card-kana">ぴゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">29</div><div class="card-kana">きゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">30</div><div class="card-kana">しょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">31</div><div class="card-kana">ちゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">32</div><div class="card-kana">にょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">33</div><div class="card-kana">ひゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">34</div><div class="card-kana">みゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">35</div><div class="card-kana">りょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">36</div><div class="card-kana">ぎゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">37</div><div class="card-kana">じゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">38</div><div class="card-kana">びょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">39</div><div class="card-kana">ぴゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">40</div><div class="card-kana">きょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">41</div><div class="card-kana">しゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">42</div><div class="card-kana">ちゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">43</div><div class="card-kana">にゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">44</div><div class="card-kana">ひょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">45</div><div class="card-kana">みゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">46</div><div class="card-kana">りゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">47</div><div class="card-kana">ぎょ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">48</div><div class="card-kana">じゅ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">49</div><div class="card-kana">びゃ</div><div class="new-tag">new</div></div>
+        <div class="quiz-card new"><div class="card-num">50</div><div class="card-kana">ぴょ</div><div class="new-tag">new</div></div>
+    </div>
+
+    <div class="instructions">
+        Reply with your 50 answers and I'll grade them!
+    </div>
+</div>
+</body>
+</html>

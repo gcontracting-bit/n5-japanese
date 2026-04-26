@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verb Conjugation Reference - Japanese Study Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        nav {
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #c05621;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #ed8936;
+        }
+
+        /* Page header */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #c05621;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Card styling */
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: white;
+            background: linear-gradient(135deg, #c05621 0%, #ed8936 100%);
+            padding: 12px 16px;
+            margin: -24px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.4em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .card h2:hover {
+            opacity: 0.95;
+        }
+
+        .toggle-arrow {
+            display: inline-block;
+            font-size: 1.2em;
+            min-width: 20px;
+        }
+
+        .section-content {
+            display: block;
+            padding: 20px 24px 24px 24px;
+        }
+
+        .section-content.collapsed {
+            display: none;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        thead {
+            background-color: #fdf2e9;
+            border-bottom: 2px solid #c05621;
+        }
+
+        th {
+            color: #c05621;
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background-color: #fdf8f4;
+        }
+
+        /* Warning style for exceptions */
+        .exception {
+            background-color: #fff3cd !important;
+        }
+
+        .exception td {
+            font-weight: 500;
+        }
+
+        .warning-badge {
+            display: inline-block;
+            background-color: #ff9800;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        /* Conjugation note */
+        .note {
+            background-color: #f9fafb;
+            border-left: 4px solid #ed8936;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .note strong {
+            color: #c05621;
+        }
+
+        /* Group badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .badge-group1 {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-group2 {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-group3 {
+            background-color: #fce4ec;
+            color: #c2185b;
+        }
+
+        /* Header row for Group section */
+        .group-header {
+            background-color: #f0f4f8;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Te-form rules table */
+        .te-form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .te-form-table thead th {
+            background-color: #fdf2e9;
+            color: #c05621;
+        }
+
+        .te-form-table tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .te-form-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .te-form-table .rule {
+            font-weight: 600;
+            color: #c05621;
+            width: 20%;
+        }
+
+        .te-form-table .example {
+            width: 40%;
+        }
+
+        .te-form-table .romaji {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Section styling */
+        h3 {
+            margin-top: 20px;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        td strong {
+            white-space: nowrap;
+        }
+
+        /* Toggle All Buttons */
+        .toggle-all-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .toggle-all-buttons button {
+            padding: 6px 16px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #4a5568;
+            transition: background 0.2s ease;
+        }
+
+        .toggle-all-buttons button:hover {
+            background: #edf2f7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html">← Home</a>
+        </nav>
+
+        <!-- Page header -->
+        <div class="page-header">
+            <h1>Verb Conjugation Reference</h1>
+        </div>
+
+        <!-- Toggle All Buttons -->
+        <div class="toggle-all-buttons">
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+        </div>
+
+        <!-- Section 1: The Three Verb Groups -->
+        <div class="card">
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                The Three Verb Groups
+            </h2>
+            <div class="section-content collapsed">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Group</th>
+                            <th>Name</th>
+                            <th>Dictionary Form</th>
+                            <th>Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Group 1</strong></td>
+                            <td>U-verbs / Godan</td>
+                            <td>Dict form ends in -u consonant (ku, gu, su, tsu, nu, bu, mu, ru*)</td>
+                            <td>書く <span class="romaji">kaku</span>, 話す <span class="romaji">hanasu</span>, 買う <span class="romaji">kau</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Group 2</strong></td>
+                            <td>Ru-verbs / Ichidan</td>
+                            <td>Dict form ends in -iru or -eru</td>
+                            <td>食べる <span class="romaji">taberu</span>, 見る <span class="romaji">miru</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Group 3</strong></td>
+                            <td>Irregular</td>
+                            <td>Only two verbs</td>
+                            <td>する <span class="romaji">suru</span>, 来る <span class="romaji">kuru</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="note">
+                    <strong>Note:</strong> Some -iru/-eru verbs are actually Group 1 (帰る <span class="romaji">kaeru</span>, 知る <span class="romaji">shiru</span>, 入る <span class="romaji">hairu</span>). These must be memorized!
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Complete Conjugation Table: Masu Forms -->
+        <div class="card">
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                Complete Conjugation Table: Masu Forms
+            </h2>
+            <div class="section-content collapsed">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Form</th>
+                            <th>書く <span class="romaji">(Grp 1)</span></th>
+                            <th>食べる <span class="romaji">(Grp 2)</span></th>
+                            <th>する <span class="romaji">(Irr.)</span></th>
+                            <th>来る <span class="romaji">(Irr.)</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Present (+)</strong></td>
+                            <td>書きます <span class="romaji">kakimasu</span></td>
+                            <td>食べます <span class="romaji">tabemasu</span></td>
+                            <td>します <span class="romaji">shimasu</span></td>
+                            <td>来ます <span class="romaji">kimasu</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Present (−)</strong></td>
+                            <td>書きません <span class="romaji">kakimasen</span></td>
+                            <td>食べません <span class="romaji">tabemasen</span></td>
+                            <td>しません <span class="romaji">shimasen</span></td>
+                            <td>来ません <span class="romaji">kimasen</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Past (+)</strong></td>
+                            <td>書きました <span class="romaji">kakimashita</span></td>
+                            <td>食べました <span class="romaji">tabemashita</span></td>
+                            <td>しました <span class="romaji">shimashita</span></td>
+                            <td>来ました <span class="romaji">kimashita</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Past (−)</strong></td>
+                            <td>書きませんでした <span class="romaji">kakimasen deshita</span></td>
+                            <td>食べませんでした <span class="romaji">tabemasen deshita</span></td>
+                            <td>しませんでした <span class="romaji">shimasen deshita</span></td>
+                            <td>来ませんでした <span class="romaji">kimasen deshita</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Volitional</strong></td>
+                            <td>書きましょう <span class="romaji">kakimashō</span></td>
+                            <td>食べましょう <span class="romaji">tabemashō</span></td>
+                            <td>しましょう <span class="romaji">shimashō</span></td>
+                            <td>来ましょう <span class="romaji">kimashō</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tai (want)</strong></td>
+                            <td>書きたい <span class="romaji">kakitai</span></td>
+                            <td>食べたい <span class="romaji">tabetai</span></td>
+                            <td>したい <span class="romaji">shitai</span></td>
+                            <td>来たい <span class="romaji">kitai</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="note">
+                    <strong>Note:</strong> (+) = affirmative (positive), (−) = negative. For example, Present (+) means "I do/will do" while Present (−) means "I don't/won't do."
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Te-Form Rules -->
+        <div class="card">
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                Te-Form Rules
+            </h2>
+            <div class="section-content collapsed">
+                <h3>
+                    <span class="badge badge-group1">Group 1</span>
+                </h3>
+                <table class="te-form-table">
+                    <thead>
+                        <tr>
+                            <th>Rule</th>
+                            <th>Example</th>
+                            <th>Romaji</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rule">く → いて</td>
+                            <td>書く → 書いて</td>
+                            <td class="romaji">kaite</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">ぐ → いで</td>
+                            <td>泳ぐ → 泳いで</td>
+                            <td class="romaji">oyoide</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">す → して</td>
+                            <td>話す → 話して</td>
+                            <td class="romaji">hanashite</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">つ → って</td>
+                            <td>待つ → 待って</td>
+                            <td class="romaji">matte</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">ぬ → んで</td>
+                            <td>死ぬ → 死んで</td>
+                            <td class="romaji">shinde</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">ぶ → んで</td>
+                            <td>遊ぶ → 遊んで</td>
+                            <td class="romaji">asonde</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">む → んで</td>
+                            <td>読む → 読んで</td>
+                            <td class="romaji">yonde</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">る → って</td>
+                            <td>帰る → 帰って</td>
+                            <td class="romaji">kaette</td>
+                        </tr>
+                        <tr>
+                            <td class="rule">う → って</td>
+                            <td>買う → 買って</td>
+                            <td class="romaji">katte</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>
+                    <span class="badge badge-group2">Group 2</span>
+                </h3>
+                <p>Drop る, add て</p>
+                <p style="font-family: Arial, sans-serif;">食べる → 食べて <span class="romaji">tabete</span> &nbsp; | &nbsp; 見る → 見て <span class="romaji">mite</span></p>
+
+                <h3>
+                    <span class="badge badge-group3">Group 3 (Irregular)</span>
+                </h3>
+                <p style="font-family: Arial, sans-serif;">
+                    する → して <span class="romaji">shite</span>
+                    <br>来る → 来て <span class="romaji">kite</span>
+                    <br>行く → 行って <span class="romaji">itte</span> <span class="warning-badge">Exception!</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 4: Short (Plain) Forms -->
+        <div class="card">
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                Short (Plain) Forms
+            </h2>
+            <div class="section-content collapsed">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Form</th>
+                            <th>書く <span class="romaji">(Grp 1)</span></th>
+                            <th>食べる <span class="romaji">(Grp 2)</span></th>
+                            <th>する</th>
+                            <th>来る</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Present (+)</strong></td>
+                            <td>書く</td>
+                            <td>食べる</td>
+                            <td>する</td>
+                            <td>来る</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Present (−)</strong></td>
+                            <td>書かない <span class="romaji">kakanai</span></td>
+                            <td>食べない <span class="romaji">tabenai</span></td>
+                            <td>しない <span class="romaji">shinai</span></td>
+                            <td>来ない <span class="romaji">konai</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Past (+)</strong></td>
+                            <td>書いた <span class="romaji">kaita</span></td>
+                            <td>食べた <span class="romaji">tabeta</span></td>
+                            <td>した <span class="romaji">shita</span></td>
+                            <td>来た <span class="romaji">kita</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Past (−)</strong></td>
+                            <td>書かなかった <span class="romaji">kakanakatta</span></td>
+                            <td>食べなかった <span class="romaji">tabenakatta</span></td>
+                            <td>しなかった <span class="romaji">shinakatta</span></td>
+                            <td>来なかった <span class="romaji">konakatta</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 5: Common N5 Verbs -->
+        <div class="card">
+            <h2>
+                <span class="toggle-arrow">▶</span>
+                Common N5 Verbs — Group Identification
+            </h2>
+            <div class="section-content collapsed">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Verb</th>
+                            <th>Reading</th>
+                            <th>Meaning</th>
+                            <th>Group</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>行く</td>
+                            <td><span class="romaji">iku</span></td>
+                            <td>to go</td>
+                            <td><span class="badge badge-group1">Group 1</span></td>
+                        </tr>
+                        <tr>
+                            <td>書く</td>
+                            <td><span class="romaji">kaku</span></td>
+                            <td>to write</td>
+                            <td><span class="badge badge-group1">Group 1</span></td>
+                        </tr>
+                        <tr>
+                            <td>話す</td>
+                            <td><span class="romaji">hanasu</span></td>
+                            <td>to speak</td>
+                            <td><span class="badge badge-group1">Group 1</span></td>
+                        </tr>
+                        <tr>
+                            <td>読む</td>
+                            <td><span class="romaji">yomu</span></td>
+                            <td>to read</td>
+                            <td><span class="badge badge-group1">Group 1</span></td>
+                        </tr>
+                        <tr>
+                            <td>飲む</td>
+                            <td><span class="romaji">nomu</span></td>
+                            <td>to drink</td>
+                            <td><span class="badge badge-group1">Group 1</span></td>
+                        </tr>
+                        <tr>
+                            <td>買う</td>
+                            <td><span class="romaji">kau</span></td>
+                            <td>to buy</td>
+                            <td><span class="badge badge-group1">Group 1</span></td>
+                        </tr>
+                        <tr>
+                            <td>待つ</td>
+                            <td><span class="romaji">matsu</span></td>
+                            <td>to wait</td>
+                            <td><span class="badge badge-group1">Group 1</span></td>
+                        </tr>
+                        <tr>
+                            <td>乗る</td>
+                            <td><span class="romaji">noru</span></td>
+                            <td>to ride</td>
+                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
+                        </tr>
+                        <tr class="exception">
+                            <td>帰る</td>
+                            <td><span class="romaji">kaeru</span></td>
+                            <td>to return</td>
+                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
+                        </tr>
+                        <tr class="exception">
+                            <td>知る</td>
+                            <td><span class="romaji">shiru</span></td>
+                            <td>to know</td>
+                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
+                        </tr>
+                        <tr class="exception">
+                            <td>入る</td>
+                            <td><span class="romaji">hairu</span></td>
+                            <td>to enter</td>
+                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
+                        </tr>
+                        <tr>
+                            <td>食べる</td>
+                            <td><span class="romaji">taberu</span></td>
+                            <td>to eat</td>
+                            <td><span class="badge badge-group2">Group 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>見る</td>
+                            <td><span class="romaji">miru</span></td>
+                            <td>to see</td>
+                            <td><span class="badge badge-group2">Group 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>起きる</td>
+                            <td><span class="romaji">okiru</span></td>
+                            <td>to wake up</td>
+                            <td><span class="badge badge-group2">Group 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>寝る</td>
+                            <td><span class="romaji">neru</span></td>
+                            <td>to sleep</td>
+                            <td><span class="badge badge-group2">Group 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>かける</td>
+                            <td><span class="romaji">kakeru</span></td>
+                            <td>to make a call</td>
+                            <td><span class="badge badge-group2">Group 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>教える</td>
+                            <td><span class="romaji">oshieru</span></td>
+                            <td>to teach</td>
+                            <td><span class="badge badge-group2">Group 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>出る</td>
+                            <td><span class="romaji">deru</span></td>
+                            <td>to leave</td>
+                            <td><span class="badge badge-group2">Group 2</span></td>
+                        </tr>
+                        <tr>
+                            <td>する</td>
+                            <td><span class="romaji">suru</span></td>
+                            <td>to do</td>
+                            <td><span class="badge badge-group3">Group 3</span></td>
+                        </tr>
+                        <tr>
+                            <td>来る</td>
+                            <td><span class="romaji">kuru</span></td>
+                            <td>to come</td>
+                            <td><span class="badge badge-group3">Group 3</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="note">
+                    <strong>Warning:</strong> The verbs marked with "Exception!" end in -iru or -eru but are actually Group 1 verbs. These must be memorized individually!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Collapsible section functionality
+        document.querySelectorAll('.card h2').forEach(header => {
+            header.addEventListener('click', function() {
+                const arrow = this.querySelector('.toggle-arrow');
+                const content = this.nextElementSibling;
+
+                if (content && content.classList.contains('section-content')) {
+                    content.classList.toggle('collapsed');
+                    arrow.textContent = content.classList.contains('collapsed') ? '▶' : '▼';
+                }
+            });
+        });
+
+        function expandAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.remove('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▼');
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▶');
+        }
+    </script>
+</body>
+</html>

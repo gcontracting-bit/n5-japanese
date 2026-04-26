@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Format - JLPT N5 Study Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #9b2c2c;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #c53030;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #9b2c2c;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Cards */
+        .exam-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .exam-card h2 {
+            color: white;
+            background: linear-gradient(135deg, #9b2c2c 0%, #e53e3e 100%);
+            padding: 12px 16px;
+            margin: -24px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.4em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .toggle-arrow {
+            display: inline-flex;
+            font-size: 1.2em;
+            min-width: 20px;
+        }
+
+        .section-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 20px 24px 24px 24px;
+        }
+
+        .exam-card.collapsed .section-content {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 24px;
+        }
+
+        .exam-card h3 {
+            color: #9b2c2c;
+            margin: 20px 0 10px 0;
+            font-size: 1.15em;
+        }
+
+        .exam-card p {
+            margin-bottom: 10px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 16px;
+        }
+
+        thead {
+            background-color: #fff5f5;
+            border-bottom: 2px solid #9b2c2c;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            color: #9b2c2c;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background-color: #fff5f5;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border-left: 4px solid #e53e3e;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box strong {
+            color: #9b2c2c;
+        }
+
+        /* Info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .info-tile {
+            background: #fff5f5;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #fed7d7;
+        }
+
+        .info-tile .label {
+            font-size: 0.85em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .info-tile .value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #9b2c2c;
+        }
+
+        .info-tile .detail {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Question type list */
+        .question-types {
+            list-style: none;
+            padding: 0;
+        }
+
+        .question-types li {
+            padding: 10px 0 10px 28px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .question-types li:last-child {
+            border-bottom: none;
+        }
+
+        .question-types li::before {
+            content: '●';
+            color: #e53e3e;
+            position: absolute;
+            left: 8px;
+            top: 10px;
+            font-size: 0.6em;
+        }
+
+        .question-types li strong {
+            color: #9b2c2c;
+        }
+
+        /* Strategy tips */
+        .strategy-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .strategy-list li {
+            padding: 12px 0 12px 36px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .strategy-list li:last-child {
+            border-bottom: none;
+        }
+
+        .strategy-list li::before {
+            content: '💡';
+            position: absolute;
+            left: 8px;
+            top: 12px;
+        }
+
+        /* Countdown */
+        .countdown-banner {
+            background: linear-gradient(135deg, #9b2c2c 0%, #e53e3e 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(155, 44, 44, 0.3);
+        }
+
+        .countdown-banner h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .countdown-days {
+            font-size: 3em;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .countdown-banner p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 10px 0 10px 32px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist li::before {
+            content: '☐';
+            position: absolute;
+            left: 8px;
+            top: 10px;
+            font-size: 1.1em;
+            color: #9b2c2c;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 16px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #e53e3e, #9b2c2c);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 12px 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 18px;
+            width: 12px;
+            height: 12px;
+            background: #e53e3e;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #e53e3e;
+        }
+
+        .timeline-item .time-label {
+            font-weight: 700;
+            color: #9b2c2c;
+            font-size: 0.95em;
+        }
+
+        .timeline-item .time-desc {
+            color: #555;
+            margin-top: 2px;
+        }
+
+        /* Toggle All Buttons */
+        .toggle-all-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .toggle-all-buttons button {
+            padding: 6px 16px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #4a5568;
+            transition: background 0.2s ease;
+        }
+
+        .toggle-all-buttons button:hover {
+            background: #edf2f7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.95em;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+
+            .page-header h1 {
+                font-size: 1.8em;
+            }
+
+            .countdown-days {
+                font-size: 2.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="index.html">← Home</a>
+        </nav>
+
+        <div class="page-header">
+            <h1>試 Exam Format & Test Day Strategy</h1>
+            <p>Everything you need to know about the JLPT N5 — structure, scoring, question types, and how to prepare for test day.</p>
+        </div>
+
+        <!-- Countdown Banner -->
+        <div class="countdown-banner">
+            <h2>JLPT N5 — July 2026</h2>
+            <div class="countdown-days" id="countdown"></div>
+            <p>Sunday, 5 July 2026 — Stay focused, you've got this!</p>
+        </div>
+
+        <!-- Toggle All Buttons -->
+        <div class="toggle-all-buttons">
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+        </div>
+
+        <!-- Exam at a Glance -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Exam at a Glance</h2>
+            <div class="section-content">
+                <div class="info-grid">
+                    <div class="info-tile">
+                        <div class="label">Total Duration</div>
+                        <div class="value">105 min</div>
+                        <div class="detail">Across 3 sections</div>
+                    </div>
+                    <div class="info-tile">
+                        <div class="label">Max Score</div>
+                        <div class="value">180</div>
+                        <div class="detail">120 + 60 points</div>
+                    </div>
+                    <div class="info-tile">
+                        <div class="label">Pass Score</div>
+                        <div class="value">80 / 180</div>
+                        <div class="detail">≈ 44% overall</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Structure -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Exam Structure</h2>
+            <div class="section-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Content</th>
+                        <th>Time</th>
+                        <th>Max Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Language Knowledge (Vocabulary)</strong></td>
+                        <td>Kanji reading, word meaning, word usage</td>
+                        <td>25 min</td>
+                        <td rowspan="2" style="vertical-align: middle; text-align: center; font-weight: 700; color: #9b2c2c;">120</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Language Knowledge (Grammar) + Reading</strong></td>
+                        <td>Grammar forms, sentence assembly, passage reading</td>
+                        <td>50 min</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Listening</strong></td>
+                        <td>Audio-based questions (played once)</td>
+                        <td>30 min</td>
+                        <td style="text-align: center; font-weight: 700; color: #9b2c2c;">60</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Scoring & Passing -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Scoring & Passing</h2>
+            <div class="section-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Score Needed</th>
+                        <th>Out Of</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Overall passing score</td>
+                        <td><strong>80</strong></td>
+                        <td>180</td>
+                    </tr>
+                    <tr>
+                        <td>Section minimum: Language Knowledge + Reading</td>
+                        <td><strong>38</strong></td>
+                        <td>120</td>
+                    </tr>
+                    <tr>
+                        <td>Section minimum: Listening</td>
+                        <td><strong>19</strong></td>
+                        <td>60</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <strong>Important:</strong> You must pass BOTH the overall threshold AND each section minimum. You cannot make up for a weak listening score with a strong reading score.
+            </div>
+            </div>
+        </div>
+
+        <!-- Registration Info -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Registration & Logistics</h2>
+            <div class="section-content">
+
+            <div class="info-grid">
+                <div class="info-tile">
+                    <div class="label">Exam Date</div>
+                    <div class="value" style="font-size: 1.2em;">5 July 2026</div>
+                    <div class="detail">Sunday</div>
+                </div>
+                <div class="info-tile">
+                    <div class="label">Test Centre</div>
+                    <div class="value" style="font-size: 1.1em;">University College Dublin</div>
+                    <div class="detail">Dublin</div>
+                </div>
+                <div class="info-tile">
+                    <div class="label">Registration</div>
+                    <div class="value" style="font-size: 1.1em; color: #276749;">✓ Registered</div>
+                    <div class="detail">Confirmed</div>
+                </div>
+            </div>
+
+            <p>The JLPT is offered twice a year: early July and early December. Registration typically opens 3–4 months before the test and closes well in advance. Some sites fill up quickly — register as soon as the window opens.</p>
+
+            <div class="highlight-box">
+                <strong>Official site:</strong> <a href="https://www.jlpt.jp/e/" style="color: #9b2c2c;">https://www.jlpt.jp/e/</a> — Find test sites, sample questions, and registration info.
+            </div>
+            </div>
+        </div>
+
+        <!-- Question Types -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Question Types</h2>
+            <div class="section-content">
+
+            <h3>Vocabulary Section</h3>
+            <ul class="question-types">
+                <li><strong>Kanji reading:</strong> Choose the correct hiragana reading for underlined kanji.</li>
+                <li><strong>Orthography:</strong> Choose the correct kanji/katakana for an underlined hiragana word.</li>
+                <li><strong>Contextual meaning:</strong> Choose the word that fits the blank in a sentence.</li>
+                <li><strong>Paraphrasing:</strong> Choose the sentence closest in meaning to the given sentence.</li>
+            </ul>
+
+            <h3>Grammar Section</h3>
+            <ul class="question-types">
+                <li><strong>Fill the blank:</strong> Choose the correct grammar form for the blank.</li>
+                <li><strong>Sentence assembly:</strong> Rearrange four scrambled parts into the correct order (identify what goes in position ★).</li>
+                <li><strong>Passage grammar:</strong> Choose correct grammar within a short text passage.</li>
+            </ul>
+
+            <h3>Reading Section</h3>
+            <ul class="question-types">
+                <li><strong>Short passages:</strong> Read 2–3 short texts and answer comprehension questions.</li>
+                <li><strong>Information retrieval:</strong> Read a notice, schedule, or sign and answer questions about it.</li>
+            </ul>
+
+            <h3>Listening Section</h3>
+            <ul class="question-types">
+                <li><strong>Task-based:</strong> Listen to a conversation and choose the correct answer/picture.</li>
+                <li><strong>Key point:</strong> Listen and identify the main point of the conversation.</li>
+                <li><strong>Verbal response:</strong> Listen to a short statement and choose the appropriate reply.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>Audio is played ONCE only.</strong> You cannot replay it. Practice listening without pausing or rewinding.
+            </div>
+            </div>
+        </div>
+
+        <!-- Test Day Strategy -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Test Day Strategy</h2>
+            <div class="section-content">
+
+            <h3>Before the Exam</h3>
+            <ul class="checklist">
+                <li>Get a full night of sleep the night before</li>
+                <li>Eat a proper meal beforehand</li>
+                <li>Bring your admission voucher</li>
+                <li>Bring photo ID</li>
+                <li>Bring HB / No. 2 pencils (no pens allowed)</li>
+                <li>Bring an eraser</li>
+                <li>Bring a watch — not all test rooms have visible clocks</li>
+            </ul>
+
+            <h3>Time Management</h3>
+            <ul class="strategy-list">
+                <li><strong>Vocabulary + Grammar (75 min total):</strong> Spend no more than 30–40 seconds on any single vocabulary or grammar question. If unsure, mark your best guess and move on.</li>
+                <li><strong>Save 15–20 min for reading passages</strong> — they take longer per question and are worth the time investment.</li>
+                <li><strong>Answer every question</strong> — there is no penalty for guessing. Eliminate choices you know are wrong, then pick from the rest.</li>
+            </ul>
+
+            <h3>Section-Specific Tips</h3>
+            <ul class="strategy-list">
+                <li><strong>Reading strategy:</strong> Read the question first, then scan the passage for the answer. You don't need to understand every word — look for keywords. For information retrieval (schedules, signs), focus on numbers, dates, and key nouns.</li>
+                <li><strong>Listening strategy:</strong> Read the answer choices during the short pause before audio plays. This tells you what to listen for. Don't panic if you miss a word — focus on overall meaning. The correct answer usually contains a keyword from the audio.</li>
+            </ul>
+            </div>
+        </div>
+
+        <!-- Test Day Timeline -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Test Day Timeline</h2>
+            <div class="section-content">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="time-label">Morning — Arrival</div>
+                    <div class="time-desc">Arrive early. Find your room and seat. Have ID and voucher ready. Settle in and relax.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time-label">Section 1 — Vocabulary (25 min)</div>
+                    <div class="time-desc">Kanji reading, word meaning, word usage. Quick pace — 30–40 seconds per question max.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time-label">Section 2 — Grammar + Reading (50 min)</div>
+                    <div class="time-desc">Grammar fill-in, sentence assembly, and passage comprehension. Save 15–20 min for reading.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time-label">Break</div>
+                    <div class="time-desc">Short break between written and listening sections. Stretch, hydrate, stay calm.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time-label">Section 3 — Listening (30 min)</div>
+                    <div class="time-desc">Audio played once. Read choices during pauses. Focus on keywords and overall meaning.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time-label">Done!</div>
+                    <div class="time-desc">Results arrive by mail approximately 2–3 months after the exam.</div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Common Exam Expressions -->
+        <div class="exam-card collapsed">
+            <h2><span class="toggle-arrow">▶</span>Common Exam Expressions</h2>
+            <div class="section-content">
+            <p>These phrases appear frequently in JLPT instructions and questions. Learn to recognise them quickly.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Japanese</th>
+                        <th>Reading</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>問題</td><td>もんだい</td><td>Question / Problem</td></tr>
+                    <tr><td>質問</td><td>しつもん</td><td>Question (to ask)</td></tr>
+                    <tr><td>答え</td><td>こたえ</td><td>Answer</td></tr>
+                    <tr><td>正しい</td><td>ただしい</td><td>Correct</td></tr>
+                    <tr><td>選ぶ</td><td>えらぶ</td><td>To choose / select</td></tr>
+                    <tr><td>読む</td><td>よむ</td><td>To read</td></tr>
+                    <tr><td>書く</td><td>かく</td><td>To write</td></tr>
+                    <tr><td>聞く</td><td>きく</td><td>To listen / ask</td></tr>
+                    <tr><td>文</td><td>ぶん</td><td>Sentence</td></tr>
+                    <tr><td>言葉</td><td>ことば</td><td>Word / Language</td></tr>
+                    <tr><td>意味</td><td>いみ</td><td>Meaning</td></tr>
+                    <tr><td>例</td><td>れい</td><td>Example</td></tr>
+                    <tr><td>次</td><td>つぎ</td><td>Next</td></tr>
+                    <tr><td>下線</td><td>かせん</td><td>Underline</td></tr>
+                    <tr><td>最も</td><td>もっとも</td><td>Most</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Countdown to July 5, 2026
+        function updateCountdown() {
+            const examDate = new Date('2026-07-05T00:00:00');
+            const now = new Date();
+            const diff = examDate - now;
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            const el = document.getElementById('countdown');
+            if (days > 0) {
+                el.textContent = days + ' days to go';
+            } else if (days === 0) {
+                el.textContent = 'Today is the day!';
+            } else {
+                el.textContent = 'Exam complete!';
+            }
+        }
+        updateCountdown();
+
+        // Toggle collapsible exam cards
+        document.querySelectorAll('.exam-card h2').forEach(h2 => {
+            h2.addEventListener('click', function() {
+                const card = this.closest('.exam-card');
+                const content = card.querySelector('.section-content');
+                const arrow = this.querySelector('.toggle-arrow');
+                if (content) {
+                    card.classList.toggle('collapsed');
+                    arrow.textContent = card.classList.contains('collapsed') ? '▶' : '▼';
+                    if (card.classList.contains('collapsed')) {
+                        content.style.maxHeight = '0';
+                    } else {
+                        content.style.maxHeight = '5000px';
+                    }
+                }
+            });
+        });
+
+        function expandAll() {
+            document.querySelectorAll('.exam-card').forEach(c => c.classList.remove('collapsed'));
+            document.querySelectorAll('.exam-card .toggle-arrow').forEach(a => a.textContent = '▼');
+            document.querySelectorAll('.exam-card .section-content').forEach(c => c.style.maxHeight = '5000px');
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.exam-card').forEach(c => c.classList.add('collapsed'));
+            document.querySelectorAll('.exam-card .toggle-arrow').forEach(a => a.textContent = '▶');
+            document.querySelectorAll('.exam-card .section-content').forEach(c => c.style.maxHeight = '0');
+        }
+    </script>
+</body>
+</html>
