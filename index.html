@@ -221,8 +221,8 @@
                                 stroke-dasharray="0 408.41" stroke-linecap="round"/>
                     </svg>
                     <div style="position: relative; z-index: 1; text-align: center;">
-                        <div class="percentage" id="wheel-pct-katakana">83%</div>
-                        <div id="wheel-count-katakana" style="font-size: 0.85em; color: #666; margin-top: 5px;">86 / 104</div>
+                        <div class="percentage" id="wheel-pct-katakana">77%</div>
+                        <div id="wheel-count-katakana" style="font-size: 0.85em; color: #666; margin-top: 5px;">80 / 104</div>
                     </div>
                 </div>
                 <div class="wheel-label">Katakana</div>
@@ -251,8 +251,8 @@
                                 stroke-dasharray="0 408.41" stroke-linecap="round"/>
                     </svg>
                     <div style="position: relative; z-index: 1; text-align: center;">
-                        <div class="percentage" id="wheel-pct-vocab">10%</div>
-                        <div id="wheel-count-vocab" style="font-size: 0.85em; color: #666; margin-top: 5px;">66 / 688</div>
+                        <div class="percentage" id="wheel-pct-vocab">16%</div>
+                        <div id="wheel-count-vocab" style="font-size: 0.85em; color: #666; margin-top: 5px;">113 / 708</div>
                     </div>
                 </div>
                 <div class="wheel-label">Vocabulary</div>
@@ -440,29 +440,28 @@
             var kataDefaults = {
                 'ア':'g','イ':'g','ウ':'g','エ':'g','オ':'g',
                 'カ':'g','キ':'g','ク':'g','ケ':'g','コ':'g',
-                'ガ':'g','ギ':'g','グ':'g','ゲ':'g','ゴ':'g',
                 'サ':'g','シ':'g','ス':'g','セ':'g','ソ':'g',
-                'タ':'g','チ':'g','ツ':'a','テ':'g','ト':'g',
-                'ダ':'g','ヂ':'g','ヅ':'a','デ':'g','ド':'g',
+                'タ':'g','チ':'g','ツ':'g','テ':'g','ト':'g',
+                'ナ':'g','ニ':'g','ヌ':'g','ネ':'g','ノ':'g',
                 'ハ':'g','ヒ':'g','フ':'g','ヘ':'g','ホ':'g',
-                'バ':'g','ビ':'g','ブ':'g','ベ':'g','ボ':'g',
-                'パ':'g','ピ':'g','プ':'g','ペ':'g','ポ':'g',
-                'マ':'g','ミ':'g','ム':'g','メ':'g','モ':'g',
-                'ヤ':'g','ユ':'g','ヨ':'g',
-                'ラ':'a','リ':'g','ル':'g','レ':'g','ロ':'g',
-                'ワ':'a','ヲ':'g','ン':'g',
+                'ヅ':'g','ピ':'g',
+                'マ':'a','ミ':'a','ユ':'a',
+                'ラ':'a','リ':'a','ル':'a','レ':'a','ロ':'a',
+                'ワ':'a','ヲ':'a','ン':'a',
+                'ガ':'a','ギ':'a','グ':'a',
+                'ダ':'a','ド':'a','バ':'a','ペ':'a',
                 // Youon combos
-                'キャ':'g','キュ':'g','キョ':'g',
-                'シャ':'g','シュ':'g','ショ':'g',
-                'チャ':'g','チュ':'g','チョ':'g',
-                'ニャ':'g','ニュ':'g',
-                'ヒャ':'g','ヒョ':'g',
-                'ミャ':'g','ミュ':'g',
-                'リャ':'g','リュ':'g','リョ':'g',
-                'ギャ':'g',
+                'キャ':'a','キュ':'a','キョ':'a',
+                'シャ':'a','シュ':'a','ショ':'a',
+                'チャ':'a','チュ':'a','チョ':'a',
+                'ニャ':'a','ニュ':'a','ニョ':'a',
+                'ヒャ':'a','ヒュ':'a','ヒョ':'a',
+                'ミャ':'a','ミュ':'a',
+                'リャ':'a','リュ':'a','リョ':'a',
+                'ギャ':'a','ギョ':'a',
                 'ジャ':'a','ジュ':'a','ジョ':'a',
-                'ビャ':'g','ビュ':'g',
-                'ピャ':'g'
+                'ビャ':'a','ビュ':'a','ビョ':'a',
+                'ピャ':'a','ピョ':'a'
             };
 
             // Count katakana: localStorage overrides hardcoded defaults
@@ -478,9 +477,7 @@
             });
 
             setWheel('hiragana', hiraKnown, allHiragana.length);
-            // Floor katakana at 86 (83%) to match authoritative count on kana.html.
-            // Localstorage progress overrides upward if user advances further.
-            setWheel('katakana', Math.max(kataKnown, 86), allKatakana.length);
+            setWheel('katakana', kataKnown, allKatakana.length);
 
             // --- Kanji scores ---
             var kanjiScores = {};
@@ -504,7 +501,7 @@
                 'にほんご|Japanese language':'g','えいご|English':'a','にほん|Japan':'g',
                 'アメリカ|America':'g','でんわ|telephone':'g','かがく|science':'g',
                 'けいざい|economics':'g','こくさいかんけい|international relations':'g','せいじ|politics':'g',
-                'ビジネス|business':'g','ぶんがく|literature':'g','れきし|history':'g',
+                'ビジネス|business':'g','ぶんがく|literature':'g','れきし|history':'a',
                 'コンピューター|computer':'g','アジアけんきゅう|Asian studies':'g','アート|art':'g',
                 'いしゃ|doctor':'g','かいしゃいん|office worker':'g','かんごし|nurse':'g',
                 'こうこうせい|high school student':'g','しゅふ|housewife':'g','エンジニア|engineer':'g',
@@ -519,8 +516,8 @@
                 'すみません|excuse me':'g','いってきます|I\u0027ll go and come back':'a',
                 'いってらっしゃい|please go and come back':'g','ただいま|I\u0027m home':'g',
                 'おかえりなさい|welcome home':'g','おねがいします|please':'a',
-                'わたしたち|we':'g','かれ|boyfriend/he':'g','かのじょ|girlfriend/she':'g',
-                'おとこ|man':'a','おんな|woman':'g','よろしくおねがいします|nice to meet you':'g',
+                'わたしたち|we':'g','かれ|boyfriend/he':'a','かのじょ|girlfriend/she':'g',
+                'おとこ|man':'r','おんな|woman':'g','よろしくおねがいします|nice to meet you':'g',
                 'いただきます|phrase before eating':'g','ごちそうさまでした|thanks for the meal':'g'
             };
             var vocabScores = {};
