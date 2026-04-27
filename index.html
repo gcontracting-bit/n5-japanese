@@ -384,11 +384,14 @@
             setWheel('kanji', kanjiKnown, KANJI_TOTAL);
 
             // --- Vocabulary scores ---
+            // Only count actual vocab words (2+ chars before |), skip single kana entries
             var vocabScores = {};
             try { vocabScores = JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) {}
             var VOCAB_TOTAL = 708;
             var vocabMastered = 0;
             Object.keys(vocabScores).forEach(function(k) {
+                var parts = k.split('|');
+                if (parts[0] && parts[0].length < 2) return; // skip single kana chars
                 var e = vocabScores[k];
                 var st = e.state || null;
                 if (!st && typeof e.streak === 'number' && e.streak >= 3) st = 'g';
