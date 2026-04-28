@@ -403,59 +403,59 @@
                 <div class="section-body">
                     <div class="kanji-grid">
                         <!-- Numbers & Amounts -->
-                        <div class="kanji-cell grey" title="イチ ひと(つ)">
+                        <div class="kanji-cell blue" title="イチ ひと(つ)">
                             <div class="kanji-character">一</div>
                             <div class="kanji-reading">ichi</div>
                         </div>
-                        <div class="kanji-cell grey" title="ニ ふた(つ)">
+                        <div class="kanji-cell blue" title="ニ ふた(つ)">
                             <div class="kanji-character">二</div>
                             <div class="kanji-reading">ni</div>
                         </div>
-                        <div class="kanji-cell grey" title="サン み(っつ)">
+                        <div class="kanji-cell blue" title="サン み(っつ)">
                             <div class="kanji-character">三</div>
                             <div class="kanji-reading">san</div>
                         </div>
-                        <div class="kanji-cell grey" title="シ よ(っつ)">
+                        <div class="kanji-cell blue" title="シ よ(っつ)">
                             <div class="kanji-character">四</div>
                             <div class="kanji-reading">shi</div>
                         </div>
-                        <div class="kanji-cell grey" title="ゴ いつ(つ)">
+                        <div class="kanji-cell blue" title="ゴ いつ(つ)">
                             <div class="kanji-character">五</div>
                             <div class="kanji-reading">go</div>
                         </div>
-                        <div class="kanji-cell grey" title="ロク む(っつ)">
+                        <div class="kanji-cell blue" title="ロク む(っつ)">
                             <div class="kanji-character">六</div>
                             <div class="kanji-reading">roku</div>
                         </div>
-                        <div class="kanji-cell grey" title="シチ なな(つ)">
+                        <div class="kanji-cell blue" title="シチ なな(つ)">
                             <div class="kanji-character">七</div>
                             <div class="kanji-reading">shichi</div>
                         </div>
-                        <div class="kanji-cell grey" title="ハチ や(っつ)">
+                        <div class="kanji-cell blue" title="ハチ や(っつ)">
                             <div class="kanji-character">八</div>
                             <div class="kanji-reading">hachi</div>
                         </div>
-                        <div class="kanji-cell grey" title="キュウ ここの(つ)">
+                        <div class="kanji-cell blue" title="キュウ ここの(つ)">
                             <div class="kanji-character">九</div>
                             <div class="kanji-reading">kyuu</div>
                         </div>
-                        <div class="kanji-cell grey" title="ジュウ とお">
+                        <div class="kanji-cell blue" title="ジュウ とお">
                             <div class="kanji-character">十</div>
                             <div class="kanji-reading">juu</div>
                         </div>
-                        <div class="kanji-cell grey" title="ヒャク">
+                        <div class="kanji-cell blue" title="ヒャク">
                             <div class="kanji-character">百</div>
                             <div class="kanji-reading">hyaku</div>
                         </div>
-                        <div class="kanji-cell grey" title="セン ち">
+                        <div class="kanji-cell blue" title="セン ち">
                             <div class="kanji-character">千</div>
                             <div class="kanji-reading">sen</div>
                         </div>
-                        <div class="kanji-cell grey" title="マン">
+                        <div class="kanji-cell blue" title="マン">
                             <div class="kanji-character">万</div>
                             <div class="kanji-reading">man</div>
                         </div>
-                        <div class="kanji-cell grey" title="エン ぐ(る)">
+                        <div class="kanji-cell blue" title="エン ぐ(る)">
                             <div class="kanji-character">円</div>
                             <div class="kanji-reading">en</div>
                         </div>
@@ -464,7 +464,7 @@
                             <div class="kanji-reading">doru</div>
                         </div>
                         <!-- Time & Calendar -->
-                        <div class="kanji-cell grey" title="ニチ ひ">
+                        <div class="kanji-cell blue" title="ニチ ひ">
                             <div class="kanji-character">日</div>
                             <div class="kanji-reading">nichi</div>
                         </div>
@@ -1818,15 +1818,16 @@
             document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▶');
         }
 
-        // ============ APPLY FLASHCARD QUIZ SCORES ============
+        // ============ APPLY KANJI SCORES FROM SUPABASE VIA CLOUD SYNC ============
+        // Mirrors kana.html pattern: re-runs on cloudsync:ready / cloudsync:update
+        // so the dashboard reflects fresh Supabase data, not stale localStorage.
         function applyKanjiScores() {
             let kanjiScores;
             try { kanjiScores = JSON.parse(localStorage.getItem('kanji_scores') || '{}'); }
             catch(e) { return; }
 
-            if (Object.keys(kanjiScores).length === 0) return;
+            let mastered = 0, learning = 0, needsWork = 0, studying = 0, notStarted = 0;
 
-            // Update the overview grid cells
             document.querySelectorAll('.kanji-cell').forEach(cell => {
                 const charEl = cell.querySelector('.kanji-character');
                 if (!charEl) return;
@@ -1835,14 +1836,59 @@
 
                 if (score) {
                     cell.classList.remove('green', 'amber', 'red', 'blue', 'grey');
-                    if (score.streak >= 1) cell.classList.add('green');
-                    else if (score.streak === -1) cell.classList.add('amber');
-                    else cell.classList.add('red');
+                    // Prefer explicit status field if present (green/amber/red/blue)
+                    if (score.status === 'green' || score.status === 'amber' || score.status === 'red' || score.status === 'blue') {
+                        cell.classList.add(score.status);
+                    } else if (score.streak >= 3) {
+                        // Fallback when status field is missing (older cached entries):
+                        // mirror kana RAG logic — streak >= 3 = green
+                        cell.classList.add('green');
+                    } else if (score.streak >= 1) {
+                        cell.classList.add('amber');
+                    } else if (score.wrong > 0) {
+                        cell.classList.add('red');
+                    } else {
+                        // Streak 0 with no wrongs = still studying, not failing
+                        cell.classList.add('blue');
+                    }
                 }
+
+                // Tally by current class (handles both scored and default-class cells)
+                if (cell.classList.contains('green')) mastered++;
+                else if (cell.classList.contains('amber')) learning++;
+                else if (cell.classList.contains('red')) needsWork++;
+                else if (cell.classList.contains('blue')) studying++;
+                else notStarted++;
             });
+
+            // Update Progress Summary stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                const numEl = card.querySelector('.stat-number');
+                if (!numEl) return;
+                if (card.classList.contains('mastered')) numEl.textContent = mastered;
+                else if (card.classList.contains('learning')) numEl.textContent = learning + studying;
+                else if (card.classList.contains('needs-work')) numEl.textContent = needsWork;
+                else if (card.classList.contains('not-started')) numEl.textContent = notStarted;
+            });
+
+            // Update top mastery progress bar (green / total)
+            const totalCells = document.querySelectorAll('.kanji-cell').length;
+            const pct = totalCells > 0 ? Math.round((mastered / totalCells) * 100) : 0;
+            const progressFill = document.querySelector('.progress-fill');
+            if (progressFill) progressFill.style.width = pct + '%';
+            const progressLabel = document.querySelector('.progress-label');
+            if (progressLabel) {
+                const spans = progressLabel.querySelectorAll('span');
+                if (spans[1]) spans[1].textContent = mastered + '/' + totalCells + ' (' + pct + '%)';
+            }
         }
 
+        // Run on page load (uses cached localStorage) and again after cloud sync fetches fresh data
         document.addEventListener('DOMContentLoaded', applyKanjiScores);
+        window.addEventListener('cloudsync:ready', applyKanjiScores);
+        window.addEventListener('cloudsync:update', function(e) {
+            if (e.detail && e.detail.key === 'kanji_scores') applyKanjiScores();
+        });
     </script>
 </body>
 </html>
