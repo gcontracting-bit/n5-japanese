@@ -373,13 +373,18 @@
             setWheel('katakana', kataKnown, 104);
 
             // --- Kanji scores ---
+            // Kanji uses the explicit `status` field (set by the daily kanji quiz):
+            // first-correct from blue → green, with streak staying 0 for greens.
+            // Fall back to streak >= 1 for legacy entries without a status field.
             var kanjiScores = {};
             try { kanjiScores = JSON.parse(localStorage.getItem('kanji_scores') || '{}'); } catch(e) {}
             var KANJI_TOTAL = 103;
             var kanjiKnown = 0;
             Object.keys(kanjiScores).forEach(function(k) {
                 var s = kanjiScores[k];
-                if (s && s.streak >= 1) kanjiKnown++;
+                if (!s) return;
+                if (s.status === 'green') kanjiKnown++;
+                else if (!s.status && s.streak >= 1) kanjiKnown++;
             });
             setWheel('kanji', kanjiKnown, KANJI_TOTAL);
 
