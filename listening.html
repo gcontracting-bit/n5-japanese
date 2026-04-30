@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genki Listening Practice</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 2.2em; color: #2b6cb0; margin-bottom: 8px; }
+        .header p { font-size: 1.1em; color: #666; }
+        .back-link {
+            display: inline-block; margin-bottom: 20px;
+            color: #2b6cb0; text-decoration: none; font-weight: 600;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* Upload area */
+        .upload-area {
+            background: white; border: 2px dashed #cbd5e0; border-radius: 12px;
+            padding: 30px; text-align: center; margin-bottom: 30px;
+            transition: all 0.2s ease; cursor: pointer;
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #2b6cb0; background: #ebf4ff;
+        }
+        .upload-area h3 { color: #2b6cb0; margin-bottom: 8px; font-size: 1.1em; }
+        .upload-area p { color: #888; font-size: 0.9em; margin-bottom: 12px; }
+        .upload-area input[type="file"] { display: none; }
+        .upload-btn {
+            background: #2b6cb0; color: white; border: none; padding: 10px 24px;
+            border-radius: 8px; font-size: 0.95em; cursor: pointer; font-weight: 600;
+        }
+        .upload-btn:hover { background: #2c5282; }
+
+        /* Upload selectors row */
+        .upload-selectors {
+            display: flex; gap: 10px; justify-content: center;
+            margin-bottom: 12px; flex-wrap: wrap;
+        }
+        .upload-selectors select {
+            padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e0;
+            font-size: 0.95em; background: white; color: #333;
+        }
+
+        /* Upload progress */
+        .upload-progress {
+            display: none; margin-top: 12px; font-size: 0.9em; color: #2b6cb0;
+        }
+        .upload-progress.show { display: block; }
+
+        /* Chapter sections */
+        .chapter-section {
+            background: white; border-radius: 12px; padding: 24px;
+            margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .chapter-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;
+            cursor: pointer; user-select: none;
+        }
+        .chapter-header h2 { font-size: 1.2em; color: #2b6cb0; }
+        .chapter-count { font-size: 0.85em; color: #888; }
+        .chapter-toggle {
+            font-size: 1.2em; color: #999; transition: transform 0.2s;
+            margin-left: 8px;
+        }
+        .chapter-section.collapsed .chapter-body { display: none; }
+        .chapter-section.collapsed .chapter-toggle { transform: rotate(-90deg); }
+
+        /* Sub-section (Textbook / Workbook) */
+        .sub-section { margin-bottom: 16px; }
+        .sub-section:last-child { margin-bottom: 0; }
+        .sub-header {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 10px; padding-bottom: 6px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        .sub-header h3 { font-size: 1em; font-weight: 600; }
+        .sub-header .sub-icon { font-size: 1.1em; }
+        .sub-header.textbook h3 { color: #2b6cb0; }
+        .sub-header.workbook h3 { color: #6b46c1; }
+        .sub-count { font-size: 0.8em; color: #999; margin-left: auto; }
+
+        /* Audio tracks */
+        .track {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 0; border-bottom: 1px solid #f0f4f8;
+        }
+        .track:last-child { border-bottom: none; }
+        .track-play {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: #ebf4ff; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: all 0.2s;
+        }
+        .track-play:hover { background: #2b6cb0; }
+        .track-play:hover svg { fill: white; }
+        .track-play svg { width: 16px; height: 16px; fill: #2b6cb0; }
+        .track-play.playing { background: #2b6cb0; }
+        .track-play.playing svg { fill: white; }
+
+        .track-info { flex: 1; min-width: 0; }
+        .track-name {
+            font-weight: 600; font-size: 0.95em; color: #333;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .track-size { font-size: 0.8em; color: #999; }
+
+        .track-progress {
+            flex: 1; max-width: 200px; height: 4px; background: #e2e8f0;
+            border-radius: 2px; cursor: pointer; position: relative;
+        }
+        .track-progress-fill {
+            height: 100%; background: #2b6cb0; border-radius: 2px;
+            width: 0%; transition: width 0.1s linear;
+        }
+        .track-time { font-size: 0.8em; color: #888; min-width: 40px; text-align: right; }
+
+        .track-delete {
+            background: none; border: none; cursor: pointer;
+            color: #cbd5e0; font-size: 1.2em; padding: 4px;
+            transition: color 0.2s;
+        }
+        .track-delete:hover { color: #e53e3e; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center; padding: 40px 20px; color: #999;
+        }
+        .empty-state .icon { font-size: 3em; margin-bottom: 10px; }
+        .empty-state p { font-size: 1em; }
+
+        /* Loading state */
+        .loading { text-align: center; padding: 40px; color: #888; }
+
+        /* Storage info */
+        .storage-info {
+            text-align: center; margin-bottom: 20px;
+            font-size: 0.85em; color: #888;
+        }
+        .storage-info strong { color: #2b6cb0; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .track { flex-wrap: wrap; gap: 8px; }
+            .track-progress { max-width: 100%; order: 5; flex-basis: 100%; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud_sync.js"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&larr; Back to Dashboard</a>
+
+        <div class="header">
+            <h1>Genki Listening Practice</h1>
+            <p>Upload and play audio files from your Genki textbooks</p>
+        </div>
+
+        <div class="storage-info" id="storageInfo">Loading storage info...</div>
+
+        <!-- Upload Area -->
+        <div class="upload-area" id="uploadArea">
+            <h3>Upload Audio Files</h3>
+            <p>Drag &amp; drop audio files here, or click to browse</p>
+            <div class="upload-selectors">
+                <select id="uploadChapter">
+                    <option value="ch01">Chapter 1 &mdash; A New Friend</option>
+                    <option value="ch02">Chapter 2 &mdash; Shopping</option>
+                    <option value="ch03">Chapter 3 &mdash; Making a Date</option>
+                    <option value="ch04">Chapter 4 &mdash; The First Date</option>
+                    <option value="ch05">Chapter 5 &mdash; A Trip to Okinawa</option>
+                    <option value="ch06">Chapter 6 &mdash; A Day in Robert's Life</option>
+                    <option value="ch07">Chapter 7 &mdash; Family Picture</option>
+                    <option value="ch08">Chapter 8 &mdash; Barbecue</option>
+                    <option value="ch09">Chapter 9 &mdash; Kabuki</option>
+                    <option value="ch10">Chapter 10 &mdash; Winter Vacation Plans</option>
+                    <option value="ch11">Chapter 11 &mdash; After the Vacation</option>
+                    <option value="ch12">Chapter 12 &mdash; Feeling Sick</option>
+                    <option value="other">Other / Misc</option>
+                </select>
+                <select id="uploadType">
+                    <option value="textbook">Textbook</option>
+                    <option value="workbook">Workbook</option>
+                </select>
+            </div>
+            <button class="upload-btn" id="uploadBtn">Choose Files</button>
+            <input type="file" id="fileInput" multiple accept="audio/*">
+            <div class="upload-progress" id="uploadProgress">Uploading...</div>
+        </div>
+
+        <!-- Audio Content -->
+        <div id="audioContent">
+            <div class="loading">Loading audio files...</div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var SUPABASE_URL = 'https://zknkjedxudhdzphxxsfj.supabase.co';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprbmtqZWR4dWRoZHpwaHh4c2ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNzIxNzksImV4cCI6MjA5MTg0ODE3OX0.RgE2FZPDOmSpy1XeC7JMmTxpWgi0QbCATnvMoF3zEfQ';
+        var BUCKET = 'genki-audio';
+
+        var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        var currentAudio = null;
+        var currentPlayBtn = null;
+
+        var CHAPTERS = [
+            'ch01','ch02','ch03','ch04','ch05','ch06',
+            'ch07','ch08','ch09','ch10','ch11','ch12','other'
+        ];
+        var CHAPTER_NAMES = {
+            'ch01': 'Chapter 1 — A New Friend',
+            'ch02': 'Chapter 2 — Shopping',
+            'ch03': 'Chapter 3 — Making a Date',
+            'ch04': 'Chapter 4 — The First Date',
+            'ch05': 'Chapter 5 — A Trip to Okinawa',
+            'ch06': 'Chapter 6 — A Day in Robert\'s Life',
+            'ch07': 'Chapter 7 — Family Picture',
+            'ch08': 'Chapter 8 — Barbecue',
+            'ch09': 'Chapter 9 — Kabuki',
+            'ch10': 'Chapter 10 — Winter Vacation Plans',
+            'ch11': 'Chapter 11 — After the Vacation',
+            'ch12': 'Chapter 12 — Feeling Sick',
+            'other': 'Other / Misc'
+        };
+        var SUB_TYPES = ['textbook', 'workbook'];
+
+        // --- Upload Logic ---
+        var uploadArea = document.getElementById('uploadArea');
+        var fileInput = document.getElementById('fileInput');
+        var uploadBtn = document.getElementById('uploadBtn');
+        var uploadProgress = document.getElementById('uploadProgress');
+        var uploadChapter = document.getElementById('uploadChapter');
+        var uploadType = document.getElementById('uploadType');
+
+        uploadBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fileInput.click();
+        });
+        uploadArea.addEventListener('click', function() { fileInput.click(); });
+
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', function() {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) uploadFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) uploadFiles(fileInput.files);
+        });
+
+        async function uploadFiles(files) {
+            var chapter = uploadChapter.value;
+            var type = uploadType.value;
+            uploadProgress.classList.add('show');
+            var total = files.length;
+            var done = 0;
+            var errors = [];
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                // Path: ch01/textbook/filename.mp3
+                var path = chapter + '/' + type + '/' + file.name;
+                uploadProgress.textContent = 'Uploading ' + (i + 1) + ' of ' + total + ': ' + file.name;
+                try {
+                    var res = await sb.storage.from(BUCKET).upload(path, file, {
+                        upsert: true,
+                        contentType: file.type || 'audio/mpeg'
+                    });
+                    if (res.error) throw res.error;
+                    done++;
+                } catch (err) {
+                    console.error('Upload error:', err);
+                    errors.push(file.name + ': ' + (err.message || 'unknown error'));
+                }
+            }
+
+            if (errors.length > 0) {
+                uploadProgress.textContent = 'Uploaded ' + done + '/' + total + '. Errors: ' + errors.join('; ');
+            } else {
+                uploadProgress.textContent = 'All ' + done + ' files uploaded!';
+            }
+            setTimeout(function() { uploadProgress.classList.remove('show'); }, 3000);
+            fileInput.value = '';
+            loadAudioFiles();
+        }
+
+        // --- Load & Display Audio Files ---
+        // Structure: { ch01: { textbook: [files], workbook: [files] }, ... }
+        async function loadAudioFiles() {
+            var content = document.getElementById('audioContent');
+            content.innerHTML = '<div class="loading">Loading audio files...</div>';
+
+            var allData = {};   // ch -> type -> [files]
+            var totalSize = 0;
+            var totalCount = 0;
+
+            for (var c = 0; c < CHAPTERS.length; c++) {
+                var ch = CHAPTERS[c];
+                for (var t = 0; t < SUB_TYPES.length; t++) {
+                    var type = SUB_TYPES[t];
+                    var folder = ch + '/' + type;
+                    try {
+                        var res = await sb.storage.from(BUCKET).list(folder, {
+                            limit: 500,
+                            sortBy: { column: 'name', order: 'asc' }
+                        });
+                        if (res.error) continue;
+                        var files = (res.data || []).filter(function(f) {
+                            return f.name && !f.name.startsWith('.');
+                        });
+                        if (files.length > 0) {
+                            if (!allData[ch]) allData[ch] = {};
+                            allData[ch][type] = files;
+                            files.forEach(function(f) {
+                                totalSize += (f.metadata && f.metadata.size) || 0;
+                                totalCount++;
+                            });
+                        }
+                    } catch (e) { console.warn('Error listing ' + folder, e); }
+                }
+            }
+
+            // Update storage info
+            var info = document.getElementById('storageInfo');
+            var sizeMB = (totalSize / (1024 * 1024)).toFixed(1);
+            info.innerHTML = '<strong>' + totalCount + '</strong> files &middot; <strong>' + sizeMB + ' MB</strong> used of 1 GB free';
+
+            if (totalCount === 0) {
+                content.innerHTML = '<div class="empty-state"><div class="icon">🎧</div>'
+                    + '<p>No audio files yet.<br>Upload your Genki audio files above to get started!</p></div>';
+                return;
+            }
+
+            var html = '';
+            var chapterKeys = Object.keys(allData);
+            for (var i = 0; i < chapterKeys.length; i++) {
+                var chKey = chapterKeys[i];
+                var chData = allData[chKey];
+                var tbFiles = chData.textbook || [];
+                var wbFiles = chData.workbook || [];
+                var chTotal = tbFiles.length + wbFiles.length;
+
+                html += '<div class="chapter-section">';
+                html += '<div class="chapter-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+                html += '<h2>' + escapeHtml(CHAPTER_NAMES[chKey] || chKey) + '</h2>';
+                html += '<span><span class="chapter-count">' + chTotal + ' track' + (chTotal !== 1 ? 's' : '') + '</span>';
+                html += '<span class="chapter-toggle">&#9660;</span></span>';
+                html += '</div>';
+                html += '<div class="chapter-body">';
+
+                // Textbook sub-section
+                if (tbFiles.length > 0) {
+                    html += '<div class="sub-section">';
+                    html += '<div class="sub-header textbook">';
+                    html += '<span class="sub-icon">📖</span>';
+                    html += '<h3>Textbook</h3>';
+                    html += '<span class="sub-count">' + tbFiles.length + ' track' + (tbFiles.length !== 1 ? 's' : '') + '</span>';
+                    html += '</div>';
+                    html += renderTracks(chKey, 'textbook', tbFiles);
+                    html += '</div>';
+                }
+
+                // Workbook sub-section
+                if (wbFiles.length > 0) {
+                    html += '<div class="sub-section">';
+                    html += '<div class="sub-header workbook">';
+                    html += '<span class="sub-icon">📝</span>';
+                    html += '<h3>Workbook</h3>';
+                    html += '<span class="sub-count">' + wbFiles.length + ' track' + (wbFiles.length !== 1 ? 's' : '') + '</span>';
+                    html += '</div>';
+                    html += renderTracks(chKey, 'workbook', wbFiles);
+                    html += '</div>';
+                }
+
+                html += '</div>'; // chapter-body
+                html += '</div>'; // chapter-section
+            }
+            content.innerHTML = html;
+            attachTrackListeners();
+        }
+
+        function renderTracks(ch, type, files) {
+            var html = '';
+            for (var j = 0; j < files.length; j++) {
+                var f = files[j];
+                var filePath = ch + '/' + type + '/' + f.name;
+                var sizeTxt = f.metadata && f.metadata.size ? (f.metadata.size / 1024).toFixed(0) + ' KB' : '';
+                var displayName = f.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+
+                html += '<div class="track" data-path="' + escapeAttr(filePath) + '">';
+                html += '<button class="track-play" title="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>';
+                html += '<div class="track-info"><div class="track-name">' + escapeHtml(displayName) + '</div>';
+                if (sizeTxt) html += '<div class="track-size">' + sizeTxt + '</div>';
+                html += '</div>';
+                html += '<div class="track-progress"><div class="track-progress-fill"></div></div>';
+                html += '<span class="track-time">0:00</span>';
+                html += '<button class="track-delete" title="Delete">&times;</button>';
+                html += '</div>';
+            }
+            return html;
+        }
+
+        function attachTrackListeners() {
+            document.querySelectorAll('.track-play').forEach(function(btn) {
+                btn.addEventListener('click', function() { togglePlay(btn); });
+            });
+            document.querySelectorAll('.track-delete').forEach(function(btn) {
+                btn.addEventListener('click', function() { deleteTrack(btn); });
+            });
+            document.querySelectorAll('.track-progress').forEach(function(bar) {
+                bar.addEventListener('click', function(e) { seekTrack(bar, e); });
+            });
+        }
+
+        async function togglePlay(btn) {
+            var track = btn.closest('.track');
+            var path = track.getAttribute('data-path');
+
+            // If clicking the same track that's playing, pause it
+            if (currentAudio && currentPlayBtn === btn) {
+                if (currentAudio.paused) {
+                    currentAudio.play();
+                    btn.classList.add('playing');
+                    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                } else {
+                    currentAudio.pause();
+                    btn.classList.remove('playing');
+                    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                }
+                return;
+            }
+
+            // Stop current audio if different track
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+                if (currentPlayBtn) {
+                    currentPlayBtn.classList.remove('playing');
+                    currentPlayBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                    var oldTrack = currentPlayBtn.closest('.track');
+                    if (oldTrack) {
+                        oldTrack.querySelector('.track-progress-fill').style.width = '0%';
+                        oldTrack.querySelector('.track-time').textContent = '0:00';
+                    }
+                }
+            }
+
+            // Get signed URL and play
+            btn.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#2b6cb0" stroke-width="2" stroke-dasharray="30 70"/></svg>';
+            try {
+                var res = await sb.storage.from(BUCKET).createSignedUrl(path, 3600);
+                if (res.error) throw res.error;
+
+                var audio = new Audio(res.data.signedUrl);
+                currentAudio = audio;
+                currentPlayBtn = btn;
+
+                audio.addEventListener('loadedmetadata', function() {
+                    track.querySelector('.track-time').textContent = formatTime(audio.duration);
+                });
+                audio.addEventListener('timeupdate', function() {
+                    if (audio.duration) {
+                        var pct = (audio.currentTime / audio.duration) * 100;
+                        track.querySelector('.track-progress-fill').style.width = pct + '%';
+                        track.querySelector('.track-time').textContent = formatTime(audio.currentTime);
+                    }
+                });
+                audio.addEventListener('ended', function() {
+                    btn.classList.remove('playing');
+                    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                    track.querySelector('.track-progress-fill').style.width = '0%';
+                    track.querySelector('.track-time').textContent = formatTime(audio.duration);
+                    currentAudio = null;
+                    currentPlayBtn = null;
+                });
+
+                await audio.play();
+                btn.classList.add('playing');
+                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+            } catch (err) {
+                console.error('Play error:', err);
+                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                alert('Could not play file: ' + (err.message || 'unknown error'));
+            }
+        }
+
+        function seekTrack(bar, e) {
+            if (!currentAudio || !currentPlayBtn) return;
+            var track = bar.closest('.track');
+            if (track !== currentPlayBtn.closest('.track')) return;
+            var rect = bar.getBoundingClientRect();
+            var pct = (e.clientX - rect.left) / rect.width;
+            currentAudio.currentTime = pct * currentAudio.duration;
+        }
+
+        async function deleteTrack(btn) {
+            var track = btn.closest('.track');
+            var path = track.getAttribute('data-path');
+            if (!confirm('Delete "' + path.split('/').pop().replace(/\.[^.]+$/, '') + '"?')) return;
+
+            try {
+                var res = await sb.storage.from(BUCKET).remove([path]);
+                if (res.error) throw res.error;
+                if (currentPlayBtn && currentPlayBtn.closest('.track') === track) {
+                    currentAudio.pause();
+                    currentAudio = null;
+                    currentPlayBtn = null;
+                }
+                track.remove();
+                loadAudioFiles();
+            } catch (err) {
+                alert('Delete failed: ' + (err.message || 'unknown error'));
+            }
+        }
+
+        function formatTime(sec) {
+            if (!sec || isNaN(sec)) return '0:00';
+            var m = Math.floor(sec / 60);
+            var s = Math.floor(sec % 60);
+            return m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        function escapeHtml(s) {
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+        function escapeAttr(s) {
+            return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;');
+        }
+
+        // Boot
+        document.addEventListener('DOMContentLoaded', loadAudioFiles);
+    })();
+    </script>
+</body>
+</html>
