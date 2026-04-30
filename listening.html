@@ -18,11 +18,18 @@
         .header { text-align: center; margin-bottom: 40px; }
         .header h1 { font-size: 2.2em; color: #2b6cb0; margin-bottom: 8px; }
         .header p { font-size: 1.1em; color: #666; }
-        .back-link {
-            display: inline-block; margin-bottom: 20px;
-            color: #2b6cb0; text-decoration: none; font-weight: 600;
+        nav { margin-bottom: 30px; }
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #2b6cb0;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
         }
-        .back-link:hover { text-decoration: underline; }
+        nav a:hover { background-color: #4299e1; }
 
         /* Upload area */
         .upload-area {
@@ -161,7 +168,7 @@
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-link">&larr; Back to Dashboard</a>
+        <nav><a href="index.html">&larr; Home</a></nav>
 
         <div class="header">
             <h1>Genki Listening Practice</h1>
@@ -249,7 +256,11 @@
             e.stopPropagation();
             fileInput.click();
         });
-        uploadArea.addEventListener('click', function() { fileInput.click(); });
+        uploadArea.addEventListener('click', function(e) {
+            // Don't open file picker when interacting with dropdowns
+            if (e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
+            fileInput.click();
+        });
 
         uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
