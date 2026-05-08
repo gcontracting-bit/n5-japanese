@@ -396,7 +396,7 @@
             // Only count actual vocab words (2+ chars before |), skip single kana entries
             var vocabScores = {};
             try { vocabScores = JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) {}
-            var VOCAB_TOTAL = 1181;
+            var VOCAB_TOTAL = 1182;
             var vocabMastered = 0;
             Object.keys(vocabScores).forEach(function(k) {
                 var parts = k.split('|');
