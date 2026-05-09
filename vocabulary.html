@@ -60,7 +60,7 @@
         .word-count { background: rgba(255,255,255,0.2); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
         .mastery-percent { background: rgba(255,255,255,0.2); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
         .toggle-icon { font-size: 1.2em; color: white; min-width: 20px; }
-        .week-content { padding: 20px; max-height: 5000px; overflow: hidden; transition: max-height 0.3s ease; }
+        .week-content { padding: 20px; max-height: 100000px; overflow: hidden; transition: max-height 0.3s ease; }
         .week-content.collapsed { max-height: 0; padding: 0 20px; }
 
         .category { margin-bottom: 25px; }
@@ -81,7 +81,51 @@
         .vocab-score-dot.green { background: #276749; }
         .vocab-score-dot.amber { background: #d69e2e; }
         .vocab-score-dot.red { background: #c53030; }
+        .vocab-score-dot.untested { background: transparent; border: 1.5px solid #a0aec0; }
         .vocab-fire-badge { font-size: 0.8em; color: #9b2c2c; font-weight: 700; margin-left: 2px; }
+
+        /* Per-chapter status summary + filter pills */
+        .status-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            align-items: center;
+        }
+        .status-bar-label { font-size: 0.85em; color: #718096; font-weight: 500; margin-right: 4px; }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+        }
+        .status-pill.red      { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+        .status-pill.amber    { background: #fffaf0; color: #b7791f; border: 1px solid #fbd38d; }
+        .status-pill.green    { background: #f0fff4; color: #276749; border: 1px solid #9ae6b4; }
+        .status-pill.untested { background: #f7fafc; color: #4a5568; border: 1px solid #cbd5e0; }
+        .status-pill.clear    { background: white; color: #718096; border: 1px solid #cbd5e0; }
+        .status-pill .count {
+            background: rgba(0,0,0,0.08);
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+        .status-pill:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .status-pill.disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+        .status-pill.active { box-shadow: 0 0 0 2px currentColor; transform: translateY(-1px); }
+        .status-pill.clear.hidden { display: none; }
+        tbody tr.row-hidden { display: none; }
+        .category.category-hidden { display: none; }
 
         @media (max-width: 768px) {
             .container { padding: 15px; }
@@ -1637,47 +1681,86 @@
             try { return JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) { return {}; }
         }
 
+        // Status ranking, worst → best, for word-level RAG (worst of kana + kanji forms).
+        const STATUS_RANK = { red: 0, amber: 1, untested: 2, green: 3 };
+
+        function statusFromEntry(e) {
+            if (!e) return 'untested';
+            let st = e.state || null;
+            if (!st && typeof e.streak === 'number') {
+                if (e.streak >= 1) st = 'g';
+                else if (e.streak === -1) st = 'a';
+                else if (e.streak <= -2) st = 'r';
+                else if (e.total > 0) st = 'r';
+            }
+            if (st === 'g') return 'green';
+            if (st === 'a') return 'amber';
+            if (st === 'r') return 'red';
+            return 'untested';
+        }
+
+        // Pull (kana, [kanji forms]) out of a row's first cell.
+        // "みず（水）" → kana="みず", kanji=["水"]
+        // "ある（在る・有る）" → kana="ある", kanji=["在る","有る"]  (multi-form, separated by ・)
+        // "スポーツ" (no parens) → kana="スポーツ", kanji=[]
+        function parseRowForms(rawJp) {
+            const m = rawJp.match(/^([^（(]+)[（(]([^）)]+)[）)]\s*$/);
+            if (!m) return { kana: rawJp.trim(), kanji: [] };
+            return {
+                kana: m[1].trim(),
+                kanji: m[2].split('・').map(s => s.trim()).filter(Boolean)
+            };
+        }
+
         function applyScores() {
             const scores = getScores();
             let totalWords = 0, masteredWords = 0;
 
             document.querySelectorAll('.week-section').forEach(section => {
-                // Skip Extra Vocabulary from mastery tally
                 const title = section.querySelector('.week-title');
                 const isExtra = title && (title.textContent.trim() === 'Extra Vocabulary' || title.textContent.trim().startsWith('Extra'));
 
                 let sTotal = 0, sMastered = 0;
                 section.querySelectorAll('tbody tr').forEach(row => {
                     const cells = row.querySelectorAll('td');
-                    if (cells.length >= 3) {
-                        // Strip kanji parenthetical to match flashcard keys
-                        // e.g. "だいがく（大学）" → "だいがく"
-                        const jp = cells[0].textContent.trim().replace(/[（(][^）)]*[）)]/g, '').trim();
-                        const en = cells[2].textContent.trim();
-                        const key = jp + '|' + en;
-                        if (!isExtra) { totalWords++; sTotal++; }
-                        if (scores[key]) {
-                            const e = scores[key];
-                            // Support both new {state} and old {streak} format
-                            let st = e.state || null;
-                            if (!st && typeof e.streak === 'number') {
-                                if (e.streak >= 1) st = 'g';
-                                else if (e.streak === -1) st = 'a';
-                                else if (e.streak <= -2) st = 'r';
-                                else if (e.total > 0) st = 'r';
-                            }
-                            let color = null;
-                            if (st === 'g') { color = 'green'; if (!isExtra) { masteredWords++; sMastered++; } }
-                            else if (st === 'a') color = 'amber';
-                            else if (st === 'r') color = 'red';
-                            let ind = '';
-                            if (color) ind += '<span class="vocab-score-dot ' + color + '"></span>';
-                            const total = e.total || 0;
-                            if (total >= 10) ind += ' 🔥 <span class="vocab-fire-badge">' + (Math.floor(total/10)*10) + '+</span>';
-                            if (ind) cells[0].innerHTML = ind + cells[0].innerHTML;
-                        }
+                    if (cells.length < 3) return;
+
+                    const rawJp = cells[0].textContent.trim();
+                    const en = cells[2].textContent.trim();
+                    const forms = parseRowForms(rawJp);
+
+                    // Word-level RAG = worst of (kana, ...kanji forms).
+                    const kanaStatus = statusFromEntry(scores[forms.kana + '|' + en]);
+                    let worst = kanaStatus;
+                    let totalCount = (scores[forms.kana + '|' + en] && scores[forms.kana + '|' + en].total) || 0;
+                    forms.kanji.forEach(k => {
+                        const e = scores[k + '|' + en];
+                        const s = statusFromEntry(e);
+                        if (STATUS_RANK[s] < STATUS_RANK[worst]) worst = s;
+                        if (e && e.total && e.total > totalCount) totalCount = e.total;
+                    });
+
+                    if (!isExtra) { totalWords++; sTotal++; if (worst === 'green') { masteredWords++; sMastered++; } }
+
+                    // Tag the row so the status bar can count + filter.
+                    row.dataset.wordStatus = worst;
+
+                    // Render the indicator (dot + optional fire badge).
+                    let ind = '<span class="vocab-score-dot ' + worst + '"></span>';
+                    if (totalCount >= 10) ind += ' 🔥 <span class="vocab-fire-badge">' + (Math.floor(totalCount/10)*10) + '+</span>';
+
+                    // Avoid double-prefixing on re-runs (cloud sync update).
+                    if (cells[0].dataset.indicatorApplied) {
+                        // Replace the existing leading indicator markup.
+                        const original = cells[0].dataset.originalText || cells[0].textContent;
+                        cells[0].innerHTML = ind + original;
+                    } else {
+                        cells[0].dataset.originalText = cells[0].innerHTML;
+                        cells[0].innerHTML = ind + cells[0].innerHTML;
+                        cells[0].dataset.indicatorApplied = '1';
                     }
                 });
+
                 const pctEl = section.querySelector('.mastery-percent');
                 if (pctEl && sTotal > 0) pctEl.textContent = Math.round((sMastered / sTotal) * 100) + '%';
             });
@@ -1689,9 +1772,88 @@
             if (opct) opct.textContent = mp + '%';
         }
 
+        // ===== Per-chapter RAG status bar (counts + filter pills) =====
+        // Inserts a row of pills at the top of each .week-content showing how
+        // many words are Red / Amber / Green / Untested. Clicking a pill
+        // filters the chapter's rows; clicking again (or "Show all") clears.
+        function renderStatusBars() {
+            document.querySelectorAll('.week-section').forEach(section => {
+                const content = section.querySelector('.week-content');
+                if (!content) return;
+
+                // Count rows by word-status for this chapter.
+                const counts = { red: 0, amber: 0, green: 0, untested: 0 };
+                section.querySelectorAll('tbody tr').forEach(row => {
+                    const s = row.dataset.wordStatus || 'untested';
+                    if (s in counts) counts[s]++;
+                });
+
+                let bar = content.querySelector(':scope > .status-bar');
+                if (!bar) {
+                    bar = document.createElement('div');
+                    bar.className = 'status-bar';
+                    bar.innerHTML =
+                        '<span class="status-bar-label">Filter:</span>' +
+                        '<span class="status-pill red"      data-status="red">🔴 Red <span class="count">0</span></span>' +
+                        '<span class="status-pill amber"    data-status="amber">🟠 Amber <span class="count">0</span></span>' +
+                        '<span class="status-pill green"    data-status="green">🟢 Green <span class="count">0</span></span>' +
+                        '<span class="status-pill untested" data-status="untested">⚪ Untested <span class="count">0</span></span>' +
+                        '<span class="status-pill clear hidden" data-status="">Show all</span>';
+                    content.insertBefore(bar, content.firstChild);
+                    bar.querySelectorAll('.status-pill').forEach(pill => {
+                        pill.addEventListener('click', () => onStatusPillClick(section, pill.dataset.status));
+                    });
+                }
+
+                ['red','amber','green','untested'].forEach(s => {
+                    const pill = bar.querySelector('.status-pill.' + s);
+                    if (!pill) return;
+                    pill.querySelector('.count').textContent = counts[s];
+                    pill.classList.toggle('disabled', counts[s] === 0);
+                });
+            });
+        }
+
+        function onStatusPillClick(section, status) {
+            const bar = section.querySelector('.status-bar');
+            if (!bar) return;
+            const currentlyActive = bar.querySelector('.status-pill.active');
+            // Clicking the active pill (or "Show all") clears the filter.
+            const next = (!status || (currentlyActive && currentlyActive.dataset.status === status)) ? '' : status;
+            bar.querySelectorAll('.status-pill').forEach(p => p.classList.remove('active'));
+            if (next) {
+                bar.querySelector('.status-pill[data-status="' + next + '"]').classList.add('active');
+                bar.querySelector('.status-pill.clear').classList.remove('hidden');
+            } else {
+                bar.querySelector('.status-pill.clear').classList.add('hidden');
+            }
+            applyChapterFilter(section, next);
+        }
+
+        function applyChapterFilter(section, status) {
+            section.querySelectorAll('tbody tr').forEach(row => {
+                const s = row.dataset.wordStatus || 'untested';
+                row.classList.toggle('row-hidden', !!status && s !== status);
+            });
+            // Hide whole categories whose rows are all filtered out.
+            section.querySelectorAll('.category').forEach(cat => {
+                const visible = cat.querySelectorAll('tbody tr:not(.row-hidden)').length;
+                cat.classList.toggle('category-hidden', visible === 0);
+            });
+        }
+
+        // Re-run on cloud sync (another device updated scores).
+        function refreshFromScores() {
+            applyScores();
+            renderStatusBars();
+        }
+        window.addEventListener('cloudsync:ready',  refreshFromScores);
+        window.addEventListener('cloudsync:update', refreshFromScores);
+
         document.addEventListener('DOMContentLoaded', function() {
             seedBaselineIfNeeded();
             applyScores();
+            renderStatusBars();
             // Count and display extra vocab words
             const extraSection = document.getElementById('extra-vocab-section');
             if (extraSection) {

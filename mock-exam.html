@@ -148,6 +148,96 @@
         .wrong-item .wrong-yours { color: #e53e3e; font-size: 0.9em; }
         .wrong-item .wrong-correct { color: #38a169; font-size: 0.9em; font-weight: 600; }
         .wrong-item .wrong-explain { color: #718096; font-size: 0.85em; margin-top: 4px; font-style: italic; }
+
+        /* Past attempts panel — last 5 saved attempts per exam variant */
+        .past-attempts {
+            margin: 18px 28px;
+            padding: 16px 18px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+        .past-attempts.hidden { display: none; }
+        .past-attempts-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .past-attempts-title {
+            font-size: 1em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .past-attempts-meta {
+            font-size: 0.8em;
+            color: #718096;
+        }
+        .attempt-row {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        .attempt-row:last-child { margin-bottom: 0; }
+        .attempt-row-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .attempt-date {
+            color: #4a5568;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+        .attempt-overall {
+            font-weight: 700;
+            font-size: 1em;
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+        .attempt-overall.pass { color: #276749; background: #f0fff4; border: 1px solid #9ae6b4; }
+        .attempt-overall.fail { color: #c53030; background: #fff5f5; border: 1px solid #feb2b2; }
+        .attempt-sections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            margin-top: 6px;
+            font-size: 0.82em;
+            color: #4a5568;
+        }
+        .attempt-section-pill {
+            display: inline-flex;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            background: #edf2f7;
+        }
+        .attempt-section-pill .lab { color: #718096; }
+        .attempt-section-pill .val { font-weight: 600; color: #2d3748; }
+        .attempt-wrong {
+            margin-top: 6px;
+            font-size: 0.82em;
+            color: #4a5568;
+        }
+        .attempt-wrong .label { color: #c53030; font-weight: 600; }
+        .attempt-wrong .nums { color: #4a5568; font-family: 'Segoe UI', monospace; }
+        .attempt-wrong .none { color: #38a169; font-weight: 600; }
+        .attempt-time {
+            color: #a0aec0;
+            font-size: 0.75em;
+            margin-left: 6px;
+        }
+        .attempt-empty {
+            font-size: 0.85em;
+            color: #a0aec0;
+            text-align: center;
+            padding: 4px 0;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="cloud_sync.js"></script>
@@ -251,6 +341,8 @@ function renderExams() {
                 var sub = renderExamVariant(levelKey, vKey, exam, level.timeMinutes);
                 body.appendChild(sub);
             });
+            // Populate past-attempts panels after the variants are in the DOM.
+            variants.forEach(function(vKey) { renderAttemptsPanel(levelKey, vKey); });
         }
         div.appendChild(body);
         container.appendChild(div);
@@ -281,6 +373,14 @@ function renderExamVariant(levelKey, variantKey, exam, timeMinutes) {
     var subBody = document.createElement('div');
     subBody.className = 'exam-sub-body';
     subBody.id = 'exam-body-' + levelKey + '-' + variantKey;
+
+    // Past Attempts panel — populated by renderAttemptsPanel(). Lives at the
+    // top of the body so the user sees their history immediately when they
+    // expand the exam.
+    var attemptsDiv = document.createElement('div');
+    attemptsDiv.id = 'attempts-' + levelKey + '-' + variantKey;
+    attemptsDiv.className = 'past-attempts hidden';
+    subBody.appendChild(attemptsDiv);
 
     var qNum = 0;
     exam.sections.forEach(function(section) {
@@ -467,6 +567,7 @@ function submitExam(levelKey, variantKey) {
     var sections = {}; // sectionId -> {correct, total, label}
     var totalCorrect = 0, totalQ = 0;
     var wrongAnswers = [];
+    var wrongQNums = []; // just the question numbers — used for the saved attempt record
 
     body.querySelectorAll('.question-block').forEach(function(block) {
         var answer = parseInt(block.getAttribute('data-answer'));
@@ -503,11 +604,37 @@ function submitExam(levelKey, variantKey) {
                 correct: answer >= 1 && answer <= options.length ? options[answer-1].textContent.replace(/^\d+\s*/, '') : '',
                 explanation: exp ? exp.textContent : ''
             });
+            wrongQNums.push(parseInt(qNum, 10));
         }
 
         // Disable clicks
         options.forEach(function(o) { o.onclick = null; });
     });
+
+    // Persist this attempt (caps to last 5 per exam variant) and refresh the
+    // Past Attempts panel. Done before rendering scoreHtml so the panel's
+    // updated state is visible alongside the result summary.
+    var sectionsForSave = {};
+    Object.keys(sections).forEach(function(sk) {
+        var s = sections[sk];
+        sectionsForSave[sk] = {
+            correct: s.correct,
+            total: s.total,
+            pct: s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0
+        };
+    });
+    pushMockAttempt(levelKey, variantKey, {
+        ts: Date.now(),
+        total: {
+            correct: totalCorrect,
+            total: totalQ,
+            pct: totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : 0
+        },
+        sections: sectionsForSave,
+        wrongQNums: wrongQNums,
+        timeSeconds: timerSeconds || 0
+    });
+    renderAttemptsPanel(levelKey, variantKey);
 
     // Remove exam mode
     sub.classList.remove('exam-mode');
@@ -638,11 +765,155 @@ function isLevelUnlocked(unlockWeek) {
     }
 }
 
+// ─── Past Attempts (last 5 per exam variant) ───
+// Storage shape (localStorage 'mock_attempts', synced to Supabase via cloud_sync.js):
+//   { "level1_A": [ attempt, attempt, ... ], "level2_B": [...], ... }
+// Each attempt:
+//   { ts, total:{correct,total,pct}, sections:{vocab:{...},...}, wrongQNums:[10,11,...], timeSeconds }
+// Last 5 are kept; older ones drop off.
+function attemptStorageKey(levelKey, variantKey) { return levelKey + '_' + variantKey; }
+
+function getMockAttempts() {
+    try { return JSON.parse(localStorage.getItem('mock_attempts') || '{}'); }
+    catch (e) { return {}; }
+}
+function saveMockAttempts(obj) {
+    localStorage.setItem('mock_attempts', JSON.stringify(obj));
+}
+function pushMockAttempt(levelKey, variantKey, attempt) {
+    var all = getMockAttempts();
+    var key = attemptStorageKey(levelKey, variantKey);
+    var arr = all[key] || [];
+    arr.unshift(attempt);                  // newest first
+    if (arr.length > 5) arr = arr.slice(0, 5);
+    all[key] = arr;
+    saveMockAttempts(all);
+}
+
+// Section labels reused for compact display.
+var SECTION_LABELS = {
+    vocab: 'Vocab',
+    grammar: 'Grammar',
+    reading: 'Reading',
+    listening: 'Listening'
+};
+
+function formatAttemptDate(ts) {
+    if (!ts) return '';
+    var d = new Date(ts);
+    if (isNaN(d.getTime())) return '';
+    var Y = d.getFullYear();
+    var M = String(d.getMonth() + 1).padStart(2, '0');
+    var D = String(d.getDate()).padStart(2, '0');
+    var h = String(d.getHours()).padStart(2, '0');
+    var m = String(d.getMinutes()).padStart(2, '0');
+    return Y + '-' + M + '-' + D + ' ' + h + ':' + m;
+}
+
+function renderAttemptsPanel(levelKey, variantKey) {
+    var panel = document.getElementById('attempts-' + levelKey + '-' + variantKey);
+    if (!panel) return;
+    var all = getMockAttempts();
+    var arr = all[attemptStorageKey(levelKey, variantKey)] || [];
+
+    if (arr.length === 0) {
+        panel.classList.add('hidden');
+        panel.innerHTML = '';
+        return;
+    }
+    panel.classList.remove('hidden');
+
+    var html = '<div class="past-attempts-header">' +
+        '<span class="past-attempts-title">📊 Past Attempts</span>' +
+        '<span class="past-attempts-meta">' + arr.length + ' of last 5 saved</span>' +
+        '</div>';
+
+    arr.forEach(function(a) {
+        var totalPct = (a.total && typeof a.total.pct === 'number') ? a.total.pct : 0;
+        var passed = totalPct >= 60;
+        html += '<div class="attempt-row">' +
+            '<div class="attempt-row-top">' +
+                '<span class="attempt-date">🕒 ' + formatAttemptDate(a.ts) + '</span>' +
+                '<span class="attempt-overall ' + (passed ? 'pass' : 'fail') + '">' +
+                    totalPct + '%  ' +
+                    '<span style="font-weight:500;font-size:0.85em;opacity:0.8">(' +
+                    (a.total ? a.total.correct : 0) + '/' + (a.total ? a.total.total : 0) + ')</span>' +
+                '</span>' +
+            '</div>';
+
+        // Section breakdown
+        if (a.sections && Object.keys(a.sections).length) {
+            html += '<div class="attempt-sections">';
+            ['vocab','grammar','reading','listening'].forEach(function(sk) {
+                var s = a.sections[sk];
+                if (!s) return;
+                html += '<span class="attempt-section-pill">' +
+                    '<span class="lab">' + (SECTION_LABELS[sk] || sk) + ':</span> ' +
+                    '<span class="val">' + s.pct + '%</span> ' +
+                    '<span class="lab" style="font-size:0.95em">(' + s.correct + '/' + s.total + ')</span>' +
+                    '</span>';
+            });
+            // Any non-standard section keys, append at end
+            Object.keys(a.sections).forEach(function(sk) {
+                if (['vocab','grammar','reading','listening'].indexOf(sk) !== -1) return;
+                var s = a.sections[sk];
+                html += '<span class="attempt-section-pill">' +
+                    '<span class="lab">' + sk + ':</span> ' +
+                    '<span class="val">' + s.pct + '%</span></span>';
+            });
+            html += '</div>';
+        }
+
+        // Wrong question numbers (no answer text — by design)
+        html += '<div class="attempt-wrong">';
+        if (a.wrongQNums && a.wrongQNums.length) {
+            html += '<span class="label">Wrong Qs:</span> ' +
+                    '<span class="nums">' + a.wrongQNums.join(', ') + '</span>';
+        } else {
+            html += '<span class="none">All correct! 🎉</span>';
+        }
+        if (a.timeSeconds && a.timeSeconds > 0) {
+            var mins = Math.floor(a.timeSeconds / 60);
+            var secs = a.timeSeconds % 60;
+            html += '<span class="attempt-time">· ' + mins + 'm ' + secs + 's</span>';
+        }
+        html += '</div>';
+        html += '</div>';
+    });
+
+    panel.innerHTML = html;
+}
+
+// Seed the user's existing Level 1 / Exam A result on first load (so it
+// doesn't disappear just because the past-attempts feature was added later).
+// Non-destructive: only seeds if no L1A attempts have been recorded yet.
+function seedAttemptBaselineIfNeeded() {
+    try {
+        var all = getMockAttempts();
+        var key = attemptStorageKey('level1', 'A');
+        if (all[key] && all[key].length > 0) return;
+        all[key] = [{
+            ts: Date.UTC(2026, 4, 9, 12, 0, 0), // 2026-05-09 12:00 UTC
+            total:    { correct: 44, total: 50, pct: 88 },
+            sections: {
+                vocab:   { correct: 18, total: 20, pct: 90 },
+                grammar: { correct: 14, total: 18, pct: 78 },
+                reading: { correct: 12, total: 12, pct: 100 }
+            },
+            wrongQNums: [10, 11, 31, 32, 33, 34],
+            timeSeconds: 0
+        }];
+        saveMockAttempts(all);
+    } catch (e) {}
+}
+
 // ─── Init ───
 document.addEventListener('DOMContentLoaded', function() {
+    seedAttemptBaselineIfNeeded();
     renderExams();
 });
 window.addEventListener('cloudsync:ready', function() { renderExams(); });
+window.addEventListener('cloudsync:update', function() { renderExams(); });
 </script>
 </body>
 </html>
