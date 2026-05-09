@@ -785,17 +785,17 @@
             <div class="filter-group">
                 <div class="filter-group-label">Hiragana</div>
                 <div class="filter-chips">
-                    <label class="chip"><input type="checkbox" value="a_row" checked> あ行</label>
-                    <label class="chip"><input type="checkbox" value="ka_row" checked> か行</label>
-                    <label class="chip"><input type="checkbox" value="sa_row" checked> さ行</label>
-                    <label class="chip"><input type="checkbox" value="ta_row" checked> た行</label>
-                    <label class="chip"><input type="checkbox" value="na_row" checked> な行</label>
+                    <label class="chip"><input type="checkbox" value="a_row"> あ行</label>
+                    <label class="chip"><input type="checkbox" value="ka_row"> か行</label>
+                    <label class="chip"><input type="checkbox" value="sa_row"> さ行</label>
+                    <label class="chip"><input type="checkbox" value="ta_row"> た行</label>
+                    <label class="chip"><input type="checkbox" value="na_row"> な行</label>
                     <label class="chip"><input type="checkbox" value="ha_row"> は行</label>
                     <label class="chip"><input type="checkbox" value="ma_row"> ま行</label>
                     <label class="chip"><input type="checkbox" value="ya_row"> や行</label>
                     <label class="chip"><input type="checkbox" value="ra_row"> ら行</label>
                     <label class="chip"><input type="checkbox" value="wa_row"> わ行</label>
-                    <label class="chip"><input type="checkbox" value="dakuten" checked> Dakuten (が行)</label>
+                    <label class="chip"><input type="checkbox" value="dakuten"> Dakuten (が行)</label>
                     <label class="chip"><input type="checkbox" value="h_za_row"> ざ行</label>
                     <label class="chip"><input type="checkbox" value="h_da_row"> だ行</label>
                     <label class="chip"><input type="checkbox" value="h_ba_row"> ば行</label>
@@ -859,6 +859,20 @@
                 </div>
             </div>
 
+            <div class="filter-group" id="status-filter">
+                <div class="filter-group-label">Status (optional — leave blank for all)</div>
+                <div class="filter-actions">
+                    <button class="filter-action-btn" onclick="drillWeakWords()">🔥 Drill weak words</button>
+                    <button class="filter-action-btn" onclick="clearStatusFilter()">Clear</button>
+                </div>
+                <div class="filter-chips">
+                    <label class="chip"><input type="checkbox" value="status_red" data-status="1"> 🔴 Red</label>
+                    <label class="chip"><input type="checkbox" value="status_amber" data-status="1"> 🟠 Amber</label>
+                    <label class="chip"><input type="checkbox" value="status_green" data-status="1"> 🟢 Green</label>
+                    <label class="chip"><input type="checkbox" value="status_untested" data-status="1"> ⚪ Untested</label>
+                </div>
+            </div>
+
             <div class="filter-group">
                 <div class="filter-group-label">Card Count</div>
                 <div class="count-filter">
@@ -875,9 +889,9 @@
             <div class="filter-group" id="quiz-type-filter">
                 <div class="filter-group-label">Quiz Type (quiz mode only)</div>
                 <div class="filter-chips">
-                    <label class="chip"><input type="checkbox" value="mc" checked> Multiple Choice</label>
-                    <label class="chip"><input type="checkbox" value="type_meaning" checked> Type English Meaning</label>
-                    <label class="chip"><input type="checkbox" value="type_romaji" checked> Type Romaji Reading</label>
+                    <label class="chip"><input type="checkbox" value="mc"> Multiple Choice</label>
+                    <label class="chip"><input type="checkbox" value="type_meaning"> Type English Meaning</label>
+                    <label class="chip"><input type="checkbox" value="type_romaji"> Type Romaji Reading</label>
                 </div>
             </div>
 
@@ -2119,12 +2133,48 @@
         }
 
         // ============ FILTER ACTIONS ============
+        // Note: Select All / Deselect All deliberately ignore the Status chips.
+        // Status is an optional secondary filter — leaving it blank means "all
+        // statuses", and we don't want a global Select All to accidentally
+        // narrow the deck.
         function selectAll() {
-            document.querySelectorAll('.filter-chips input[type="checkbox"]').forEach(c => c.checked = true);
+            document.querySelectorAll('.filter-chips input[type="checkbox"]:not([data-status])').forEach(c => c.checked = true);
         }
 
         function deselectAll() {
-            document.querySelectorAll('.filter-chips input[type="checkbox"]').forEach(c => c.checked = false);
+            document.querySelectorAll('.filter-chips input[type="checkbox"]:not([data-status])').forEach(c => c.checked = false);
+        }
+
+        // ============ STATUS FILTER ============
+        // Returns one of 'green' | 'amber' | 'red' | 'untested' for any card.
+        function getCardStatus(card) {
+            const scores = getScores();
+            const entry = scores[scoreKey(card)];
+            if (!entry) return 'untested';
+            const color = getScoreColor(entry);
+            return color || 'untested';
+        }
+
+        // "Drill weak words" — quick toggle that selects Red + Amber only.
+        function drillWeakWords() {
+            const chips = document.querySelectorAll('#status-filter input[data-status]');
+            chips.forEach(c => {
+                c.checked = (c.value === 'status_red' || c.value === 'status_amber');
+            });
+        }
+
+        function clearStatusFilter() {
+            document.querySelectorAll('#status-filter input[data-status]').forEach(c => c.checked = false);
+        }
+
+        function getSelectedStatuses() {
+            const checked = Array.from(document.querySelectorAll('#status-filter input:checked')).map(c => c.value);
+            const set = new Set();
+            if (checked.indexOf('status_red') !== -1) set.add('red');
+            if (checked.indexOf('status_amber') !== -1) set.add('amber');
+            if (checked.indexOf('status_green') !== -1) set.add('green');
+            if (checked.indexOf('status_untested') !== -1) set.add('untested');
+            return set;
         }
 
         // ============ CARD COUNT ============
@@ -2167,8 +2217,11 @@
 
         // ============ START SESSION ============
         function startSession() {
-            // Gather selected categories
-            const checked = Array.from(document.querySelectorAll('.filter-chips input:checked')).map(c => c.value);
+            // Gather selected categories — exclude the secondary "status" chips
+            // so an empty status selection doesn't trip the "no categories" check.
+            const checked = Array.from(
+                document.querySelectorAll('.filter-chips input:checked:not([data-status])')
+            ).map(c => c.value);
             if (checked.length === 0) {
                 alert('Please select at least one category.');
                 return;
@@ -2190,6 +2243,19 @@
                 }
             });
 
+            // Optional status filter — only applied if user has ticked at least one
+            // status chip. Leaving them all blank = "no status filter".
+            const statusFilter = getSelectedStatuses();
+            if (statusFilter.size > 0) {
+                pool = pool.filter(card => statusFilter.has(getCardStatus(card)));
+            }
+
+            // Empty state: status filter is on but nothing matches.
+            if (pool.length === 0) {
+                renderEmptyState(statusFilter);
+                return;
+            }
+
             // Shuffle
             pool = shuffle(pool);
 
@@ -2204,6 +2270,54 @@
                 renderFlipCards();
             } else {
                 startQuiz();
+            }
+        }
+
+        // Empty state shown when the status filter narrows the deck to zero cards.
+        function renderEmptyState(statusFilter) {
+            const isWeakOnly =
+                statusFilter.size === 2 &&
+                statusFilter.has('red') &&
+                statusFilter.has('amber');
+            const labels = [];
+            if (statusFilter.has('red')) labels.push('Red');
+            if (statusFilter.has('amber')) labels.push('Amber');
+            if (statusFilter.has('green')) labels.push('Green');
+            if (statusFilter.has('untested')) labels.push('Untested');
+
+            const headline = isWeakOnly
+                ? 'No weak words right now! 🎉'
+                : 'No cards match the selected statuses';
+            const sub = isWeakOnly
+                ? 'Nothing in the selected categories is currently Red or Amber. Try clearing the status filter to add new words to your tracking.'
+                : 'No cards in the selected categories have status: ' + labels.join(', ') +
+                  '. Try a different combination, or clear the status filter.';
+
+            const html = `
+                <div class="quiz-summary">
+                    <h2>${headline}</h2>
+                    <p style="color:#666; margin-bottom: 20px;">${sub}</p>
+                    <button class="summary-btn" onclick="clearStatusFilter(); resetToFilters();">Clear status filter</button>
+                    <button class="summary-btn secondary" onclick="resetToFilters()">Change filters</button>
+                </div>
+            `;
+
+            // Render in whichever section is current so the toggle still works.
+            if (currentMode === 'flip') {
+                document.getElementById('flip-area').classList.remove('hidden');
+                document.getElementById('quiz-area').classList.add('hidden');
+                // Replace the flip grid with the empty-state card.
+                document.getElementById('flip-grid').innerHTML = html;
+                document.getElementById('flip-grid').style.display = '';
+                document.getElementById('single-card-area').style.display = 'none';
+                document.getElementById('single-card-counter').style.display = 'none';
+            } else {
+                document.getElementById('quiz-area').classList.remove('hidden');
+                document.getElementById('flip-area').classList.add('hidden');
+                document.getElementById('quiz-progress-text').textContent = '0 / 0';
+                document.getElementById('quiz-progress-fill').style.width = '0%';
+                document.getElementById('quiz-score-text').textContent = '✓ 0  ✗ 0';
+                document.getElementById('quiz-card-container').innerHTML = html;
             }
         }
 
