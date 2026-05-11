@@ -18,6 +18,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 28px;
+            margin-bottom: 40px;
         }
 
         .book-card {
@@ -33,31 +34,75 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
         }
         .book-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.13);
         }
+        .book-card.disabled {
+            opacity: 0.45;
+            cursor: default;
+            transform: none !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+        }
 
         .book-icon { font-size: 3.5em; line-height: 1; }
         .book-title { font-size: 1.15em; font-weight: 700; color: #2b6cb0; }
         .book-desc { font-size: 0.88em; color: #888; }
-        .open-label {
+
+        .book-badge {
             display: inline-block;
             margin-top: 8px;
             font-size: 0.85em;
             font-weight: 600;
             color: white;
-            background: #2b6cb0;
             padding: 5px 16px;
             border-radius: 20px;
         }
+        .badge-open { background: #2b6cb0; }
+        .badge-missing { background: #cbd5e0; color: #718096; }
+
+        /* Upload section */
+        .upload-section {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .upload-section h2 { font-size: 1.2em; color: #2b6cb0; margin-bottom: 12px; }
+        .upload-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .upload-row label { font-weight: 600; min-width: 120px; font-size: 0.95em; }
+        .upload-row input[type="file"] { flex: 1; font-size: 0.9em; }
+        .upload-row .status-icon { font-size: 1.2em; }
+
+        .upload-btn {
+            background: #2b6cb0; color: white; border: none; padding: 10px 28px;
+            border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer;
+            margin-top: 10px;
+        }
+        .upload-btn:hover { background: #2c5282; }
+        .upload-btn:disabled { background: #a0aec0; cursor: not-allowed; }
+
+        .progress-bar { width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 12px; display: none; }
+        .progress-fill { height: 100%; background: #2b6cb0; border-radius: 3px; transition: width 0.3s; width: 0%; }
+        .upload-log { font-size: 0.85em; color: #666; margin-top: 10px; white-space: pre-line; max-height: 120px; overflow-y: auto; }
 
         @media (max-width: 600px) {
             .books-grid { grid-template-columns: 1fr; gap: 18px; }
             .book-card { padding: 26px 18px; }
+            .upload-row { flex-direction: column; align-items: flex-start; }
+            .upload-row label { min-width: unset; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud_sync.js"></script>
 </head>
 <body>
 <div class="container">
@@ -65,28 +110,153 @@
     <h1>Genki I Books</h1>
     <p class="subtitle">Textbook, Workbook &amp; Answer Key</p>
 
-    <div class="books-grid">
-        <a href="genki-textbook.pdf" target="_blank" class="book-card">
-            <div class="book-icon">📕</div>
-            <div class="book-title">Genki I Textbook</div>
-            <div class="book-desc">2nd Edition &middot; 132 MB</div>
-            <span class="open-label">Open PDF &rarr;</span>
-        </a>
+    <div class="books-grid" id="books-grid">
+        <div class="book-card disabled"><div class="book-icon">📕</div><div class="book-title">Loading...</div></div>
+        <div class="book-card disabled"><div class="book-icon">📗</div><div class="book-title">Loading...</div></div>
+        <div class="book-card disabled"><div class="book-icon">📘</div><div class="book-title">Loading...</div></div>
+    </div>
 
-        <a href="genki-workbook.pdf" target="_blank" class="book-card">
-            <div class="book-icon">📗</div>
-            <div class="book-title">Genki I Workbook</div>
-            <div class="book-desc">2nd Edition &middot; 37 MB</div>
-            <span class="open-label">Open PDF &rarr;</span>
-        </a>
-
-        <a href="genki-answerkey.pdf" target="_blank" class="book-card">
-            <div class="book-icon">📘</div>
-            <div class="book-title">Workbook Answer Key</div>
-            <div class="book-desc">42 MB</div>
-            <span class="open-label">Open PDF &rarr;</span>
-        </a>
+    <div class="upload-section" id="upload-section">
+        <h2>Upload PDFs</h2>
+        <p style="color:#666; margin-bottom:14px; font-size:0.92em;">Select the Genki PDFs from your computer. They upload to Supabase so they work on any device.</p>
+        <div class="upload-row">
+            <label>Textbook:</label>
+            <input type="file" id="file-textbook" accept=".pdf">
+            <span class="status-icon" id="status-textbook"></span>
+        </div>
+        <div class="upload-row">
+            <label>Workbook:</label>
+            <input type="file" id="file-workbook" accept=".pdf">
+            <span class="status-icon" id="status-workbook"></span>
+        </div>
+        <div class="upload-row">
+            <label>Answer Key:</label>
+            <input type="file" id="file-answerkey" accept=".pdf">
+            <span class="status-icon" id="status-answerkey"></span>
+        </div>
+        <button class="upload-btn" id="upload-btn" onclick="uploadAll()">Upload Selected Files</button>
+        <div class="progress-bar" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="upload-log" id="upload-log"></div>
     </div>
 </div>
+
+<script>
+var SUPABASE_URL = 'https://zknkjedxudhdzphxxsfj.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprbmtqZWR4dWRoZHpwaHh4c2ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNzIxNzksImV4cCI6MjA5MTg0ODE3OX0.RgE2FZPDOmSpy1XeC7JMmTxpWgi0QbCATnvMoF3zEfQ';
+var BUCKET = 'genki-books';
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+var BOOKS = [
+    { key: 'genki-textbook.pdf',  label: 'Genki I Textbook',    icon: '📕', desc: '2nd Edition', inputId: 'file-textbook',  statusId: 'status-textbook'  },
+    { key: 'genki-workbook.pdf',  label: 'Genki I Workbook',    icon: '📗', desc: '2nd Edition', inputId: 'file-workbook',  statusId: 'status-workbook'  },
+    { key: 'genki-answerkey.pdf', label: 'Workbook Answer Key', icon: '📘', desc: '',            inputId: 'file-answerkey', statusId: 'status-answerkey' }
+];
+
+var bookStatus = {}; // key → true/false
+
+async function checkBooks() {
+    for (var i = 0; i < BOOKS.length; i++) {
+        var b = BOOKS[i];
+        try {
+            var { data } = sb.storage.from(BUCKET).getPublicUrl(b.key);
+            var resp = await fetch(data.publicUrl, { method: 'HEAD' });
+            bookStatus[b.key] = resp.ok;
+        } catch(e) {
+            bookStatus[b.key] = false;
+        }
+        // Update status icon next to file input
+        var el = document.getElementById(b.statusId);
+        if (el) el.textContent = bookStatus[b.key] ? '✅' : '';
+    }
+}
+
+function renderCards() {
+    var grid = document.getElementById('books-grid');
+    grid.innerHTML = '';
+    var allUploaded = true;
+    for (var i = 0; i < BOOKS.length; i++) {
+        var b = BOOKS[i];
+        var exists = bookStatus[b.key];
+        if (!exists) allUploaded = false;
+        var url = SUPABASE_URL + '/storage/v1/object/public/' + BUCKET + '/' + b.key;
+
+        var card = document.createElement('a');
+        card.className = 'book-card' + (exists ? '' : ' disabled');
+        if (exists) { card.href = url; card.target = '_blank'; }
+        card.innerHTML =
+            '<div class="book-icon">' + b.icon + '</div>' +
+            '<div class="book-title">' + b.label + '</div>' +
+            (b.desc ? '<div class="book-desc">' + b.desc + '</div>' : '') +
+            '<span class="book-badge ' + (exists ? 'badge-open' : 'badge-missing') + '">' +
+                (exists ? 'Open PDF →' : 'Not uploaded') +
+            '</span>';
+        grid.appendChild(card);
+    }
+    // Hide upload section if all books are uploaded
+    var sec = document.getElementById('upload-section');
+    if (sec) sec.style.display = allUploaded ? 'none' : '';
+}
+
+function log(msg) {
+    var el = document.getElementById('upload-log');
+    el.textContent += msg + '\n';
+    el.scrollTop = el.scrollHeight;
+}
+
+async function uploadAll() {
+    var btn = document.getElementById('upload-btn');
+    var bar = document.getElementById('progress-bar');
+    var fill = document.getElementById('progress-fill');
+    document.getElementById('upload-log').textContent = '';
+
+    var toUpload = [];
+    for (var i = 0; i < BOOKS.length; i++) {
+        var b = BOOKS[i];
+        var input = document.getElementById(b.inputId);
+        if (input.files.length > 0) {
+            toUpload.push({ key: b.key, file: input.files[0], label: b.label });
+        }
+    }
+    if (toUpload.length === 0) { log('No files selected.'); return; }
+
+    btn.disabled = true;
+    bar.style.display = 'block';
+    fill.style.width = '0%';
+
+    for (var i = 0; i < toUpload.length; i++) {
+        var item = toUpload[i];
+        fill.style.width = Math.round((i / toUpload.length) * 100) + '%';
+        log('Uploading ' + item.label + ' (' + (item.file.size / 1048576).toFixed(0) + ' MB)...');
+
+        try {
+            var { data, error } = await sb.storage.from(BUCKET).upload(item.key, item.file, {
+                cacheControl: '86400',
+                upsert: true,
+                contentType: 'application/pdf'
+            });
+            if (error) {
+                log('  ✗ Error: ' + error.message);
+            } else {
+                log('  ✓ Done!');
+                bookStatus[item.key] = true;
+            }
+        } catch(e) {
+            log('  ✗ Error: ' + e.message);
+        }
+    }
+
+    fill.style.width = '100%';
+    log('\nFinished!');
+    btn.disabled = false;
+    renderCards();
+    await checkBooks();
+    renderCards();
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await checkBooks();
+    renderCards();
+});
+</script>
 </body>
 </html>
