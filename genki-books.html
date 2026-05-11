@@ -20,79 +20,35 @@
             gap: 28px;
             margin-bottom: 40px;
         }
-
         .book-card {
-            background: white;
-            border-radius: 14px;
-            padding: 36px 24px;
-            text-align: center;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
+            background: white; border-radius: 14px; padding: 36px 24px; text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s ease;
+            text-decoration: none; color: inherit; display: flex; flex-direction: column;
+            align-items: center; gap: 10px; cursor: pointer;
         }
-        .book-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.13);
-        }
-        .book-card.disabled {
-            opacity: 0.45;
-            cursor: default;
-            transform: none !important;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
-        }
-
+        .book-card:hover { transform: translateY(-5px); box-shadow: 0 8px 24px rgba(0,0,0,0.13); }
+        .book-card.disabled { opacity: 0.45; cursor: default; transform: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important; }
         .book-icon { font-size: 3.5em; line-height: 1; }
         .book-title { font-size: 1.15em; font-weight: 700; color: #2b6cb0; }
         .book-desc { font-size: 0.88em; color: #888; }
-
-        .book-badge {
-            display: inline-block;
-            margin-top: 8px;
-            font-size: 0.85em;
-            font-weight: 600;
-            color: white;
-            padding: 5px 16px;
-            border-radius: 20px;
-        }
+        .book-badge { display: inline-block; margin-top: 8px; font-size: 0.85em; font-weight: 600; color: white; padding: 5px 16px; border-radius: 20px; }
         .badge-open { background: #2b6cb0; }
         .badge-missing { background: #cbd5e0; color: #718096; }
+        .badge-loading { background: #d69e2e; }
 
-        /* Upload section */
-        .upload-section {
-            background: white;
-            border-radius: 14px;
-            padding: 30px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        }
+        .upload-section { background: white; border-radius: 14px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
         .upload-section h2 { font-size: 1.2em; color: #2b6cb0; margin-bottom: 12px; }
-        .upload-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
+        .upload-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
         .upload-row label { font-weight: 600; min-width: 120px; font-size: 0.95em; }
         .upload-row input[type="file"] { flex: 1; font-size: 0.9em; }
         .upload-row .status-icon { font-size: 1.2em; }
-
-        .upload-btn {
-            background: #2b6cb0; color: white; border: none; padding: 10px 28px;
-            border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer;
-            margin-top: 10px;
-        }
+        .upload-btn { background: #2b6cb0; color: white; border: none; padding: 10px 28px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .upload-btn:hover { background: #2c5282; }
         .upload-btn:disabled { background: #a0aec0; cursor: not-allowed; }
-
         .progress-bar { width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 12px; display: none; }
         .progress-fill { height: 100%; background: #2b6cb0; border-radius: 3px; transition: width 0.3s; width: 0%; }
         .upload-log { font-size: 0.85em; color: #666; margin-top: 10px; white-space: pre-line; max-height: 120px; overflow-y: auto; }
+        .note { background: #ebf8ff; border-left: 4px solid #2b6cb0; padding: 12px 16px; border-radius: 6px; font-size: 0.88em; color: #2c5282; margin-bottom: 20px; }
 
         @media (max-width: 600px) {
             .books-grid { grid-template-columns: 1fr; gap: 18px; }
@@ -103,10 +59,11 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="cloud_sync.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
 <div class="container">
-    <a href="index.html" class="back-link">&larr; Back to Dashboard</a>
+    <a href="index.html" class="back-link">&larr; Home</a>
     <h1>Genki I Books</h1>
     <p class="subtitle">Textbook, Workbook &amp; Answer Key</p>
 
@@ -118,11 +75,23 @@
 
     <div class="upload-section" id="upload-section">
         <h2>Upload PDFs</h2>
-        <p style="color:#666; margin-bottom:14px; font-size:0.92em;">Select the Genki PDFs from your computer. They upload to Supabase so they work on any device.</p>
+        <div class="note">The textbook is split into 3 parts (under 50 MB each) for Supabase upload. When you click a book card, the parts are merged back into one PDF automatically.</div>
+        <p style="color:#666; margin-bottom:14px; font-size:0.92em;">Select the files from the <code>n5-japanese</code> folder and hit Upload.</p>
+
         <div class="upload-row">
-            <label>Textbook:</label>
-            <input type="file" id="file-textbook" accept=".pdf">
-            <span class="status-icon" id="status-textbook"></span>
+            <label>Textbook Pt 1:</label>
+            <input type="file" id="file-tb1" accept=".pdf">
+            <span class="status-icon" id="status-tb1"></span>
+        </div>
+        <div class="upload-row">
+            <label>Textbook Pt 2:</label>
+            <input type="file" id="file-tb2" accept=".pdf">
+            <span class="status-icon" id="status-tb2"></span>
+        </div>
+        <div class="upload-row">
+            <label>Textbook Pt 3:</label>
+            <input type="file" id="file-tb3" accept=".pdf">
+            <span class="status-icon" id="status-tb3"></span>
         </div>
         <div class="upload-row">
             <label>Workbook:</label>
@@ -146,61 +115,142 @@ var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 var BUCKET = 'genki-books';
 var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-var BOOKS = [
-    { key: 'genki-textbook.pdf',  label: 'Genki I Textbook',    icon: '📕', desc: '2nd Edition', inputId: 'file-textbook',  statusId: 'status-textbook'  },
-    { key: 'genki-workbook.pdf',  label: 'Genki I Workbook',    icon: '📗', desc: '2nd Edition', inputId: 'file-workbook',  statusId: 'status-workbook'  },
-    { key: 'genki-answerkey.pdf', label: 'Workbook Answer Key', icon: '📘', desc: '',            inputId: 'file-answerkey', statusId: 'status-answerkey' }
+// Files stored in Supabase
+var FILES = [
+    { key: 'genki-textbook-part1.pdf', inputId: 'file-tb1',       statusId: 'status-tb1' },
+    { key: 'genki-textbook-part2.pdf', inputId: 'file-tb2',       statusId: 'status-tb2' },
+    { key: 'genki-textbook-part3.pdf', inputId: 'file-tb3',       statusId: 'status-tb3' },
+    { key: 'genki-workbook.pdf',       inputId: 'file-workbook',  statusId: 'status-workbook' },
+    { key: 'genki-answerkey.pdf',      inputId: 'file-answerkey', statusId: 'status-answerkey' }
 ];
 
-var bookStatus = {}; // key → true/false
+// Books displayed as cards (textbook = 3 parts merged)
+var BOOKS = [
+    { label: 'Genki I Textbook', icon: '📕', desc: '2nd Edition',
+      parts: ['genki-textbook-part1.pdf','genki-textbook-part2.pdf','genki-textbook-part3.pdf'] },
+    { label: 'Genki I Workbook', icon: '📗', desc: '2nd Edition',
+      parts: ['genki-workbook.pdf'] },
+    { label: 'Workbook Answer Key', icon: '📘', desc: '',
+      parts: ['genki-answerkey.pdf'] }
+];
 
-async function checkBooks() {
-    for (var i = 0; i < BOOKS.length; i++) {
-        var b = BOOKS[i];
+var fileExists = {}; // key → true/false
+
+function pubUrl(key) {
+    return SUPABASE_URL + '/storage/v1/object/public/' + BUCKET + '/' + key;
+}
+
+async function checkFiles() {
+    var checks = FILES.map(async function(f) {
         try {
-            var { data } = sb.storage.from(BUCKET).getPublicUrl(b.key);
-            var resp = await fetch(data.publicUrl, { method: 'HEAD' });
-            bookStatus[b.key] = resp.ok;
-        } catch(e) {
-            bookStatus[b.key] = false;
-        }
-        // Update status icon next to file input
-        var el = document.getElementById(b.statusId);
-        if (el) el.textContent = bookStatus[b.key] ? '✅' : '';
-    }
+            var resp = await fetch(pubUrl(f.key), { method: 'HEAD' });
+            fileExists[f.key] = resp.ok;
+        } catch(e) { fileExists[f.key] = false; }
+        var el = document.getElementById(f.statusId);
+        if (el) el.textContent = fileExists[f.key] ? '✅' : '';
+    });
+    await Promise.all(checks);
+}
+
+function bookReady(book) {
+    return book.parts.every(function(k) { return fileExists[k]; });
 }
 
 function renderCards() {
     var grid = document.getElementById('books-grid');
     grid.innerHTML = '';
-    var allUploaded = true;
-    for (var i = 0; i < BOOKS.length; i++) {
-        var b = BOOKS[i];
-        var exists = bookStatus[b.key];
-        if (!exists) allUploaded = false;
-        var url = SUPABASE_URL + '/storage/v1/object/public/' + BUCKET + '/' + b.key;
+    var allReady = true;
+
+    BOOKS.forEach(function(b) {
+        var ready = bookReady(b);
+        if (!ready) allReady = false;
 
         var card = document.createElement('a');
-        card.className = 'book-card' + (exists ? '' : ' disabled');
-        if (exists) { card.href = url; card.target = '_blank'; }
+        card.className = 'book-card' + (ready ? '' : ' disabled');
+        if (ready) {
+            card.href = '#';
+            card.onclick = function(e) { e.preventDefault(); openBook(b); };
+        }
         card.innerHTML =
             '<div class="book-icon">' + b.icon + '</div>' +
             '<div class="book-title">' + b.label + '</div>' +
             (b.desc ? '<div class="book-desc">' + b.desc + '</div>' : '') +
-            '<span class="book-badge ' + (exists ? 'badge-open' : 'badge-missing') + '">' +
-                (exists ? 'Open PDF →' : 'Not uploaded') +
+            '<span class="book-badge ' + (ready ? 'badge-open' : 'badge-missing') + '">' +
+                (ready ? 'Open PDF →' : 'Not uploaded') +
             '</span>';
         grid.appendChild(card);
+    });
+
+    document.getElementById('upload-section').style.display = allReady ? 'none' : '';
+}
+
+// Open a book: if single part, open directly. If multi-part, merge with pdf-lib then open.
+async function openBook(book) {
+    if (book.parts.length === 1) {
+        window.open(pubUrl(book.parts[0]), '_blank');
+        return;
     }
-    // Hide upload section if all books are uploaded
-    var sec = document.getElementById('upload-section');
-    if (sec) sec.style.display = allUploaded ? 'none' : '';
+
+    // Show loading state on the card
+    var cards = document.querySelectorAll('.book-card');
+    var idx = BOOKS.indexOf(book);
+    if (cards[idx]) {
+        var badge = cards[idx].querySelector('.book-badge');
+        if (badge) { badge.className = 'book-badge badge-loading'; badge.textContent = 'Merging PDF...'; }
+    }
+
+    try {
+        var merged = await PDFLib.PDFDocument.create();
+        for (var i = 0; i < book.parts.length; i++) {
+            var resp = await fetch(pubUrl(book.parts[i]));
+            var bytes = await resp.arrayBuffer();
+            var part = await PDFLib.PDFDocument.load(bytes);
+            var pages = await merged.copyPages(part, part.getPageIndices());
+            pages.forEach(function(p) { merged.addPage(p); });
+        }
+        var pdfBytes = await merged.save();
+        var blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        var url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+    } catch(e) {
+        alert('Error merging PDF: ' + e.message);
+    }
+
+    // Restore badge
+    if (cards[idx]) {
+        var badge = cards[idx].querySelector('.book-badge');
+        if (badge) { badge.className = 'book-badge badge-open'; badge.textContent = 'Open PDF →'; }
+    }
 }
 
 function log(msg) {
     var el = document.getElementById('upload-log');
     el.textContent += msg + '\n';
     el.scrollTop = el.scrollHeight;
+}
+
+function directUpload(key, file, onProgress) {
+    return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', SUPABASE_URL + '/storage/v1/object/' + BUCKET + '/' + key, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + SUPABASE_ANON_KEY);
+        xhr.setRequestHeader('Content-Type', 'application/pdf');
+        xhr.setRequestHeader('Cache-Control', 'max-age=86400');
+        xhr.setRequestHeader('x-upsert', 'true');
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) onProgress(e.loaded / e.total);
+        };
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) { onProgress(1); resolve(); }
+            else {
+                var msg = 'Upload failed (' + xhr.status + ')';
+                try { msg = JSON.parse(xhr.responseText).message || msg; } catch(e) {}
+                reject(new Error(msg));
+            }
+        };
+        xhr.onerror = function() { reject(new Error('Network error')); };
+        xhr.send(file);
+    });
 }
 
 async function uploadAll() {
@@ -210,13 +260,12 @@ async function uploadAll() {
     document.getElementById('upload-log').textContent = '';
 
     var toUpload = [];
-    for (var i = 0; i < BOOKS.length; i++) {
-        var b = BOOKS[i];
-        var input = document.getElementById(b.inputId);
+    FILES.forEach(function(f) {
+        var input = document.getElementById(f.inputId);
         if (input.files.length > 0) {
-            toUpload.push({ key: b.key, file: input.files[0], label: b.label });
+            toUpload.push({ key: f.key, file: input.files[0] });
         }
-    }
+    });
     if (toUpload.length === 0) { log('No files selected.'); return; }
 
     btn.disabled = true;
@@ -225,21 +274,13 @@ async function uploadAll() {
 
     for (var i = 0; i < toUpload.length; i++) {
         var item = toUpload[i];
-        fill.style.width = Math.round((i / toUpload.length) * 100) + '%';
-        log('Uploading ' + item.label + ' (' + (item.file.size / 1048576).toFixed(0) + ' MB)...');
-
+        log('Uploading ' + item.key + ' (' + (item.file.size / 1048576).toFixed(0) + ' MB)...');
         try {
-            var { data, error } = await sb.storage.from(BUCKET).upload(item.key, item.file, {
-                cacheControl: '86400',
-                upsert: true,
-                contentType: 'application/pdf'
+            await directUpload(item.key, item.file, function(pct) {
+                fill.style.width = (((i + pct) / toUpload.length) * 100).toFixed(0) + '%';
             });
-            if (error) {
-                log('  ✗ Error: ' + error.message);
-            } else {
-                log('  ✓ Done!');
-                bookStatus[item.key] = true;
-            }
+            log('  ✓ Done!');
+            fileExists[item.key] = true;
         } catch(e) {
             log('  ✗ Error: ' + e.message);
         }
@@ -249,12 +290,10 @@ async function uploadAll() {
     log('\nFinished!');
     btn.disabled = false;
     renderCards();
-    await checkBooks();
-    renderCards();
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
-    await checkBooks();
+    await checkFiles();
     renderCards();
 });
 </script>
