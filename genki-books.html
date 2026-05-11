@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genki Books - JLPT N5 Study</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: #333; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        h1 { font-size: 2em; color: #2b6cb0; text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #2b6cb0; text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 14px;
+            padding: 36px 24px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+        }
+
+        .book-icon { font-size: 3.5em; line-height: 1; }
+        .book-title { font-size: 1.15em; font-weight: 700; color: #2b6cb0; }
+        .book-desc { font-size: 0.88em; color: #888; }
+        .open-label {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: white;
+            background: #2b6cb0;
+            padding: 5px 16px;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .books-grid { grid-template-columns: 1fr; gap: 18px; }
+            .book-card { padding: 26px 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="index.html" class="back-link">&larr; Back to Dashboard</a>
+    <h1>Genki I Books</h1>
+    <p class="subtitle">Textbook, Workbook &amp; Answer Key</p>
+
+    <div class="books-grid">
+        <a href="genki-textbook.pdf" target="_blank" class="book-card">
+            <div class="book-icon">📕</div>
+            <div class="book-title">Genki I Textbook</div>
+            <div class="book-desc">2nd Edition &middot; 132 MB</div>
+            <span class="open-label">Open PDF &rarr;</span>
+        </a>
+
+        <a href="genki-workbook.pdf" target="_blank" class="book-card">
+            <div class="book-icon">📗</div>
+            <div class="book-title">Genki I Workbook</div>
+            <div class="book-desc">2nd Edition &middot; 37 MB</div>
+            <span class="open-label">Open PDF &rarr;</span>
+        </a>
+
+        <a href="genki-answerkey.pdf" target="_blank" class="book-card">
+            <div class="book-icon">📘</div>
+            <div class="book-title">Workbook Answer Key</div>
+            <div class="book-desc">42 MB</div>
+            <span class="open-label">Open PDF &rarr;</span>
+        </a>
+    </div>
+</div>
+</body>
+</html>
