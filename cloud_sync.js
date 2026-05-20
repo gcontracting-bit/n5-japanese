@@ -73,7 +73,61 @@
     }
   };
 
-  // --- Initial fetch: cloud wins on page load --------------------------------
+  // --- Per-entry merge for the score maps ------------------------------------
+  // vocab_scores / kana_scores / kanji_scores are { "word|en": entry } maps.
+  // Mirroring them as a single blob with last-write-wins means a stale push
+  // from one tab/device can silently drop entries another device just earned.
+  // For these keys we MERGE per entry instead: union the keys, and on a
+  // conflict keep whichever entry shows more learning activity. A merge can
+  // therefore only ADD/UPGRADE an entry, never lose one. Every other tracked
+  // key keeps the original cloud-wins-on-load behavior.
+  var SCORE_MAP_KEYS = ["kana_scores", "kanji_scores", "vocab_scores"];
+
+  // How "real" an entry is. A baseline seed is {state:'g', total:1}; genuine
+  // study activity is either repeated testing (total > 1) or a downgrade from
+  // a wrong answer (amber/red, or a negative kana streak). "Engaged" entries
+  // always beat baseline-ish ones regardless of raw counts, so the baseline
+  // can never clobber real progress.
+  function activityScore(e) {
+    if (!e || typeof e !== "object") return -1;
+    var total = (typeof e.total === "number") ? e.total : 0;
+    var engaged = total > 1 || e.state === "a" || e.state === "r" ||
+                  (typeof e.streak === "number" && e.streak < 0);
+    return (engaged ? 1e6 : 0) + total;
+  }
+
+  function mergeScoreMap(localMap, cloudMap) {
+    var out = {}, changed = false, k;
+    for (k in cloudMap) out[k] = cloudMap[k];
+    for (k in localMap) {
+      if (!(k in cloudMap)) { out[k] = localMap[k]; changed = true; }
+      else if (activityScore(localMap[k]) > activityScore(cloudMap[k])) {
+        out[k] = localMap[k]; changed = true;
+      }
+    }
+    return { value: out, changed: changed };
+  }
+
+  function isPlainObject(v) {
+    return v && typeof v === "object" && !Array.isArray(v);
+  }
+
+  // Reconcile an incoming cloud value with the current local value.
+  // Returns { value, changed } where `changed` means the local copy contributed
+  // something the cloud lacked (so we should push the merged union back).
+  function reconcile(key, localVal, cloudVal) {
+    if (SCORE_MAP_KEYS.indexOf(key) !== -1 && isPlainObject(localVal) && isPlainObject(cloudVal)) {
+      return mergeScoreMap(localVal, cloudVal);
+    }
+    return { value: cloudVal, changed: false }; // cloud wins (original behavior)
+  }
+
+  function readLocalParsed(key) {
+    try { var raw = nativeGetItem(key); return raw == null ? undefined : JSON.parse(raw); }
+    catch (e) { return undefined; }
+  }
+
+  // --- Initial fetch: cloud wins on page load (per-key merge for score maps) --
   async function initialFetch() {
     setStatus("syncing", "Connecting...");
     try {
@@ -81,9 +135,13 @@
       if (res.error) throw res.error;
       suppressPush = true;
       var cloudKeys = new Set();
+      var pushAfterMerge = [];
       (res.data || []).forEach(function (row) {
         cloudKeys.add(row.key);
-        nativeSetItem(row.key, JSON.stringify(row.value));
+        var rec = reconcile(row.key, readLocalParsed(row.key), row.value);
+        nativeSetItem(row.key, JSON.stringify(rec.value));
+        // Local had progress the cloud lacked — remember to push the union back.
+        if (rec.changed) pushAfterMerge.push([row.key, JSON.stringify(rec.value)]);
       });
       // Re-enable push BEFORE seeding local-only keys to cloud,
       // otherwise schedulePush silently drops them.
@@ -95,6 +153,9 @@
           if (v != null) schedulePush(k, v);
         }
       });
+      // Score-map keys where the merge kept local-only progress: push the
+      // merged union so the cloud and other devices converge (no lost entries).
+      pushAfterMerge.forEach(function (kv) { schedulePush(kv[0], kv[1]); });
       setStatus("synced", "Live");
       window.dispatchEvent(new CustomEvent("cloudsync:ready"));
     } catch (e) {
@@ -109,16 +170,22 @@
       .on("postgres_changes", { event: "*", schema: "public", table: TABLE }, function (payload) {
         var row = payload.new || payload.old;
         if (!row || TRACKED_KEYS.indexOf(row.key) === -1) return;
+        var pushBack = null;
         suppressPush = true;
         try {
           if (payload.eventType === "DELETE") {
             nativeRemoveItem(row.key);
           } else {
-            nativeSetItem(row.key, JSON.stringify(row.value));
+            var rec = reconcile(row.key, readLocalParsed(row.key), row.value);
+            nativeSetItem(row.key, JSON.stringify(rec.value));
+            // Our local copy had entries this update lacked — re-push the merge
+            // so a concurrent write elsewhere can't drop them (last-write-wins).
+            if (rec.changed) pushBack = JSON.stringify(rec.value);
           }
         } finally {
           suppressPush = false;
         }
+        if (pushBack) schedulePush(row.key, pushBack);
         window.dispatchEvent(new CustomEvent("cloudsync:update", { detail: { key: row.key, eventType: payload.eventType } }));
         setStatus("synced", "Live • updated from another device");
         setTimeout(function () { setStatus("synced", "Live"); }, 2000);
