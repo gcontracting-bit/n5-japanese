@@ -1738,6 +1738,9 @@
         function applyScores() {
             const scores = getScores();
             let totalWords = 0, masteredWords = 0;
+            // Canonical word list parsed from the tables, published for index.html
+            // so the dashboard wheel can compute the same mastery live.
+            const wordList = [];
 
             document.querySelectorAll('.week-section').forEach(section => {
                 const title = section.querySelector('.week-title');
@@ -1760,6 +1763,7 @@
                     }
                     const en = cells[2].textContent.trim();
                     const forms = parseRowForms(rawJp);
+                    wordList.push({ kana: forms.kana, kanji: forms.kanji, en: en, extra: !!isExtra });
 
                     // Word-level RAG = worst of (kana, ...kanji forms).
                     // Only count kanji forms that have actually been tested;
@@ -1811,12 +1815,15 @@
             if (op) op.style.width = mp + '%';
             if (opct) opct.textContent = mp + '%';
 
-            // Publish the canonical word-level counts so the dashboard wheel on
-            // index.html shows the SAME number as this bar. This page is the only
-            // one with the full Genki word list + kana/kanji form grouping, so it
-            // is the source of truth. Local-only (derived; not a synced key).
+            // Publish the canonical word-level counts AND the parsed word list so
+            // the dashboard wheel on index.html shows the SAME number as this bar.
+            // This page is the only one with the full Genki word list + kana/kanji
+            // form grouping, so it is the source of truth. The word list lets the
+            // dashboard recompute mastery LIVE from vocab_scores (no revisit needed);
+            // vocab_progress remains as a fast fallback. Local-only (derived).
             try {
                 localStorage.setItem('vocab_progress', JSON.stringify({ mastered: masteredWords, total: totalWords }));
+                localStorage.setItem('vocab_word_list', JSON.stringify(wordList));
             } catch (e) {}
         }
 
