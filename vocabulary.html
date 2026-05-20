@@ -1748,7 +1748,16 @@
                     const cells = row.querySelectorAll('td');
                     if (cells.length < 3) return;
 
-                    const rawJp = cells[0].textContent.trim();
+                    // Parse from the ORIGINAL cell text, captured once. applyScores
+                    // re-runs on every cloud sync and prepends an indicator to the
+                    // cell; for 10+ words that indicator includes the "🔥 10+" text,
+                    // which would otherwise pollute textContent and corrupt the
+                    // lookup key on re-render (making the word read as Untested).
+                    let rawJp = cells[0].dataset.rawJp;
+                    if (rawJp == null) {
+                        rawJp = cells[0].textContent.trim();
+                        cells[0].dataset.rawJp = rawJp;
+                    }
                     const en = cells[2].textContent.trim();
                     const forms = parseRowForms(rawJp);
 
