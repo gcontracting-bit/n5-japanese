@@ -397,20 +397,31 @@
             setWheel('kanji', kanjiKnown, KANJI_TOTAL);
 
             // --- Vocabulary scores ---
-            // Only count actual vocab words (2+ chars before |), skip single kana entries
-            var vocabScores = {};
-            try { vocabScores = JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) {}
-            var VOCAB_TOTAL = 1182;
-            var vocabMastered = 0;
-            Object.keys(vocabScores).forEach(function(k) {
-                var parts = k.split('|');
-                if (parts[0] && parts[0].length < 2) return; // skip single kana chars
-                var e = vocabScores[k];
-                var st = e.state || null;
-                if (!st && typeof e.streak === 'number' && e.streak >= 3) st = 'g';
-                if (st === 'g') vocabMastered++;
-            });
-            setWheel('vocab', vocabMastered, VOCAB_TOTAL);
+            // Source of truth is vocabulary.html, which counts WORDS (one per row,
+            // worst of kana + kanji forms) over the full Genki list and publishes
+            // {mastered,total} to `vocab_progress`. Use that so this wheel matches
+            // the bar on the vocab page exactly.
+            var vp = null;
+            try { vp = JSON.parse(localStorage.getItem('vocab_progress') || 'null'); } catch(e) {}
+            if (vp && typeof vp.mastered === 'number' && typeof vp.total === 'number' && vp.total > 0) {
+                setWheel('vocab', vp.mastered, vp.total);
+            } else {
+                // Fallback (vocab page not opened on this device yet): estimate from
+                // raw entries. Approximate only — replaced once vocab_progress exists.
+                var vocabScores = {};
+                try { vocabScores = JSON.parse(localStorage.getItem('vocab_scores') || '{}'); } catch(e) {}
+                var VOCAB_TOTAL = 1182;
+                var vocabMastered = 0;
+                Object.keys(vocabScores).forEach(function(k) {
+                    var parts = k.split('|');
+                    if (parts[0] && parts[0].length < 2) return; // skip single kana chars
+                    var e = vocabScores[k];
+                    var st = e.state || null;
+                    if (!st && typeof e.streak === 'number' && e.streak >= 3) st = 'g';
+                    if (st === 'g') vocabMastered++;
+                });
+                setWheel('vocab', vocabMastered, VOCAB_TOTAL);
+            }
         }
     </script>
 </body>

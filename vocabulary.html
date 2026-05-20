@@ -1810,6 +1810,14 @@
             const opct = document.getElementById('overall-percent');
             if (op) op.style.width = mp + '%';
             if (opct) opct.textContent = mp + '%';
+
+            // Publish the canonical word-level counts so the dashboard wheel on
+            // index.html shows the SAME number as this bar. This page is the only
+            // one with the full Genki word list + kana/kanji form grouping, so it
+            // is the source of truth. Local-only (derived; not a synced key).
+            try {
+                localStorage.setItem('vocab_progress', JSON.stringify({ mastered: masteredWords, total: totalWords }));
+            } catch (e) {}
         }
 
         // ===== Per-chapter RAG status bar (counts + filter pills) =====
