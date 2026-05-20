@@ -1664,16 +1664,39 @@
             'いただきます|phrase before eating':'g','ごちそうさまでした|thanks for the meal':'g'
         };
 
-        function seedBaselineIfNeeded() {
-            // Non-destructive merge: any key already in localStorage is left alone.
-            // Re-seeds after new deploys if keys are still missing.
+        function seedBaselineIfNeeded(pushToCloud) {
+            // Non-destructive merge: any key already in localStorage is left alone
+            // (real flashcard progress always wins over the baseline).
+            //
+            // pushToCloud=false (cold start, before cloud sync has loaded): write via
+            // the NATIVE setter so we don't schedule a cloud push of a possibly empty
+            // or stale local store — that push could land after the cloud fetch and
+            // clobber real progress with baseline-only data.
+            // pushToCloud=true (after cloudsync:ready/update, i.e. seeded on top of the
+            // authoritative cloud copy): write via the synced setter so the merged
+            // union (cloud entries + any missing baseline) propagates to other devices.
+            // A "hollow" entry has no real progress (no state, no positive streak,
+            // zero totals). The baseline declares every Ch.1 word as tested, so it
+            // should reclaim hollow/missing entries — but NEVER overwrite a real
+            // score (state set, or any tested total / streak).
+            const isHollow = function (e) {
+                if (!e) return true;
+                if (e.state) return false;
+                if (typeof e.streak === 'number' && e.streak !== 0) return false;
+                if (e.total > 0) return false;
+                return true;
+            };
             try {
                 const cur = JSON.parse(localStorage.getItem('vocab_scores') || '{}');
                 let added = 0;
                 for (const k in VOCAB_BASELINE) {
-                    if (!cur[k]) { cur[k] = { state: VOCAB_BASELINE[k], total: 1 }; added++; }
+                    if (isHollow(cur[k])) { cur[k] = { state: VOCAB_BASELINE[k], total: 1 }; added++; }
                 }
-                if (added > 0) localStorage.setItem('vocab_scores', JSON.stringify(cur));
+                if (added > 0) {
+                    const json = JSON.stringify(cur);
+                    if (pushToCloud) localStorage.setItem('vocab_scores', json);
+                    else Storage.prototype.setItem.call(localStorage, 'vocab_scores', json);
+                }
             } catch(e) {}
         }
 
@@ -1851,7 +1874,12 @@
         }
 
         // Re-run on cloud sync (another device updated scores).
+        // Cloud sync OVERWRITES the local vocab_scores blob, which can drop
+        // baseline-only entries — so re-apply the baseline (and propagate the
+        // merged union) before re-rendering, otherwise baseline words flicker
+        // to "Untested".
         function refreshFromScores() {
+            seedBaselineIfNeeded(true);
             applyScores();
             renderStatusBars();
         }
@@ -1859,7 +1887,10 @@
         window.addEventListener('cloudsync:update', refreshFromScores);
 
         document.addEventListener('DOMContentLoaded', function() {
-            seedBaselineIfNeeded();
+            // Cold start: seed for immediate display only (no cloud push).
+            // The authoritative seed+push happens in refreshFromScores once the
+            // cloud copy has loaded (cloudsync:ready).
+            seedBaselineIfNeeded(false);
             applyScores();
             renderStatusBars();
             // Count and display extra vocab words
