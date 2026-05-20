@@ -150,6 +150,29 @@ var EXAM_DATA = {
           ]
         }
       ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K01-01.mp3",
+          transcript: "<p>おんな：すみません、ゆうびんきょくはどこですか。<br>おとこ：ゆうびんきょくですか。このみちをまっすぐいって、ふたつめのかどをみぎにまがってください。ひだりがわにあります。<br>おんな：みぎですね。ありがとうございます。</p>",
+          questions: [
+            { stem: "おんなのひとはどこにいきたいですか。", options: ["えき", "ゆうびんきょく", "ぎんこう", "がっこう"], answer: 2, explanation: "ゆうびんきょくはどこですか — she wants the post office." },
+            { stem: "ゆうびんきょくはみちのどちらがわにありますか。", options: ["みぎがわ", "ひだりがわ", "まえ", "うしろ"], answer: 2, explanation: "ひだりがわにあります。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「はじめまして。」", options: ["ありがとうございます。", "はじめまして。どうぞよろしく。", "おはようございます。", "さようなら。"], answer: 2, explanation: "はじめまして is replied with the same plus どうぞよろしく." },
+            { stem: "「すみません、いまなんじですか。」", options: ["はい、そうです。", "ごじです。", "わかりません、すみません。", "そうですか。"], answer: 2, explanation: "Telling the time directly answers the question." }
+          ]
+        }
+      ]
     }
   ]
 },
@@ -290,6 +313,29 @@ var EXAM_DATA = {
             { stem: "きょうはなんようびですか。", options: ["げつようび", "すいようび", "にちようび", "どようび"], answer: 3, explanation: "にちようび (Sunday)." },
             { stem: "ふたりはなにをしますか。", options: ["テレビをみる", "にほんごのべんきょう", "かいもの", "りょうり"], answer: 2, explanation: "にほんごのべんきょうをします (study Japanese)." },
             { stem: "あきこさんはどこにいますか。", options: ["だいがく", "としょかん", "わたしのうち", "おみせ"], answer: 3, explanation: "あきこさんもうちにいます (also at the house)." }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K02-02.mp3",
+          transcript: "<p>おとこ：すみません、このTシャツはいくらですか。<br>おんな：それは２,０００えんです。でも、きょうはセールで３０パーセントオフです。<br>おとこ：じゃ、これをください。</p>",
+          questions: [
+            { stem: "Tシャツはいくらですか（セールのまえ）。", options: ["１,０００えん", "２,０００えん", "３,０００えん", "５,０００えん"], answer: 2, explanation: "それは２,０００えんです。" },
+            { stem: "おとこのひとはなにをかいますか。", options: ["ぼうし", "ズボン", "Tシャツ", "くつ"], answer: 3, explanation: "じゃ、これをください — referring to the T-shirt." }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「これはいくらですか。」", options: ["はい、そうです。", "せん（１０００）えんです。", "いいえ、ちがいます。", "ありがとうございます。"], answer: 2, explanation: "Answering the price question directly." },
+            { stem: "「どうぞ。」", options: ["ありがとうございます。", "すみません。", "おはようございます。", "さようなら。"], answer: 1, explanation: "ありがとうございます when receiving something offered with どうぞ." }
           ]
         }
       ]
@@ -449,6 +495,29 @@ var EXAM_DATA = {
           ]
         }
       ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K03-01.mp3",
+          transcript: "<p>おんな：すみません、このちかくにコンビニはありますか。<br>おとこ：コンビニですか。あのしんごうをひだりにまがると、みぎがわにありますよ。<br>おんな：しんごうをひだりですね。ありがとうございます。</p>",
+          questions: [
+            { stem: "おんなのひとはなにをさがしていますか。", options: ["コンビニ", "がっこう", "えき", "びょういん"], answer: 1, explanation: "このちかくにコンビニはありますか。" },
+            { stem: "コンビニはどこにありますか。", options: ["しんごうのまえ", "しんごうをひだりにまがって、みぎがわ", "しんごうをみぎにまがって、ひだりがわ", "このみちのつきあたり"], answer: 2, explanation: "しんごうをひだりにまがると、みぎがわにあります。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「がっこうはどこですか。」", options: ["はい、そうです。", "あそこです。", "ありがとうございます。", "そうですか。"], answer: 2, explanation: "Pointing out the location with あそこです。" },
+            { stem: "「テストはどうでしたか。」", options: ["むずかしかったです。", "テストがあります。", "テストをします。", "テストはいやです。"], answer: 1, explanation: "Past-tense reflection on how the test was." }
+          ]
+        }
+      ]
     }
   ]
 },
@@ -589,6 +658,29 @@ var EXAM_DATA = {
             { stem: "こうえんになにがありましたか。", options: ["はな", "おおきいき", "いけ", "レストラン"], answer: 2, explanation: "おおきいきがたくさんありました (many big trees)." },
             { stem: "こうえんでなにをたべましたか。", options: ["おすし", "おべんとう", "サンドイッチ", "たべなかった"], answer: 2, explanation: "おべんとうをたべました (ate a bento)." },
             { stem: "こうえんはどうでしたか。", options: ["つまらなかった", "たのしかった", "さむかった", "こわかった"], answer: 2, explanation: "とてもたのしかったです (it was very fun)." }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K04-02.mp3",
+          transcript: "<p>おんな：もしもし。きょうのよるのよやくをしたいんですが。<br>おとこ：はい、なんめいさまですか。<br>おんな：４にんです。７じにおねがいします。<br>おとこ：７じですね。おなまえをおねがいします。<br>おんな：たなかです。<br>おとこ：たなかさま、４めい、７じ。かしこまりました。</p>",
+          questions: [
+            { stem: "なんにんでよやくしますか。", options: ["２にん", "３にん", "４にん", "５にん"], answer: 3, explanation: "４にんです。" },
+            { stem: "なんじによやくしますか。", options: ["６じ", "７じ", "８じ", "９じ"], answer: 2, explanation: "７じにおねがいします。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「メニューをみせてください。」", options: ["はい、どうぞ。", "いいえ、いりません。", "メニューがすきです。", "メニューをかいます。"], answer: 1, explanation: "はい、どうぞ politely complies with the request." },
+            { stem: "「あした、なにをしますか。」", options: ["きのう、いきました。", "ともだちとあいます。", "あしたです。", "わかりませんでした。"], answer: 2, explanation: "Telling tomorrow's plan directly." }
           ]
         }
       ]
@@ -748,6 +840,29 @@ var EXAM_DATA = {
           ]
         }
       ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K05-01.mp3",
+          transcript: "<p>おんな：すみません、スーパーはどこですか。<br>おとこ：スーパーですか。このみちをまっすぐいって、３つめのしんごうをみぎにまがってください。ひだりがわにおおきいスーパーがありますよ。<br>おんな：３つめのしんごうをみぎですね。ありがとうございます。<br>おとこ：ここからあるいて１０ぷんぐらいです。</p>",
+          questions: [
+            { stem: "スーパーまであるいてどのくらいですか。", options: ["５ふん", "１０ぷん", "１５ふん", "２０ぷん"], answer: 2, explanation: "あるいて１０ぷんぐらいです。" },
+            { stem: "なんこめのしんごうをまがりますか。", options: ["１つめ", "２つめ", "３つめ", "４つめ"], answer: 3, explanation: "３つめのしんごうをみぎにまがってください。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「いっしょにえいがをみませんか。」", options: ["いいですね、いきましょう。", "はい、みません。", "えいががあります。", "えいががすきじゃないです。"], answer: 1, explanation: "Accepting an invitation politely." },
+            { stem: "「コーヒーとおちゃ、どちらがすきですか。」", options: ["はい、すきです。", "いいえ、きらいです。", "コーヒーがすきです。", "コーヒーとおちゃをのみます。"], answer: 3, explanation: "Picking one of the two options is the natural answer." }
+          ]
+        }
+      ]
     }
   ]
 },
@@ -888,6 +1003,29 @@ var EXAM_DATA = {
             { stem: "やまださんはあさなにをしますか。", options: ["シャワーをあびる", "おふろにはいる", "さんぽする", "うんどうする"], answer: 2, explanation: "おふろにはいります (takes a bath)." },
             { stem: "やまださんはコーヒーがすきですか。", options: ["はい、すき", "はい、だいすき", "いいえ、きらい", "ふつう"], answer: 2, explanation: "コーヒーがだいすきです (loves coffee)." },
             { stem: "いちにちにコーヒーをなんばいのみますか。", options: ["いっぱい", "にはい", "さんばい", "よんはい"], answer: 3, explanation: "さんばいのみます (drinks three cups)." }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K06-02.mp3",
+          transcript: "<p>おとこ：おかあさん、あしたのおべんとう、なにがいい？<br>おんな：そうねえ、おにぎりとからあげをおねがい。<br>おとこ：たまごやきは？<br>おんな：うん、それもいれてくれるとうれしいわ。あ、それからくだものもね。<br>おとこ：わかった。りんごでいい？<br>おんな：ありがとう。</p>",
+          questions: [
+            { stem: "おべんとうにいれないものはどれですか。", options: ["おにぎり", "サンドイッチ", "からあげ", "たまごやき"], answer: 2, explanation: "サンドイッチは出ていません。" },
+            { stem: "くだものはなんですか。", options: ["みかん", "バナナ", "りんご", "いちご"], answer: 3, explanation: "りんごでいい？→ ありがとう。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「あさごはんはなにをたべましたか。」", options: ["はい、たべます。", "パンとコーヒーをのみました。", "あさごはんがすきです。", "あさごはんはありません。"], answer: 2, explanation: "Past-tense answer to what was eaten for breakfast." },
+            { stem: "「いっしょにごはんをたべませんか。」", options: ["はい、たべましょう。", "いいえ、たべます。", "はい、たべません。", "ごはんがすきです。"], answer: 1, explanation: "～ましょう accepts the suggestion." }
           ]
         }
       ]
@@ -1047,6 +1185,38 @@ var EXAM_DATA = {
           ]
         }
       ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K07-01.mp3",
+          transcript: "<p>おんな：もしもし、クリーニングやさんですか。きのうだしたコートはいつできますか。<br>おとこ：きのうのコートですね。あさってのごごには できますよ。<br>おんな：あさってですか。もうすこしはやくなりませんか。きんようびにひつようなんです。<br>おとこ：きんようびですか…。じゃ、あしたのゆうがた５じまでにはだいじょうぶです。<br>おんな：ありがとうございます。たすかります。</p>",
+          questions: [
+            { stem: "コートはいつできますか。", options: ["きょう", "あした", "あさって", "きんようび"], answer: 2, explanation: "あしたのゆうがた５じまでにはだいじょうぶです。" },
+            { stem: "コートはなんじまでにできますか。", options: ["ごぜん１０じ", "ごご３じ", "ゆうがた５じ", "ごご７じ"], answer: 3, explanation: "あしたのゆうがた５じまでに。" }
+          ]
+        },
+        {
+          label: "問題2 — Key point listening",
+          audio: "W07-A.mp3",
+          transcript: "<p>おとこ：にほんごのクラスはどうですか。<br>おんな：せんせいがとてもおもしろくて、たのしいです。でも、しゅくだいがおおいです。<br>おとこ：しゅうになんかいクラスがありますか。<br>おんな：３かいです。げつ、すい、きんです。</p>",
+          questions: [
+            { stem: "にほんごのクラスのせんせいはどうですか。", options: ["こわい", "おもしろい", "つまらない", "やさしくない"], answer: 2, explanation: "せんせいがとてもおもしろくて、たのしいです。" },
+            { stem: "クラスはしゅうになんかいありますか。", options: ["１かい", "２かい", "３かい", "まいにち"], answer: 3, explanation: "３かいです。げつ、すい、きんです。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「あめがふっていますね。」", options: ["はい、いいてんきです。", "ええ、かさをもっていきましょう。", "ありがとうございます。", "あめがすきです。"], answer: 2, explanation: "Acknowledging rain and suggesting an umbrella." },
+            { stem: "「しゅみはなんですか。」", options: ["はい、しゅみです。", "おんがくをきくことです。", "しゅみがあります。", "いいえ、ちがいます。"], answer: 2, explanation: "Stating one's hobby directly." }
+          ]
+        }
+      ]
     }
   ]
 },
@@ -1187,6 +1357,38 @@ var EXAM_DATA = {
             { stem: "メアリーさんはにほんにどのくらいいますか。", options: ["はんとし", "一年", "二年", "三年"], answer: 2, explanation: "にほんにきて一年 (has been in Japan for one year)." },
             { stem: "はじめはにほんごがわかりましたか。", options: ["はい、わかった", "すこしわかった", "ぜんぜんわからなかった", "とてもじょうずだった"], answer: 3, explanation: "はじめはぜんぜんわかりませんでした (didn't understand at all at first)." },
             { stem: "メアリーさんはにほんごをどうおもっていますか。", options: ["むずかしいけどたのしい", "かんたん", "つまらない", "むずかしくてきらい"], answer: 1, explanation: "むずかしいけど、たのしい (difficult but fun)." }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K08-01.mp3",
+          transcript: "<p>おとこ：あのう、すみません。このへんにATMはありますか。<br>おんな：ATMですか。あのコンビニのなかにありますよ。<br>おとこ：あのコンビニですね。ありがとうございます。<br>おんな：でも、いま１２じですから、おひるやすみでこんでいるかもしれませんよ。</p>",
+          questions: [
+            { stem: "ATMはどこにありますか。", options: ["ぎんこうのなか", "えきのなか", "コンビニのなか", "スーパーのなか"], answer: 3, explanation: "あのコンビニのなかにありますよ。" },
+            { stem: "いまなんじですか。", options: ["１０じ", "１１じ", "１２じ", "１じ"], answer: 3, explanation: "いま１２じですから。" }
+          ]
+        },
+        {
+          label: "問題2 — Key point listening",
+          audio: "W08-A.mp3",
+          transcript: "<p>おんな：すずきさん、やすみのひはなにをしていますか。<br>おとこ：そうですね、たいていほんをよんでいます。とくにれきしのほんがすきです。<br>おんな：そうなんですか。わたしはりょうりをするのがすきです。<br>おとこ：いいですね。こんどつくってください。</p>",
+          questions: [
+            { stem: "すずきさんのしゅみはなんですか。", options: ["りょうり", "どくしょ", "うんどう", "おんがく"], answer: 2, explanation: "ほんをよんでいます = どくしょ (reading)." },
+            { stem: "おんなのひとはなにがすきですか。", options: ["どくしょ", "スポーツ", "りょうり", "りょこう"], answer: 3, explanation: "りょうりをするのがすきです。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「ここにすわってもいいですか。」", options: ["はい、どうぞ。", "いいえ、すわります。", "すわります。", "すみません、すわりたいです。"], answer: 1, explanation: "はい、どうぞ permits the request." },
+            { stem: "「しゅうまつ、いっしょにこうえんにいきませんか。」", options: ["いいですね、いきましょう。", "いいえ、いきます。", "こうえんがあります。", "こうえんがすきじゃないです。"], answer: 1, explanation: "Accepting an invitation with ～ましょう." }
           ]
         }
       ]
@@ -1346,6 +1548,38 @@ var EXAM_DATA = {
           ]
         }
       ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K09-02.mp3",
+          transcript: "<p>おとこ：いらっしゃいませ。なんめいさまですか。<br>おんな：ふたりです。きんえんせきはありますか。<br>おとこ：もうしわけございません。きんえんせきはいまいっぱいです。きつえんせきならあいています。<br>おんな：じゃ、すこしまちます。<br>おとこ：はい、１０ぷんぐらいでごあんないできるとおもいます。</p>",
+          questions: [
+            { stem: "おんなのひとはどうしますか。", options: ["きつえんせきにすわる", "きんえんせきをまつ", "べつのレストランにいく", "かえる"], answer: 2, explanation: "じゃ、すこしまちます — she'll wait for a non-smoking seat." },
+            { stem: "どのくらいまちますか。", options: ["５ふん", "１０ぷん", "２０ぷん", "３０ぷん"], answer: 2, explanation: "１０ぷんぐらいでごあんないできる。" }
+          ]
+        },
+        {
+          label: "問題2 — Key point listening",
+          audio: "W09-A.mp3",
+          transcript: "<p>おとこ：にほんでいちばんいきたいところはどこですか。<br>おんな：きょうとです。おてらやじんじゃがみたいです。<br>おとこ：わたしはおおさかにいきたいです。おいしいたべものがたくさんありますから。<br>おんな：おおさかもいいですね。たこやきがゆうめいですよね。</p>",
+          questions: [
+            { stem: "おんなのひとはどこにいちばんいきたいですか。", options: ["とうきょう", "おおさか", "きょうと", "なら"], answer: 3, explanation: "きょうとです。" },
+            { stem: "おとこのひとがおおさかにいきたいりゆうはなんですか。", options: ["おてらがあるから", "ともだちがいるから", "おいしいたべものがあるから", "やすいから"], answer: 3, explanation: "おいしいたべものがたくさんありますから。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「とうきょうとおおさかと、どちらがおおきいですか。」", options: ["はい、おおきいです。", "とうきょうのほうがおおきいです。", "おおさかにいきたいです。", "とうきょうもおおさかもおおきいです。"], answer: 2, explanation: "～のほうが is the comparative form." },
+            { stem: "「りょこうにいきたいですね。」", options: ["はい、りょこうです。", "そうですね、いっしょにいきましょう。", "りょこうがすきじゃないです。", "りょこうにいきました。"], answer: 2, explanation: "Agreeing and suggesting going together." }
+          ]
+        }
+      ]
     }
   ]
 },
@@ -1486,6 +1720,38 @@ var EXAM_DATA = {
             { stem: "メアリーさんはフランスにいったことがありますか。", options: ["はい", "いいえ", "わからない", "いきたい"], answer: 1, explanation: "フランスとイタリアにいったことがあります。" },
             { stem: "メアリーさんはどのくにがいちばんすきですか。", options: ["フランス", "イタリア", "にほん", "アメリカ"], answer: 3, explanation: "にほんがいちばんすきだといっています。" },
             { stem: "メアリーさんはフランスとイタリアとどちらがすきでしたか。", options: ["フランス", "イタリア", "どちらもすき", "どちらもきらい"], answer: 2, explanation: "フランスよりイタリアのほうがすきだった。" }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K10-01.mp3",
+          transcript: "<p>おんな：すみません、この荷物をおくりたいんですが。<br>おとこ：どちらまでですか。<br>おんな：おおさかまでです。<br>おとこ：おおさかですと、あしたとどきます。りょうきんは１,２００えんです。<br>おんな：おねがいします。</p>",
+          questions: [
+            { stem: "にもつをどこにおくりますか。", options: ["とうきょう", "おおさか", "きょうと", "ふくおか"], answer: 2, explanation: "おおさかまでです。" },
+            { stem: "りょうきんはいくらですか。", options: ["８００えん", "１,０００えん", "１,２００えん", "１,５００えん"], answer: 3, explanation: "りょうきんは１,２００えんです。" }
+          ]
+        },
+        {
+          label: "問題2 — Key point listening",
+          audio: "W10-A.mp3",
+          transcript: "<p>おとこ：にほんりょうりでなにがいちばんすきですか。<br>おんな：おすしがいちばんすきです。とくにサーモンがすきです。<br>おとこ：わたしはラーメンがいちばんすきです。<br>おんな：らいしゅう、おいしいおすしやさんにいきませんか。<br>おとこ：いいですね。いきましょう。</p>",
+          questions: [
+            { stem: "おんなのひとがいちばんすきなにほんりょうりはなんですか。", options: ["ラーメン", "てんぷら", "おすし", "うどん"], answer: 3, explanation: "おすしがいちばんすきです。" },
+            { stem: "ふたりはらいしゅうなにをしますか。", options: ["ラーメンをたべにいく", "おすしをたべにいく", "りょうりをつくる", "レストランをさがす"], answer: 2, explanation: "おいしいおすしやさんにいきませんか → いきましょう。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「らいしゅうのよていは？」", options: ["はい、よていです。", "ともだちとパーティーがあります。", "らいしゅうがすきです。", "よていをします。"], answer: 2, explanation: "Telling next week's plan." },
+            { stem: "「どうやってがっこうにきましたか。」", options: ["でんしゃできました。", "がっこうがあります。", "がっこうにいきます。", "はい、きました。"], answer: 1, explanation: "～でくる describes means of transport." }
           ]
         }
       ]
@@ -1645,6 +1911,38 @@ var EXAM_DATA = {
           ]
         }
       ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K11-02.mp3",
+          transcript: "<p>おとこ：あのう、チェックインをおねがいします。<br>おんな：おなまえをおねがいします。<br>おとこ：スミスです。２はくよやくしています。<br>おんな：スミスさま、はい。シングルルームですね。おへやは５０３ごうしつです。<br>おとこ：ちょうしょくはついていますか。<br>おんな：はい、ちょうしょくは１かいのレストランで、７じから９じまでです。</p>",
+          questions: [
+            { stem: "へやのばんごうはなんですか。", options: ["３０５", "５０３", "３５０", "５３０"], answer: 2, explanation: "おへやは５０３ごうしつです。" },
+            { stem: "ちょうしょくはなんじまでですか。", options: ["６じ", "７じ", "８じ", "９じ"], answer: 4, explanation: "ちょうしょくは…７じから９じまでです。" }
+          ]
+        },
+        {
+          label: "問題2 — Key point listening",
+          audio: "W11-A.mp3",
+          transcript: "<p>おんな：たなかさん、アルバイトはなにをしていますか。<br>おとこ：コンビニではたらいています。しゅうに３かいです。<br>おんな：たいへんですか。<br>おとこ：すこしたいへんですが、いろいろなひとにあえるので、たのしいです。</p>",
+          questions: [
+            { stem: "たなかさんはどこではたらいていますか。", options: ["レストラン", "カフェ", "コンビニ", "スーパー"], answer: 3, explanation: "コンビニではたらいています。" },
+            { stem: "しゅうになんかいはたらいていますか。", options: ["２かい", "３かい", "４かい", "５かい"], answer: 2, explanation: "しゅうに３かいです。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「これ、たんじょうびのプレゼントです。」", options: ["はい、ください。", "ありがとうございます、うれしいです。", "プレゼントがすきです。", "たんじょうびはあした。"], answer: 2, explanation: "Receiving a gift gracefully." },
+            { stem: "「あたまがいたいんです。」", options: ["はい、そうです。", "それはたいへんですね。おだいじに。", "あたまがあります。", "おだいじに、おねがいします。"], answer: 2, explanation: "Sympathy + おだいじに for someone unwell." }
+          ]
+        }
+      ]
     }
   ]
 },
@@ -1785,6 +2083,38 @@ var EXAM_DATA = {
             { stem: "スミスさんはだれにてがみをかきましたか。", options: ["ともだち", "かぞく", "せんせい", "ホストファミリー"], answer: 3, explanation: "せんせいにてがみをかきました。" },
             { stem: "スミスさんはくににかえってからなにをするつもりですか。", options: ["にほんごをやめる", "にほんごをつづける", "ちゅうごくごをべんきょうする", "しごとをさがす"], answer: 2, explanation: "にほんごのべんきょうをつづけるつもり (plans to continue studying)." },
             { stem: "スミスさんはまたにほんにきたいですか。", options: ["はい", "いいえ", "わからない", "きたくない"], answer: 1, explanation: "またにほんにきたいです (wants to come to Japan again)." }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Section 4: Listening",
+      titleJp: "聴解",
+      sectionId: "listening",
+      parts: [
+        {
+          label: "問題1 — Task-based listening",
+          audio: "K12-01.mp3",
+          transcript: "<p>おんな：きょうのばんごはん、なにがたべたい？<br>おとこ：うーん、カレーはどう？<br>おんな：きのうもカレーだったじゃない。<br>おとこ：そうだった。じゃ、パスタにしよう。<br>おんな：いいね。トマトソースとクリームソース、どっちがいい？<br>おとこ：トマトソースがいいな。</p>",
+          questions: [
+            { stem: "きょうのばんごはんはなんですか。", options: ["カレー", "パスタ", "すし", "ラーメン"], answer: 2, explanation: "パスタにしよう。" },
+            { stem: "どのソースにしますか。", options: ["ミートソース", "トマトソース", "クリームソース", "しょうゆソース"], answer: 2, explanation: "トマトソースがいいな。" }
+          ]
+        },
+        {
+          label: "問題2 — Key point listening",
+          audio: "W12-A.mp3",
+          transcript: "<p>おとこ：にほんにきてからなにがいちばんおどろきましたか。<br>おんな：でんしゃがじかんどおりにくることです。わたしのくにではかんがえられません。<br>おとこ：そうですか。ほかにはありますか。<br>おんな：コンビニが２４じかんあいていることもおどろきました。</p>",
+          questions: [
+            { stem: "おんなのひとがいちばんおどろいたのはなんですか。", options: ["たべものがおいしいこと", "でんしゃがじかんどおりにくること", "ひとがやさしいこと", "まちがきれいなこと"], answer: 2, explanation: "でんしゃがじかんどおりにくること。" },
+            { stem: "コンビニはなんじかんあいていますか。", options: ["１２じかん", "１６じかん", "２０じかん", "２４じかん"], answer: 4, explanation: "２４じかんあいていることもおどろきました。" }
+          ]
+        },
+        {
+          label: "問題4 — Choose the best reply",
+          questions: [
+            { stem: "「かぜをひいてしまいました。」", options: ["おだいじに。", "おめでとうございます。", "ごちそうさまでした。", "おかげさまで。"], answer: 1, explanation: "おだいじに for someone who is unwell." },
+            { stem: "「えいがにいってもいいですか。」", options: ["はい、いきません。", "もちろん、いってきてください。", "はい、えいががあります。", "いいえ、いきます。"], answer: 2, explanation: "Permitting + a friendly send-off." }
           ]
         }
       ]

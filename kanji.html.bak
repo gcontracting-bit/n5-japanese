@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanji N5 漢字 — Study Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        nav {
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #975a16;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #d69e2e;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #975a16;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Progress Box */
+        .progress-box {
+            background: white;
+            padding: 24px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            background-color: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #d69e2e, #975a16);
+            width: 0%;
+            border-radius: 12px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Collapsible Sections */
+        .collapsible-section {
+            margin-bottom: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(135deg, #975a16 0%, #b7791f 100%);
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            text-align: left;
+            transition: background 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #8b5113 0%, #a67c52 100%);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: white;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .toggle-arrow {
+            display: inline-block;
+            font-size: 1.2em;
+            color: white;
+            flex-shrink: 0;
+            min-width: 20px;
+        }
+
+        .section-content {
+            max-height: 10000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        /* Kanji Grid */
+        .kanji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .kanji-cell {
+            aspect-ratio: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            padding: 8px;
+            font-weight: 500;
+            overflow: hidden;
+        }
+
+        .kanji-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .kanji-character {
+            font-size: 1.6em;
+            font-weight: bold;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .kanji-character.multi-char {
+            font-size: 1.0em;
+        }
+
+        .kanji-reading {
+            font-size: 0.55rem;
+            word-break: break-all;
+            text-align: center;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            max-height: 1.4em;
+        }
+
+        .kanji-cell.grey {
+            background: #edf2f7;
+            border: 2px solid #cbd5e0;
+            color: #a0aec0;
+        }
+
+        .kanji-cell.green {
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            border: 2px solid #48bb78;
+            color: #22543d;
+        }
+
+        .kanji-cell.amber {
+            background: linear-gradient(135deg, #fffff0 0%, #fefcbf 100%);
+            border: 2px solid #ecc94b;
+            color: #7c2d12;
+        }
+
+        .kanji-cell.red {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 2px solid #fc8181;
+            color: #742a2a;
+        }
+
+        .kanji-cell.blue {
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            border: 2px solid #4299e1;
+            color: #2c5282;
+        }
+
+        /* Category Tables */
+        .category-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .category-table thead {
+            background-color: #fdf6e3;
+            border-bottom: 2px solid #975a16;
+        }
+
+        .category-table th {
+            color: #975a16;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .category-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .category-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .category-table tbody tr:hover {
+            background-color: #fdf6e3;
+        }
+
+        .category-table .kanji-col {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            width: 70px;
+        }
+
+        .category-table .reading-col {
+            font-weight: 500;
+            width: 150px;
+        }
+
+        .category-table .meaning-col {
+            width: 150px;
+        }
+
+        .category-table .example-col {
+            font-size: 0.95em;
+            color: #666;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .stat-card.mastered {
+            background-color: #4caf50;
+        }
+
+        .stat-card.learning {
+            background-color: #ff9800;
+        }
+
+        .stat-card.needs-work {
+            background-color: #f44336;
+        }
+
+        .stat-card.not-started {
+            background-color: #9e9e9e;
+        }
+
+        /* Toggle All Buttons */
+        .toggle-all-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .toggle-all-buttons button {
+            padding: 6px 16px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #4a5568;
+            transition: background 0.2s ease;
+        }
+
+        .toggle-all-buttons button:hover {
+            background: #edf2f7;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud_sync.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html">← Home</a>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Kanji N5 漢字</h1>
+            <p>Study Dashboard</p>
+        </div>
+
+        <!-- Progress Box -->
+        <div class="progress-box">
+            <div class="progress-label">
+                <span>Mastery Progress</span>
+                <span>0/103 (0%)</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- Toggle All Buttons -->
+        <div class="toggle-all-buttons">
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+        </div>
+
+        <!-- All N5 Kanji Grid (Collapsible) -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>All N5 Kanji (103)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <div class="kanji-grid">
+                        <!-- Numbers & Amounts -->
+                        <div class="kanji-cell grey" title="イチ ひと(つ)">
+                            <div class="kanji-character">一</div>
+                            <div class="kanji-reading">ichi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ニ ふた(つ)">
+                            <div class="kanji-character">二</div>
+                            <div class="kanji-reading">ni</div>
+                        </div>
+                        <div class="kanji-cell grey" title="サン み(っつ)">
+                            <div class="kanji-character">三</div>
+                            <div class="kanji-reading">san</div>
+                        </div>
+                        <div class="kanji-cell grey" title="シ よ(っつ)">
+                            <div class="kanji-character">四</div>
+                            <div class="kanji-reading">shi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ゴ いつ(つ)">
+                            <div class="kanji-character">五</div>
+                            <div class="kanji-reading">go</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ロク む(っつ)">
+                            <div class="kanji-character">六</div>
+                            <div class="kanji-reading">roku</div>
+                        </div>
+                        <div class="kanji-cell grey" title="シチ なな(つ)">
+                            <div class="kanji-character">七</div>
+                            <div class="kanji-reading">shichi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ハチ や(っつ)">
+                            <div class="kanji-character">八</div>
+                            <div class="kanji-reading">hachi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="キュウ ここの(つ)">
+                            <div class="kanji-character">九</div>
+                            <div class="kanji-reading">kyuu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ジュウ とお">
+                            <div class="kanji-character">十</div>
+                            <div class="kanji-reading">juu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ヒャク">
+                            <div class="kanji-character">百</div>
+                            <div class="kanji-reading">hyaku</div>
+                        </div>
+                        <div class="kanji-cell grey" title="セン ち">
+                            <div class="kanji-character">千</div>
+                            <div class="kanji-reading">sen</div>
+                        </div>
+                        <div class="kanji-cell grey" title="マン">
+                            <div class="kanji-character">万</div>
+                            <div class="kanji-reading">man</div>
+                        </div>
+                        <div class="kanji-cell grey" title="エン ぐ(る)">
+                            <div class="kanji-character">円</div>
+                            <div class="kanji-reading">en</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ドル">
+                            <div class="kanji-character multi-char">ドル</div>
+                            <div class="kanji-reading">doru</div>
+                        </div>
+                        <!-- Time & Calendar -->
+                        <div class="kanji-cell grey" title="ニチ ひ">
+                            <div class="kanji-character">日</div>
+                            <div class="kanji-reading">nichi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ゲツ つき">
+                            <div class="kanji-character">月</div>
+                            <div class="kanji-reading">getsu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ネン とし">
+                            <div class="kanji-character">年</div>
+                            <div class="kanji-reading">nen</div>
+                        </div>
+                        <div class="kanji-cell grey" title="シュウ しゅ">
+                            <div class="kanji-character">週</div>
+                            <div class="kanji-reading">shuu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ジツ ひ">
+                            <div class="kanji-character">実</div>
+                            <div class="kanji-reading">jitsu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ゴゼン">
+                            <div class="kanji-character multi-char">午前</div>
+                            <div class="kanji-reading">gozen</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ゴゴ">
+                            <div class="kanji-character multi-char">午後</div>
+                            <div class="kanji-reading">gogo</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ジ とき">
+                            <div class="kanji-character">時</div>
+                            <div class="kanji-reading">ji</div>
+                        </div>
+                        <div class="kanji-cell grey" title="フン">
+                            <div class="kanji-character">分</div>
+                            <div class="kanji-reading">fun</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ビョウ">
+                            <div class="kanji-character">秒</div>
+                            <div class="kanji-reading">byou</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ガツ">
+                            <div class="kanji-character">月</div>
+                            <div class="kanji-reading">gatsu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="マンダ">
+                            <div class="kanji-character multi-char">曜日</div>
+                            <div class="kanji-reading">youbi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ゲツ">
+                            <div class="kanji-character">月</div>
+                            <div class="kanji-reading">getsu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="カ">
+                            <div class="kanji-character">火</div>
+                            <div class="kanji-reading">ka</div>
+                        </div>
+                        <div class="kanji-cell grey" title="スイ">
+                            <div class="kanji-character">水</div>
+                            <div class="kanji-reading">sui</div>
+                        </div>
+                        <div class="kanji-cell grey" title="モク">
+                            <div class="kanji-character">木</div>
+                            <div class="kanji-reading">moku</div>
+                        </div>
+                        <div class="kanji-cell grey" title="キン">
+                            <div class="kanji-character">金</div>
+                            <div class="kanji-reading">kin</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ド">
+                            <div class="kanji-character">土</div>
+                            <div class="kanji-reading">do</div>
+                        </div>
+                        <!-- People & Body -->
+                        <div class="kanji-cell grey" title="ニン">
+                            <div class="kanji-character">人</div>
+                            <div class="kanji-reading">nin</div>
+                        </div>
+                        <div class="kanji-cell grey" title="オトナ">
+                            <div class="kanji-character multi-char">大人</div>
+                            <div class="kanji-reading">otona</div>
+                        </div>
+                        <div class="kanji-cell grey" title="コドモ">
+                            <div class="kanji-character multi-char">子ども</div>
+                            <div class="kanji-reading">kodomo</div>
+                        </div>
+                        <div class="kanji-cell grey" title="オトコ">
+                            <div class="kanji-character">男</div>
+                            <div class="kanji-reading">otoko</div>
+                        </div>
+                        <div class="kanji-cell grey" title="オンナ">
+                            <div class="kanji-character">女</div>
+                            <div class="kanji-reading">onna</div>
+                        </div>
+                        <div class="kanji-cell grey" title="オトこども">
+                            <div class="kanji-character multi-char">男の子</div>
+                            <div class="kanji-reading">otoko no ko</div>
+                        </div>
+                        <div class="kanji-cell grey" title="オンナこども">
+                            <div class="kanji-character multi-char">女の子</div>
+                            <div class="kanji-reading">onna no ko</div>
+                        </div>
+                        <div class="kanji-cell grey" title="シン ぶ(つ)">
+                            <div class="kanji-character">身</div>
+                            <div class="kanji-reading">shin</div>
+                        </div>
+                        <div class="kanji-cell grey" title="タイ からだ">
+                            <div class="kanji-character">体</div>
+                            <div class="kanji-reading">tai</div>
+                        </div>
+                        <div class="kanji-cell grey" title="カオ">
+                            <div class="kanji-character">顔</div>
+                            <div class="kanji-reading">kao</div>
+                        </div>
+                        <div class="kanji-cell grey" title="テ て">
+                            <div class="kanji-character">手</div>
+                            <div class="kanji-reading">te</div>
+                        </div>
+                        <div class="kanji-cell grey" title="アシ あし">
+                            <div class="kanji-character">足</div>
+                            <div class="kanji-reading">ashi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="コシ こし">
+                            <div class="kanji-character">腰</div>
+                            <div class="kanji-reading">koshi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ナマ なま">
+                            <div class="kanji-character">生</div>
+                            <div class="kanji-reading">nama</div>
+                        </div>
+                        <!-- Nature & Directions -->
+                        <div class="kanji-cell grey" title="ソン さと">
+                            <div class="kanji-character">村</div>
+                            <div class="kanji-reading">son</div>
+                        </div>
+                        <div class="kanji-cell grey" title="イナ">
+                            <div class="kanji-character">稲</div>
+                            <div class="kanji-reading">ina</div>
+                        </div>
+                        <div class="kanji-cell grey" title="マツ まつ">
+                            <div class="kanji-character">松</div>
+                            <div class="kanji-reading">matsu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="メ ため">
+                            <div class="kanji-character">目</div>
+                            <div class="kanji-reading">me</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ボク わたし">
+                            <div class="kanji-character">木</div>
+                            <div class="kanji-reading">boku</div>
+                        </div>
+                        <div class="kanji-cell grey" title="キ">
+                            <div class="kanji-character">木</div>
+                            <div class="kanji-reading">ki</div>
+                        </div>
+                        <div class="kanji-cell grey" title="イ">
+                            <div class="kanji-character">石</div>
+                            <div class="kanji-reading">ishi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ガン いわ">
+                            <div class="kanji-character">岩</div>
+                            <div class="kanji-reading">gan</div>
+                        </div>
+                        <div class="kanji-cell grey" title="クロ">
+                            <div class="kanji-character">黒</div>
+                            <div class="kanji-reading">kuro</div>
+                        </div>
+                        <div class="kanji-cell grey" title="マゴ">
+                            <div class="kanji-character">孫</div>
+                            <div class="kanji-reading">mago</div>
+                        </div>
+                        <div class="kanji-cell grey" title="テン">
+                            <div class="kanji-character">天</div>
+                            <div class="kanji-reading">ten</div>
+                        </div>
+                        <div class="kanji-cell grey" title="シン">
+                            <div class="kanji-character">神</div>
+                            <div class="kanji-reading">shin</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ホク">
+                            <div class="kanji-character">北</div>
+                            <div class="kanji-reading">hoku</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ミナミ">
+                            <div class="kanji-character">南</div>
+                            <div class="kanji-reading">minami</div>
+                        </div>
+                        <div class="kanji-cell grey" title="アズマ">
+                            <div class="kanji-character">東</div>
+                            <div class="kanji-reading">azuma</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ニシ">
+                            <div class="kanji-character">西</div>
+                            <div class="kanji-reading">nishi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ハナ はな">
+                            <div class="kanji-character">花</div>
+                            <div class="kanji-reading">hana</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ナガ なが">
+                            <div class="kanji-character">長</div>
+                            <div class="kanji-reading">naga</div>
+                        </div>
+                        <!-- Places & Buildings -->
+                        <div class="kanji-cell grey" title="イエ">
+                            <div class="kanji-character">家</div>
+                            <div class="kanji-reading">ie</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ショッ">
+                            <div class="kanji-character">店</div>
+                            <div class="kanji-reading">mise</div>
+                        </div>
+                        <div class="kanji-cell grey" title="グン">
+                            <div class="kanji-character">郡</div>
+                            <div class="kanji-reading">gun</div>
+                        </div>
+                        <div class="kanji-cell grey" title="チク">
+                            <div class="kanji-character">町</div>
+                            <div class="kanji-reading">machi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="シ">
+                            <div class="kanji-character">市</div>
+                            <div class="kanji-reading">shi</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ケン">
+                            <div class="kanji-character">県</div>
+                            <div class="kanji-reading">ken</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ド">
+                            <div class="kanji-character">都</div>
+                            <div class="kanji-reading">to</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ター">
+                            <div class="kanji-character">駅</div>
+                            <div class="kanji-reading">eki</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ロ">
+                            <div class="kanji-character">路</div>
+                            <div class="kanji-reading">ro</div>
+                        </div>
+                        <!-- Actions & Descriptions -->
+                        <div class="kanji-cell grey" title="スル">
+                            <div class="kanji-character">為</div>
+                            <div class="kanji-reading">suru</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ナル">
+                            <div class="kanji-character">成</div>
+                            <div class="kanji-reading">naru</div>
+                        </div>
+                        <div class="kanji-cell grey" title="イク">
+                            <div class="kanji-character multi-char">行く</div>
+                            <div class="kanji-reading">iku</div>
+                        </div>
+                        <div class="kanji-cell grey" title="クル">
+                            <div class="kanji-character">来</div>
+                            <div class="kanji-reading">kuru</div>
+                        </div>
+                        <div class="kanji-cell grey" title="アル">
+                            <div class="kanji-character">有</div>
+                            <div class="kanji-reading">aru</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ナイ">
+                            <div class="kanji-character">無</div>
+                            <div class="kanji-reading">nai</div>
+                        </div>
+                        <div class="kanji-cell grey" title="エル">
+                            <div class="kanji-character">売</div>
+                            <div class="kanji-reading">eru</div>
+                        </div>
+                        <div class="kanji-cell grey" title="カ">
+                            <div class="kanji-character">買</div>
+                            <div class="kanji-reading">ka</div>
+                        </div>
+                        <div class="kanji-cell grey" title="キク">
+                            <div class="kanji-character multi-char">聞く</div>
+                            <div class="kanji-reading">kiku</div>
+                        </div>
+                        <div class="kanji-cell grey" title="イウ">
+                            <div class="kanji-character multi-char">言う</div>
+                            <div class="kanji-reading">iu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="コウ">
+                            <div class="kanji-character multi-char">行く</div>
+                            <div class="kanji-reading">kou</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ライ">
+                            <div class="kanji-character">来</div>
+                            <div class="kanji-reading">rai</div>
+                        </div>
+                        <div class="kanji-cell grey" title="キュウ">
+                            <div class="kanji-character">休</div>
+                            <div class="kanji-reading">kyuu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="リツ">
+                            <div class="kanji-character">立</div>
+                            <div class="kanji-reading">ritsu</div>
+                        </div>
+                        <div class="kanji-cell grey" title="バイ">
+                            <div class="kanji-character">買</div>
+                            <div class="kanji-reading">bai</div>
+                        </div>
+                        <div class="kanji-cell grey" title="チョウ">
+                            <div class="kanji-character">長</div>
+                            <div class="kanji-reading">chou</div>
+                        </div>
+                        <div class="kanji-cell grey" title="コウ">
+                            <div class="kanji-character">高</div>
+                            <div class="kanji-reading">kou</div>
+                        </div>
+                        <div class="kanji-cell grey" title="アン">
+                            <div class="kanji-character">安</div>
+                            <div class="kanji-reading">an</div>
+                        </div>
+                        <div class="kanji-cell grey" title="シン">
+                            <div class="kanji-character">新</div>
+                            <div class="kanji-reading">shin</div>
+                        </div>
+                        <div class="kanji-cell grey" title="コ">
+                            <div class="kanji-character">古</div>
+                            <div class="kanji-reading">ko</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ダイ">
+                            <div class="kanji-character">大</div>
+                            <div class="kanji-reading">dai</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ショウ">
+                            <div class="kanji-character">小</div>
+                            <div class="kanji-reading">shou</div>
+                        </div>
+                        <div class="kanji-cell grey" title="タ">
+                            <div class="kanji-character">多</div>
+                            <div class="kanji-reading">ta</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ショウ">
+                            <div class="kanji-character">少</div>
+                            <div class="kanji-reading">shou</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ハク">
+                            <div class="kanji-character">白</div>
+                            <div class="kanji-reading">haku</div>
+                        </div>
+                        <!-- Abstract & Functional -->
+                        <div class="kanji-cell grey" title="ホン">
+                            <div class="kanji-character">本</div>
+                            <div class="kanji-reading">hon</div>
+                        </div>
+                        <div class="kanji-cell grey" title="メイ">
+                            <div class="kanji-character">名</div>
+                            <div class="kanji-reading">mei</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ゴ">
+                            <div class="kanji-character">語</div>
+                            <div class="kanji-reading">go</div>
+                        </div>
+                        <div class="kanji-cell grey" title="カ">
+                            <div class="kanji-character">何</div>
+                            <div class="kanji-reading">ka</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ブン">
+                            <div class="kanji-character">文</div>
+                            <div class="kanji-reading">bun</div>
+                        </div>
+                        <div class="kanji-cell grey" title="ジ">
+                            <div class="kanji-character">字</div>
+                            <div class="kanji-reading">ji</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Tables -->
+
+        <!-- Numbers & Amounts -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>Numbers & Amounts (15 kanji)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Kanji</th>
+                                <th>On'yomi</th>
+                                <th>Kun'yomi</th>
+                                <th>Meaning</th>
+                                <th>Common Word</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kanji-col">一</td>
+                                <td class="reading-col">イチ</td>
+                                <td class="reading-col">ひと(つ)</td>
+                                <td class="meaning-col">one</td>
+                                <td class="example-col">一人 hitori</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">二</td>
+                                <td class="reading-col">ニ</td>
+                                <td class="reading-col">ふた(つ)</td>
+                                <td class="meaning-col">two</td>
+                                <td class="example-col">二人 futari</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">三</td>
+                                <td class="reading-col">サン</td>
+                                <td class="reading-col">み(っつ)</td>
+                                <td class="meaning-col">three</td>
+                                <td class="example-col">三人 sannin</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">四</td>
+                                <td class="reading-col">シ</td>
+                                <td class="reading-col">よ(っつ)</td>
+                                <td class="meaning-col">four</td>
+                                <td class="example-col">四月 shigatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">五</td>
+                                <td class="reading-col">ゴ</td>
+                                <td class="reading-col">いつ(つ)</td>
+                                <td class="meaning-col">five</td>
+                                <td class="example-col">五月 gogatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">六</td>
+                                <td class="reading-col">ロク</td>
+                                <td class="reading-col">む(っつ)</td>
+                                <td class="meaning-col">six</td>
+                                <td class="example-col">六月 rokugatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">七</td>
+                                <td class="reading-col">シチ</td>
+                                <td class="reading-col">なな(つ)</td>
+                                <td class="meaning-col">seven</td>
+                                <td class="example-col">七月 shichigatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">八</td>
+                                <td class="reading-col">ハチ</td>
+                                <td class="reading-col">や(っつ)</td>
+                                <td class="meaning-col">eight</td>
+                                <td class="example-col">八月 hachigatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">九</td>
+                                <td class="reading-col">キュウ</td>
+                                <td class="reading-col">ここの(つ)</td>
+                                <td class="meaning-col">nine</td>
+                                <td class="example-col">九月 kugatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">十</td>
+                                <td class="reading-col">ジュウ</td>
+                                <td class="reading-col">とお</td>
+                                <td class="meaning-col">ten</td>
+                                <td class="example-col">十月 jugatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">百</td>
+                                <td class="reading-col">ヒャク</td>
+                                <td class="reading-col">もも</td>
+                                <td class="meaning-col">hundred</td>
+                                <td class="example-col">百円 hyakuen</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">千</td>
+                                <td class="reading-col">セン</td>
+                                <td class="reading-col">ち</td>
+                                <td class="meaning-col">thousand</td>
+                                <td class="example-col">千円 sen'en</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">万</td>
+                                <td class="reading-col">マン</td>
+                                <td class="reading-col">よろず</td>
+                                <td class="meaning-col">ten thousand</td>
+                                <td class="example-col">万人 bannjin</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">円</td>
+                                <td class="reading-col">エン</td>
+                                <td class="reading-col">ぐ(る)</td>
+                                <td class="meaning-col">yen</td>
+                                <td class="example-col">円安 en'yasu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">分</td>
+                                <td class="reading-col">ブン</td>
+                                <td class="reading-col">わ(ける)</td>
+                                <td class="meaning-col">divide</td>
+                                <td class="example-col">分ける wakeru</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time & Calendar -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>Time & Calendar (18 kanji)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Kanji</th>
+                                <th>On'yomi</th>
+                                <th>Kun'yomi</th>
+                                <th>Meaning</th>
+                                <th>Common Word</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kanji-col">日</td>
+                                <td class="reading-col">ニチ</td>
+                                <td class="reading-col">ひ</td>
+                                <td class="meaning-col">day</td>
+                                <td class="example-col">日本 Nihon</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">月</td>
+                                <td class="reading-col">ゲツ</td>
+                                <td class="reading-col">つき</td>
+                                <td class="meaning-col">month</td>
+                                <td class="example-col">月曜 getsuyou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">年</td>
+                                <td class="reading-col">ネン</td>
+                                <td class="reading-col">とし</td>
+                                <td class="meaning-col">year</td>
+                                <td class="example-col">今年 kotoshi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">週</td>
+                                <td class="reading-col">シュウ</td>
+                                <td class="reading-col">しゅ</td>
+                                <td class="meaning-col">week</td>
+                                <td class="example-col">週末 shuumatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">火</td>
+                                <td class="reading-col">カ</td>
+                                <td class="reading-col">ひ</td>
+                                <td class="meaning-col">fire/Tuesday</td>
+                                <td class="example-col">火曜 kayou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">水</td>
+                                <td class="reading-col">スイ</td>
+                                <td class="reading-col">みず</td>
+                                <td class="meaning-col">water/Wednesday</td>
+                                <td class="example-col">水曜 suiyou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">木</td>
+                                <td class="reading-col">モク</td>
+                                <td class="reading-col">き</td>
+                                <td class="meaning-col">tree/Thursday</td>
+                                <td class="example-col">木曜 mokuyou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">金</td>
+                                <td class="reading-col">キン</td>
+                                <td class="reading-col">かね</td>
+                                <td class="meaning-col">money/Friday</td>
+                                <td class="example-col">金曜 kinyou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">土</td>
+                                <td class="reading-col">ド</td>
+                                <td class="reading-col">つち</td>
+                                <td class="meaning-col">earth/Saturday</td>
+                                <td class="example-col">土曜 doyou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">日</td>
+                                <td class="reading-col">ニチ</td>
+                                <td class="reading-col">ひ</td>
+                                <td class="meaning-col">day/Sunday</td>
+                                <td class="example-col">日曜 nichiyou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">時</td>
+                                <td class="reading-col">ジ</td>
+                                <td class="reading-col">とき</td>
+                                <td class="meaning-col">time</td>
+                                <td class="example-col">時間 jikan</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">分</td>
+                                <td class="reading-col">フン</td>
+                                <td class="reading-col">ぶ</td>
+                                <td class="meaning-col">minute</td>
+                                <td class="example-col">分 fun</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">秒</td>
+                                <td class="reading-col">ビョウ</td>
+                                <td class="reading-col">ひと</td>
+                                <td class="meaning-col">second</td>
+                                <td class="example-col">秒 byou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">朝</td>
+                                <td class="reading-col">チョウ</td>
+                                <td class="reading-col">あした</td>
+                                <td class="meaning-col">morning</td>
+                                <td class="example-col">朝日 asahi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">昼</td>
+                                <td class="reading-col">チュウ</td>
+                                <td class="reading-col">ひる</td>
+                                <td class="meaning-col">daytime</td>
+                                <td class="example-col">昼間 hiruma</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">夜</td>
+                                <td class="reading-col">ヤ</td>
+                                <td class="reading-col">よ</td>
+                                <td class="meaning-col">night</td>
+                                <td class="example-col">夜明け yoake</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">晴</td>
+                                <td class="reading-col">セイ</td>
+                                <td class="reading-col">は(れ)</td>
+                                <td class="meaning-col">clear/sunny</td>
+                                <td class="example-col">晴天 seiten</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">雨</td>
+                                <td class="reading-col">ウ</td>
+                                <td class="reading-col">あめ</td>
+                                <td class="meaning-col">rain</td>
+                                <td class="example-col">雨 ame</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- People & Body -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>People & Body (14 kanji)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Kanji</th>
+                                <th>On'yomi</th>
+                                <th>Kun'yomi</th>
+                                <th>Meaning</th>
+                                <th>Common Word</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kanji-col">人</td>
+                                <td class="reading-col">ニン</td>
+                                <td class="reading-col">ひと</td>
+                                <td class="meaning-col">person</td>
+                                <td class="example-col">人間 ningen</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">男</td>
+                                <td class="reading-col">ダン</td>
+                                <td class="reading-col">おとこ</td>
+                                <td class="meaning-col">man</td>
+                                <td class="example-col">男性 dansei</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">女</td>
+                                <td class="reading-col">ジョ</td>
+                                <td class="reading-col">おんな</td>
+                                <td class="meaning-col">woman</td>
+                                <td class="example-col">女性 josei</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">子</td>
+                                <td class="reading-col">シ</td>
+                                <td class="reading-col">こ</td>
+                                <td class="meaning-col">child</td>
+                                <td class="example-col">子ども kodomo</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">生</td>
+                                <td class="reading-col">セイ</td>
+                                <td class="reading-col">い(きる)</td>
+                                <td class="meaning-col">life/live</td>
+                                <td class="example-col">生活 seikatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">父</td>
+                                <td class="reading-col">フ</td>
+                                <td class="reading-col">ちち</td>
+                                <td class="meaning-col">father</td>
+                                <td class="example-col">父親 chichioya</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">母</td>
+                                <td class="reading-col">ボ</td>
+                                <td class="reading-col">はは</td>
+                                <td class="meaning-col">mother</td>
+                                <td class="example-col">母親 hahaoya</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">兄</td>
+                                <td class="reading-col">キョウ</td>
+                                <td class="reading-col">あに</td>
+                                <td class="meaning-col">older brother</td>
+                                <td class="example-col">兄さん ani-san</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">弟</td>
+                                <td class="reading-col">テイ</td>
+                                <td class="reading-col">おとうと</td>
+                                <td class="meaning-col">younger brother</td>
+                                <td class="example-col">弟子 deshi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">姉</td>
+                                <td class="reading-col">シ</td>
+                                <td class="reading-col">あね</td>
+                                <td class="meaning-col">older sister</td>
+                                <td class="example-col">姉さん ane-san</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">妹</td>
+                                <td class="reading-col">マイ</td>
+                                <td class="reading-col">いもうと</td>
+                                <td class="meaning-col">younger sister</td>
+                                <td class="example-col">妹 imouto</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">手</td>
+                                <td class="reading-col">シュ</td>
+                                <td class="reading-col">て</td>
+                                <td class="meaning-col">hand</td>
+                                <td class="example-col">手紙 tegami</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">足</td>
+                                <td class="reading-col">ソク</td>
+                                <td class="reading-col">あし</td>
+                                <td class="meaning-col">foot</td>
+                                <td class="example-col">足 ashi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">目</td>
+                                <td class="reading-col">モク</td>
+                                <td class="reading-col">め</td>
+                                <td class="meaning-col">eye</td>
+                                <td class="example-col">目玉 medama</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nature & Directions -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>Nature & Directions (19 kanji)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Kanji</th>
+                                <th>On'yomi</th>
+                                <th>Kun'yomi</th>
+                                <th>Meaning</th>
+                                <th>Common Word</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kanji-col">木</td>
+                                <td class="reading-col">モク</td>
+                                <td class="reading-col">き</td>
+                                <td class="meaning-col">tree</td>
+                                <td class="example-col">木 ki</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">森</td>
+                                <td class="reading-col">シン</td>
+                                <td class="reading-col">もり</td>
+                                <td class="meaning-col">forest</td>
+                                <td class="example-col">森林 shinrin</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">草</td>
+                                <td class="reading-col">ソウ</td>
+                                <td class="reading-col">くさ</td>
+                                <td class="meaning-col">grass</td>
+                                <td class="example-col">草 kusa</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">花</td>
+                                <td class="reading-col">カ</td>
+                                <td class="reading-col">はな</td>
+                                <td class="meaning-col">flower</td>
+                                <td class="example-col">花火 hanabi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">水</td>
+                                <td class="reading-col">スイ</td>
+                                <td class="reading-col">みず</td>
+                                <td class="meaning-col">water</td>
+                                <td class="example-col">水 mizu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">火</td>
+                                <td class="reading-col">カ</td>
+                                <td class="reading-col">ひ</td>
+                                <td class="meaning-col">fire</td>
+                                <td class="example-col">火 hi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">土</td>
+                                <td class="reading-col">ド</td>
+                                <td class="reading-col">つち</td>
+                                <td class="meaning-col">earth</td>
+                                <td class="example-col">土 tsuchi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">石</td>
+                                <td class="reading-col">セキ</td>
+                                <td class="reading-col">いし</td>
+                                <td class="meaning-col">stone</td>
+                                <td class="example-col">石 ishi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">山</td>
+                                <td class="reading-col">サン</td>
+                                <td class="reading-col">やま</td>
+                                <td class="meaning-col">mountain</td>
+                                <td class="example-col">山 yama</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">川</td>
+                                <td class="reading-col">セン</td>
+                                <td class="reading-col">かわ</td>
+                                <td class="meaning-col">river</td>
+                                <td class="example-col">川 kawa</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">海</td>
+                                <td class="reading-col">カイ</td>
+                                <td class="reading-col">うみ</td>
+                                <td class="meaning-col">sea</td>
+                                <td class="example-col">海 umi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">天</td>
+                                <td class="reading-col">テン</td>
+                                <td class="reading-col">あめ</td>
+                                <td class="meaning-col">heaven/sky</td>
+                                <td class="example-col">天気 tenki</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">雲</td>
+                                <td class="reading-col">ウン</td>
+                                <td class="reading-col">くも</td>
+                                <td class="meaning-col">cloud</td>
+                                <td class="example-col">雲 kumo</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">北</td>
+                                <td class="reading-col">ホク</td>
+                                <td class="reading-col">きた</td>
+                                <td class="meaning-col">north</td>
+                                <td class="example-col">北 kita</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">南</td>
+                                <td class="reading-col">ナン</td>
+                                <td class="reading-col">みなみ</td>
+                                <td class="meaning-col">south</td>
+                                <td class="example-col">南 minami</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">東</td>
+                                <td class="reading-col">トウ</td>
+                                <td class="reading-col">ひがし</td>
+                                <td class="meaning-col">east</td>
+                                <td class="example-col">東京 Tokyo</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">西</td>
+                                <td class="reading-col">セイ</td>
+                                <td class="reading-col">にし</td>
+                                <td class="meaning-col">west</td>
+                                <td class="example-col">西 nishi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">中</td>
+                                <td class="reading-col">チュウ</td>
+                                <td class="reading-col">なか</td>
+                                <td class="meaning-col">middle</td>
+                                <td class="example-col">中国 Chuugoku</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">外</td>
+                                <td class="reading-col">ガイ</td>
+                                <td class="reading-col">そと</td>
+                                <td class="meaning-col">outside</td>
+                                <td class="example-col">外 soto</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Places & Buildings -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>Places & Buildings (9 kanji)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Kanji</th>
+                                <th>On'yomi</th>
+                                <th>Kun'yomi</th>
+                                <th>Meaning</th>
+                                <th>Common Word</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kanji-col">家</td>
+                                <td class="reading-col">カ</td>
+                                <td class="reading-col">いえ</td>
+                                <td class="meaning-col">house</td>
+                                <td class="example-col">家 ie</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">店</td>
+                                <td class="reading-col">テン</td>
+                                <td class="reading-col">みせ</td>
+                                <td class="meaning-col">store</td>
+                                <td class="example-col">店 mise</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">学</td>
+                                <td class="reading-col">ガク</td>
+                                <td class="reading-col">まなぶ</td>
+                                <td class="meaning-col">study</td>
+                                <td class="example-col">学校 gakkou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">校</td>
+                                <td class="reading-col">コウ</td>
+                                <td class="reading-col">きょう</td>
+                                <td class="meaning-col">school</td>
+                                <td class="example-col">学校 gakkou</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">町</td>
+                                <td class="reading-col">チョウ</td>
+                                <td class="reading-col">まち</td>
+                                <td class="meaning-col">town</td>
+                                <td class="example-col">町 machi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">市</td>
+                                <td class="reading-col">シ</td>
+                                <td class="reading-col">いち</td>
+                                <td class="meaning-col">city</td>
+                                <td class="example-col">市場 ichiba</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">会</td>
+                                <td class="reading-col">カイ</td>
+                                <td class="reading-col">あう</td>
+                                <td class="meaning-col">meeting</td>
+                                <td class="example-col">会社 kaisha</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">社</td>
+                                <td class="reading-col">シャ</td>
+                                <td class="reading-col">やしろ</td>
+                                <td class="meaning-col">company</td>
+                                <td class="example-col">会社 kaisha</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">駅</td>
+                                <td class="reading-col">エキ</td>
+                                <td class="reading-col">えき</td>
+                                <td class="meaning-col">station</td>
+                                <td class="example-col">駅 eki</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions & Descriptions -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>Actions & Descriptions (25 kanji)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Kanji</th>
+                                <th>On'yomi</th>
+                                <th>Kun'yomi</th>
+                                <th>Meaning</th>
+                                <th>Common Word</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kanji-col">言</td>
+                                <td class="reading-col">ゲン/ゴン</td>
+                                <td class="reading-col">い(う)</td>
+                                <td class="meaning-col">say</td>
+                                <td class="example-col">言葉 kotoba</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">行</td>
+                                <td class="reading-col">コウ</td>
+                                <td class="reading-col">い(く)</td>
+                                <td class="meaning-col">go</td>
+                                <td class="example-col">行く iku</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">来</td>
+                                <td class="reading-col">ライ</td>
+                                <td class="reading-col">く(る)</td>
+                                <td class="meaning-col">come</td>
+                                <td class="example-col">来る kuru</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">休</td>
+                                <td class="reading-col">キュウ</td>
+                                <td class="reading-col">やす(む)</td>
+                                <td class="meaning-col">rest</td>
+                                <td class="example-col">休む yasumu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">立</td>
+                                <td class="reading-col">リツ</td>
+                                <td class="reading-col">た(つ)</td>
+                                <td class="meaning-col">stand</td>
+                                <td class="example-col">立つ tatsu</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">買</td>
+                                <td class="reading-col">バイ</td>
+                                <td class="reading-col">か(う)</td>
+                                <td class="meaning-col">buy</td>
+                                <td class="example-col">買う kau</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">長</td>
+                                <td class="reading-col">チョウ</td>
+                                <td class="reading-col">なが(い)</td>
+                                <td class="meaning-col">long</td>
+                                <td class="example-col">長い nagai</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">高</td>
+                                <td class="reading-col">コウ</td>
+                                <td class="reading-col">たか(い)</td>
+                                <td class="meaning-col">tall/expensive</td>
+                                <td class="example-col">高い takai</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">安</td>
+                                <td class="reading-col">アン</td>
+                                <td class="reading-col">やす(い)</td>
+                                <td class="meaning-col">cheap</td>
+                                <td class="example-col">安い yasui</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">新</td>
+                                <td class="reading-col">シン</td>
+                                <td class="reading-col">あたら(しい)</td>
+                                <td class="meaning-col">new</td>
+                                <td class="example-col">新しい atarashii</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">古</td>
+                                <td class="reading-col">コ</td>
+                                <td class="reading-col">ふる(い)</td>
+                                <td class="meaning-col">old</td>
+                                <td class="example-col">古い furui</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">大</td>
+                                <td class="reading-col">ダイ/タイ</td>
+                                <td class="reading-col">おお(きい)</td>
+                                <td class="meaning-col">big</td>
+                                <td class="example-col">大きい ookii</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">小</td>
+                                <td class="reading-col">ショウ</td>
+                                <td class="reading-col">ちい(さい)</td>
+                                <td class="meaning-col">small</td>
+                                <td class="example-col">小さい chiisai</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">多</td>
+                                <td class="reading-col">タ</td>
+                                <td class="reading-col">おお(い)</td>
+                                <td class="meaning-col">many</td>
+                                <td class="example-col">多い ooi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">少</td>
+                                <td class="reading-col">ショウ</td>
+                                <td class="reading-col">すく(ない)</td>
+                                <td class="meaning-col">few</td>
+                                <td class="example-col">少し sukoshi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">白</td>
+                                <td class="reading-col">ハク</td>
+                                <td class="reading-col">しろ(い)</td>
+                                <td class="meaning-col">white</td>
+                                <td class="example-col">白い shiroi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">黒</td>
+                                <td class="reading-col">コク</td>
+                                <td class="reading-col">くろ(い)</td>
+                                <td class="meaning-col">black</td>
+                                <td class="example-col">黒い kuroi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">赤</td>
+                                <td class="reading-col">セキ</td>
+                                <td class="reading-col">あか(い)</td>
+                                <td class="meaning-col">red</td>
+                                <td class="example-col">赤い akai</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">青</td>
+                                <td class="reading-col">セイ</td>
+                                <td class="reading-col">あお(い)</td>
+                                <td class="meaning-col">blue</td>
+                                <td class="example-col">青い aoi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">美</td>
+                                <td class="reading-col">ビ</td>
+                                <td class="reading-col">うつく(しい)</td>
+                                <td class="meaning-col">beautiful</td>
+                                <td class="example-col">美しい utsukushii</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">強</td>
+                                <td class="reading-col">キョウ</td>
+                                <td class="reading-col">つよ(い)</td>
+                                <td class="meaning-col">strong</td>
+                                <td class="example-col">強い tsuyoi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">弱</td>
+                                <td class="reading-col">ジャク</td>
+                                <td class="reading-col">よわ(い)</td>
+                                <td class="meaning-col">weak</td>
+                                <td class="example-col">弱い yowai</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">速</td>
+                                <td class="reading-col">ソク</td>
+                                <td class="reading-col">はや(い)</td>
+                                <td class="meaning-col">fast</td>
+                                <td class="example-col">速い hayai</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">遅</td>
+                                <td class="reading-col">チ</td>
+                                <td class="reading-col">おそ(い)</td>
+                                <td class="meaning-col">slow</td>
+                                <td class="example-col">遅い osoi</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">好</td>
+                                <td class="reading-col">コウ</td>
+                                <td class="reading-col">す(き)</td>
+                                <td class="meaning-col">like</td>
+                                <td class="example-col">好き suki</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abstract & Functional -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>Abstract & Functional (6 kanji)</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th>Kanji</th>
+                                <th>On'yomi</th>
+                                <th>Kun'yomi</th>
+                                <th>Meaning</th>
+                                <th>Common Word</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="kanji-col">本</td>
+                                <td class="reading-col">ホン</td>
+                                <td class="reading-col">もと</td>
+                                <td class="meaning-col">book/origin</td>
+                                <td class="example-col">日本 Nihon</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">名</td>
+                                <td class="reading-col">メイ/ミョウ</td>
+                                <td class="reading-col">な</td>
+                                <td class="meaning-col">name</td>
+                                <td class="example-col">名前 namae</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">語</td>
+                                <td class="reading-col">ゴ</td>
+                                <td class="reading-col">かた(る)</td>
+                                <td class="meaning-col">language</td>
+                                <td class="example-col">日本語 nihongo</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">何</td>
+                                <td class="reading-col">カ</td>
+                                <td class="reading-col">なに/なん</td>
+                                <td class="meaning-col">what</td>
+                                <td class="example-col">何 nani</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">文</td>
+                                <td class="reading-col">ブン/モン</td>
+                                <td class="reading-col">ふみ</td>
+                                <td class="meaning-col">sentence</td>
+                                <td class="example-col">作文 sakubun</td>
+                            </tr>
+                            <tr>
+                                <td class="kanji-col">字</td>
+                                <td class="reading-col">ジ</td>
+                                <td class="reading-col">あざ</td>
+                                <td class="meaning-col">character</td>
+                                <td class="example-col">漢字 kanji</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Summary -->
+        <div class="collapsible-section">
+            <button class="section-header collapsed">
+                <span class="toggle-arrow">▶</span>
+                <h2>Progress Summary</h2>
+            </button>
+            <div class="section-content collapsed">
+                <div class="section-body">
+                    <div class="stats-grid">
+                        <div class="stat-card mastered">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Mastered</div>
+                        </div>
+                        <div class="stat-card learning">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Learning</div>
+                        </div>
+                        <div class="stat-card needs-work">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Needs Work</div>
+                        </div>
+                        <div class="stat-card not-started">
+                            <div class="stat-number">103</div>
+                            <div class="stat-label">Not Started</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Collapsible sections functionality
+        document.querySelectorAll('.section-header').forEach(button => {
+            button.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const arrow = this.querySelector('.toggle-arrow');
+                const isCollapsed = this.classList.contains('collapsed');
+
+                if (isCollapsed) {
+                    // Expand
+                    this.classList.remove('collapsed');
+                    content.classList.remove('collapsed');
+                    arrow.textContent = '▼';
+                } else {
+                    // Collapse
+                    this.classList.add('collapsed');
+                    content.classList.add('collapsed');
+                    arrow.textContent = '▶';
+                }
+            });
+        });
+
+        function expandAll() {
+            document.querySelectorAll('.section-header').forEach(h => h.classList.remove('collapsed'));
+            document.querySelectorAll('.section-content').forEach(c => c.classList.remove('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▼');
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.section-header').forEach(h => h.classList.add('collapsed'));
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+            document.querySelectorAll('.toggle-arrow').forEach(a => a.textContent = '▶');
+        }
+
+        // ============ APPLY FLASHCARD QUIZ SCORES ============
+        function applyKanjiScores() {
+            let kanjiScores;
+            try { kanjiScores = JSON.parse(localStorage.getItem('kanji_scores') || '{}'); }
+            catch(e) { return; }
+
+            if (Object.keys(kanjiScores).length === 0) return;
+
+            // Update the overview grid cells
+            document.querySelectorAll('.kanji-cell').forEach(cell => {
+                const charEl = cell.querySelector('.kanji-character');
+                if (!charEl) return;
+                const char = charEl.textContent.trim();
+                const score = kanjiScores[char];
+
+                if (score) {
+                    cell.classList.remove('green', 'amber', 'red', 'blue', 'grey');
+                    if (score.streak >= 1) cell.classList.add('green');
+                    else if (score.streak === -1) cell.classList.add('amber');
+                    else cell.classList.add('red');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', applyKanjiScores);
+    </script>
+</body>
+</html>

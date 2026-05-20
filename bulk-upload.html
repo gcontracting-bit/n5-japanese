@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genki Audio Bulk Upload</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f0f4f8; color: #333; line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container { max-width: 700px; margin: 0 auto; }
+        h1 { color: #2b6cb0; text-align: center; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+
+        .step {
+            background: white; border-radius: 12px; padding: 24px;
+            margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .step h2 { font-size: 1.1em; color: #2b6cb0; margin-bottom: 12px; }
+        .step p { font-size: 0.95em; color: #666; margin-bottom: 12px; }
+
+        .folder-btn {
+            background: #2b6cb0; color: white; border: none; padding: 12px 28px;
+            border-radius: 8px; font-size: 1em; cursor: pointer; font-weight: 600;
+        }
+        .folder-btn:hover { background: #2c5282; }
+        .folder-btn:disabled { background: #a0aec0; cursor: not-allowed; }
+
+        .preview { margin-top: 16px; }
+        .preview-group { margin-bottom: 12px; }
+        .preview-group h3 {
+            font-size: 0.95em; color: #2b6cb0; margin-bottom: 4px;
+            border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;
+        }
+        .preview-group .sub { margin-left: 16px; margin-bottom: 4px; }
+        .preview-group .sub-label { font-weight: 600; font-size: 0.9em; }
+        .preview-group .sub-label.tb { color: #2b6cb0; }
+        .preview-group .sub-label.wb { color: #6b46c1; }
+        .file-count { font-size: 0.85em; color: #999; }
+
+        .progress-area { margin-top: 16px; display: none; }
+        .progress-area.show { display: block; }
+        .progress-bar {
+            width: 100%; height: 24px; background: #e2e8f0;
+            border-radius: 12px; overflow: hidden; margin-bottom: 8px;
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, #2b6cb0, #6b46c1);
+            border-radius: 12px; transition: width 0.3s; width: 0%;
+        }
+        .progress-text { font-size: 0.9em; color: #666; text-align: center; }
+
+        .result { margin-top: 16px; padding: 16px; border-radius: 8px; display: none; }
+        .result.success { display: block; background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+        .result.error { display: block; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+
+        .note { font-size: 0.85em; color: #999; text-align: center; margin-top: 20px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Genki Audio Bulk Upload</h1>
+        <p class="subtitle">One-click upload of all your Genki I audio files to cloud storage</p>
+
+        <div class="step">
+            <h2>Step 1: Select your audio folders</h2>
+            <p>Click the button below and select ALL the audio files from your Genki folders.
+               You can select files from multiple folders (Textbook, Workbook, Reading) at once.
+               The uploader will auto-sort them by chapter and type based on the filenames.</p>
+            <button class="folder-btn" id="selectBtn">Select Audio Files</button>
+            <input type="file" id="fileInput" multiple accept=".mp3,.wav,.ogg,.m4a,.aac" style="display:none">
+
+            <div class="preview" id="preview"></div>
+        </div>
+
+        <div class="step" id="step2" style="display:none">
+            <h2>Step 2: Upload to Supabase</h2>
+            <p id="uploadSummary"></p>
+            <button class="folder-btn" id="uploadBtn">Upload All</button>
+
+            <div class="progress-area" id="progressArea">
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text" id="progressText">Preparing...</div>
+            </div>
+
+            <div class="result" id="result"></div>
+        </div>
+
+        <p class="note">This page uploads directly to your Supabase storage bucket.<br>
+        You can delete this file after uploading — the listening page handles everything else.</p>
+    </div>
+
+    <script>
+    (function() {
+        var SUPABASE_URL = 'https://zknkjedxudhdzphxxsfj.supabase.co';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprbmtqZWR4dWRoZHpwaHh4c2ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNzIxNzksImV4cCI6MjA5MTg0ODE3OX0.RgE2FZPDOmSpy1XeC7JMmTxpWgi0QbCATnvMoF3zEfQ';
+        var BUCKET = 'genki-audio';
+        var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        var CHAPTER_NAMES = {
+            'ch01': 'Chapter 1 — A New Friend',
+            'ch02': 'Chapter 2 — Shopping',
+            'ch03': 'Chapter 3 — Making a Date',
+            'ch04': 'Chapter 4 — The First Date',
+            'ch05': 'Chapter 5 — A Trip to Okinawa',
+            'ch06': 'Chapter 6 — A Day in Robert\'s Life',
+            'ch07': 'Chapter 7 — Family Picture',
+            'ch08': 'Chapter 8 — Barbecue',
+            'ch09': 'Chapter 9 — Kabuki',
+            'ch10': 'Chapter 10 — Winter Vacation Plans',
+            'ch11': 'Chapter 11 — After the Vacation',
+            'ch12': 'Chapter 12 — Feeling Sick',
+            'other': 'Other / Misc'
+        };
+
+        var categorized = []; // { file, chapter, type, storagePath }
+
+        document.getElementById('selectBtn').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function() {
+            var files = this.files;
+            if (!files.length) return;
+            categorized = [];
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var name = file.name;
+                var info = categorizeFile(name);
+                if (info) {
+                    info.file = file;
+                    info.storagePath = info.chapter + '/' + info.type + '/' + name;
+                    categorized.push(info);
+                }
+            }
+
+            renderPreview();
+        });
+
+        function categorizeFile(name) {
+            // Textbook conversation/grammar: K01-01.mp3, K00-G.mp3, Genki1-Title.mp3
+            var mK = name.match(/^K(\d{2})-/i);
+            if (mK) {
+                var num = parseInt(mK[1], 10);
+                if (num === 0) return { chapter: 'other', type: 'textbook' };
+                var ch = 'ch' + (num < 10 ? '0' : '') + num;
+                return { chapter: ch, type: 'textbook' };
+            }
+
+            // Workbook listening comprehension: W01-A.mp3
+            var mW = name.match(/^W(\d{2})-/i);
+            if (mW) {
+                var num = parseInt(mW[1], 10);
+                var ch = 'ch' + (num < 10 ? '0' : '') + num;
+                return { chapter: ch, type: 'workbook' };
+            }
+
+            // Reading section: Y01-1.mp3, Y02.mp3
+            var mY = name.match(/^Y(\d{2})/i);
+            if (mY) {
+                var num = parseInt(mY[1], 10);
+                var ch = 'ch' + (num < 10 ? '0' : '') + num;
+                return { chapter: ch, type: 'reading' };
+            }
+
+            // Title or intro file
+            if (name.toLowerCase().indexOf('genki') !== -1 || name.toLowerCase().indexOf('title') !== -1) {
+                return { chapter: 'other', type: 'textbook' };
+            }
+
+            // Unknown — put in other/textbook
+            return { chapter: 'other', type: 'textbook' };
+        }
+
+        function renderPreview() {
+            // Group by chapter, then by type
+            var grouped = {};
+            categorized.forEach(function(item) {
+                if (!grouped[item.chapter]) grouped[item.chapter] = { textbook: [], workbook: [] };
+                grouped[item.chapter][item.type].push(item);
+            });
+
+            var html = '';
+            var chapters = Object.keys(grouped).sort();
+            chapters.forEach(function(ch) {
+                var g = grouped[ch];
+                var tbCount = g.textbook.length;
+                var wbCount = g.workbook.length;
+                var total = tbCount + wbCount;
+                html += '<div class="preview-group">';
+                html += '<h3>' + (CHAPTER_NAMES[ch] || ch) + ' <span class="file-count">(' + total + ' files)</span></h3>';
+                if (tbCount > 0) {
+                    html += '<div class="sub"><span class="sub-label tb">📖 Textbook:</span> <span class="file-count">' + tbCount + ' files</span></div>';
+                }
+                if (wbCount > 0) {
+                    html += '<div class="sub"><span class="sub-label wb">📝 Workbook:</span> <span class="file-count">' + wbCount + ' files</span></div>';
+                }
+                html += '</div>';
+            });
+
+            document.getElementById('preview').innerHTML = html;
+            document.getElementById('step2').style.display = 'block';
+
+            var totalMB = 0;
+            categorized.forEach(function(item) { totalMB += item.file.size; });
+            totalMB = (totalMB / (1024 * 1024)).toFixed(1);
+            document.getElementById('uploadSummary').textContent =
+                'Ready to upload ' + categorized.length + ' files (' + totalMB + ' MB) across ' + chapters.length + ' chapters.';
+        }
+
+        document.getElementById('uploadBtn').addEventListener('click', async function() {
+            var btn = this;
+            btn.disabled = true;
+            var progressArea = document.getElementById('progressArea');
+            var progressFill = document.getElementById('progressFill');
+            var progressText = document.getElementById('progressText');
+            var result = document.getElementById('result');
+            progressArea.classList.add('show');
+            result.style.display = 'none';
+
+            var total = categorized.length;
+            var done = 0;
+            var errors = [];
+
+            for (var i = 0; i < categorized.length; i++) {
+                var item = categorized[i];
+                progressText.textContent = 'Uploading ' + (i + 1) + ' of ' + total + ': ' + item.file.name;
+                progressFill.style.width = ((i / total) * 100) + '%';
+
+                try {
+                    var res = await sb.storage.from(BUCKET).upload(item.storagePath, item.file, {
+                        upsert: true,
+                        contentType: item.file.type || 'audio/mpeg'
+                    });
+                    if (res.error) throw res.error;
+                    done++;
+                } catch (err) {
+                    console.error('Upload error for ' + item.file.name + ':', err);
+                    errors.push(item.file.name + ': ' + (err.message || 'unknown error'));
+                }
+            }
+
+            progressFill.style.width = '100%';
+
+            if (errors.length === 0) {
+                progressText.textContent = 'All done!';
+                result.className = 'result success';
+                result.textContent = 'Successfully uploaded all ' + done + ' files! You can now go to the Listening page to play them.';
+                result.style.display = 'block';
+            } else {
+                progressText.textContent = 'Finished with errors.';
+                result.className = 'result error';
+                result.innerHTML = 'Uploaded ' + done + '/' + total + ' files. Errors:<br>' + errors.join('<br>');
+                result.style.display = 'block';
+            }
+            btn.disabled = false;
+        });
+    })();
+    </script>
+</body>
+</html>
