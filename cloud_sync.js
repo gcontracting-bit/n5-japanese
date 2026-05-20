@@ -12,7 +12,7 @@
   var SUPABASE_URL = "https://zknkjedxudhdzphxxsfj.supabase.co";
   var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprbmtqZWR4dWRoZHpwaHh4c2ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNzIxNzksImV4cCI6MjA5MTg0ODE3OX0.RgE2FZPDOmSpy1XeC7JMmTxpWgi0QbCATnvMoF3zEfQ";
   var TABLE = "learning_japanese_state";
-  var TRACKED_KEYS = ["kana_scores", "kanji_scores", "vocab_scores", "study_plan_completed"];
+  var TRACKED_KEYS = ["kana_scores", "kanji_scores", "vocab_scores", "study_plan_completed", "mock_attempts"];
 
   if (!window.supabase || typeof window.supabase.createClient !== "function") {
     console.warn("[cloud_sync] Supabase JS not loaded. Include the CDN script before cloud_sync.js.");
@@ -85,6 +85,9 @@
         cloudKeys.add(row.key);
         nativeSetItem(row.key, JSON.stringify(row.value));
       });
+      // Re-enable push BEFORE seeding local-only keys to cloud,
+      // otherwise schedulePush silently drops them.
+      suppressPush = false;
       // Any tracked key present locally but not in cloud gets pushed up (first run seeding).
       TRACKED_KEYS.forEach(function (k) {
         if (!cloudKeys.has(k)) {
@@ -92,7 +95,6 @@
           if (v != null) schedulePush(k, v);
         }
       });
-      suppressPush = false;
       setStatus("synced", "Live");
       window.dispatchEvent(new CustomEvent("cloudsync:ready"));
     } catch (e) {

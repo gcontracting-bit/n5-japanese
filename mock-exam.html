@@ -341,11 +341,19 @@ function renderExams() {
                 var sub = renderExamVariant(levelKey, vKey, exam, level.timeMinutes);
                 body.appendChild(sub);
             });
-            // Populate past-attempts panels after the variants are in the DOM.
-            variants.forEach(function(vKey) { renderAttemptsPanel(levelKey, vKey); });
         }
         div.appendChild(body);
         container.appendChild(div);
+    });
+    // Second pass: now that every variant's DOM is committed to the
+    // document, populate the past-attempts panels. (document.getElementById
+    // can't find detached elements, so this MUST run after container.appendChild.)
+    levels.forEach(function(levelKey) {
+        var level = EXAM_DATA[levelKey];
+        if (!isLevelUnlocked(level.unlockWeek)) return;
+        Object.keys(level.exams).forEach(function(vKey) {
+            renderAttemptsPanel(levelKey, vKey);
+        });
     });
 }
 
@@ -449,7 +457,7 @@ function renderExamVariant(levelKey, variantKey, exam, timeMinutes) {
                 // Stem
                 innerHtml += '<div class="q-stem"><span class="q-number">' + qNum + '</span>';
                 if (q.reorder) {
-                    innerHtml += q.stem + '</div>';
+                    innerHtml += q.stem + '<br><span style="font-size:0.82em;color:#718096;font-weight:400;">Arrange all 4 words to complete the sentence. Select the word that goes in the ★ position.</span></div>';
                     innerHtml += '<div class="reorder-context">' + q.context + '</div>';
                 } else {
                     innerHtml += q.stem + '</div>';
@@ -912,8 +920,17 @@ document.addEventListener('DOMContentLoaded', function() {
     seedAttemptBaselineIfNeeded();
     renderExams();
 });
-window.addEventListener('cloudsync:ready', function() { renderExams(); });
-window.addEventListener('cloudsync:update', function() { renderExams(); });
+// cloud_sync may overwrite localStorage AFTER the initial render with whatever
+// it pulled from Supabase — so re-run the seed (idempotent) and re-render
+// after the cloud round-trip lands.
+window.addEventListener('cloudsync:ready', function() {
+    seedAttemptBaselineIfNeeded();
+    renderExams();
+});
+window.addEventListener('cloudsync:update', function() {
+    seedAttemptBaselineIfNeeded();
+    renderExams();
+});
 </script>
 </body>
 </html>

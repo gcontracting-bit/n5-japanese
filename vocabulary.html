@@ -1730,13 +1730,21 @@
                     const forms = parseRowForms(rawJp);
 
                     // Word-level RAG = worst of (kana, ...kanji forms).
-                    const kanaStatus = statusFromEntry(scores[forms.kana + '|' + en]);
+                    // Only count kanji forms that have actually been tested;
+                    // untested kanji forms don't penalize a word whose kana
+                    // form was quizzed (flashcards only quiz kana).
+                    const kanaEntry = scores[forms.kana + '|' + en];
+                    const kanaStatus = statusFromEntry(kanaEntry);
                     let worst = kanaStatus;
-                    let totalCount = (scores[forms.kana + '|' + en] && scores[forms.kana + '|' + en].total) || 0;
+                    let totalCount = (kanaEntry && kanaEntry.total) || 0;
                     forms.kanji.forEach(k => {
                         const e = scores[k + '|' + en];
                         const s = statusFromEntry(e);
-                        if (STATUS_RANK[s] < STATUS_RANK[worst]) worst = s;
+                        // Only let a kanji form drag the word down if it
+                        // has actually been tested (has an entry with total > 0).
+                        if (e && (e.total > 0 || e.state)) {
+                            if (STATUS_RANK[s] < STATUS_RANK[worst]) worst = s;
+                        }
                         if (e && e.total && e.total > totalCount) totalCount = e.total;
                     });
 
