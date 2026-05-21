@@ -2186,19 +2186,13 @@
             return color || 'untested';
         }
 
-        // Word-level RAG = worst of the entry's cards' statuses.
-        // Ordering (worst → best): red < amber < untested < green.
-        // For single-card entries this is the same as getCardStatus.
-        const STATUS_RANK = { red: 0, amber: 1, untested: 2, green: 3 };
-        function getEntryStatus(entry) {
-            const cards = expandEntry(entry);
-            let worst = 'green';
-            for (const c of cards) {
-                const s = getCardStatus(c);
-                if (STATUS_RANK[s] < STATUS_RANK[worst]) worst = s;
-            }
-            return worst;
-        }
+        // Kana and kanji forms are tracked as SEPARATE items. We no longer
+        // merge a word's cards into a single word-level status — each card
+        // carries its own status via getCardStatus(). The status filter in
+        // startSession() filters each card independently, so an untested kanji
+        // card surfaces on its own and a mastered kana card stays green on its
+        // own. This keeps flashcards.html and vocabulary.html in agreement on
+        // every form.
 
         // "Drill weak words" — quick toggle that selects Red + Amber only.
         function drillWeakWords() {
@@ -2280,25 +2274,23 @@
                 arrow.textContent = '▶';
             }
 
-            // Build card pool — iterate entries so we can apply the status
-            // filter at the word (entry) level, then expand each chosen entry
-            // into 1 (kana-only) or 2 (kana + kanji) cards.
+            // Build card pool — expand each entry into 1 (kana-only) or 2
+            // (kana + kanji) cards, then apply the optional status filter to
+            // EACH card by its OWN status. Kana and kanji are independent items:
+            // an untested kanji card and a mastered kana card are judged
+            // separately, so the deck reflects per-form mastery (and matches the
+            // per-form status shown on vocabulary.html).
             const statusFilter = getSelectedStatuses();
             let pool = [];
             checked.forEach(key => {
                 const entries = fcData[key];
                 if (!entries) return;
                 entries.forEach(entry => {
-                    // Optional word-level status filter.
-                    // A word's status is the WORST of its kana/kanji cards
-                    // (red < amber < untested < green). If the word's status
-                    // matches, all of its cards drop into the pool together
-                    // — the user reinforces both forms of a weak word.
-                    if (statusFilter.size > 0) {
-                        if (!statusFilter.has(getEntryStatus(entry))) return;
-                    }
                     const cards = expandEntry(entry);
-                    for (let i = 0; i < cards.length; i++) pool.push(cards[i]);
+                    for (let i = 0; i < cards.length; i++) {
+                        if (statusFilter.size > 0 && !statusFilter.has(getCardStatus(cards[i]))) continue;
+                        pool.push(cards[i]);
+                    }
                 });
             });
 

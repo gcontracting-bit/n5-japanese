@@ -1765,32 +1765,38 @@
                     const forms = parseRowForms(rawJp);
                     wordList.push({ kana: forms.kana, kanji: forms.kanji, en: en, extra: !!isExtra });
 
-                    // Word-level RAG = worst of (kana, ...kanji forms).
-                    // Only count kanji forms that have actually been tested;
-                    // untested kanji forms don't penalize a word whose kana
-                    // form was quizzed (flashcards only quiz kana).
+                    // Each FORM is an independent item with its own status: the
+                    // kana form, plus each kanji form. We do NOT merge them into
+                    // a single word-level status — an untested kanji form shows
+                    // as its own Untested item, while a mastered kana form stays
+                    // Green on its own. flashcards.html tracks the kana card and
+                    // kanji card separately too, so the two pages agree per form.
                     const kanaEntry = scores[forms.kana + '|' + en];
-                    const kanaStatus = statusFromEntry(kanaEntry);
-                    let worst = kanaStatus;
+                    const formStatuses = [{ form: forms.kana, status: statusFromEntry(kanaEntry) }];
                     let totalCount = (kanaEntry && kanaEntry.total) || 0;
                     forms.kanji.forEach(k => {
                         const e = scores[k + '|' + en];
-                        const s = statusFromEntry(e);
-                        // Only let a kanji form drag the word down if it
-                        // has actually been tested (has an entry with total > 0).
-                        if (e && (e.total > 0 || e.state)) {
-                            if (STATUS_RANK[s] < STATUS_RANK[worst]) worst = s;
-                        }
+                        formStatuses.push({ form: k, status: statusFromEntry(e) });
                         if (e && e.total && e.total > totalCount) totalCount = e.total;
                     });
 
-                    if (!isExtra) { totalWords++; sTotal++; if (worst === 'green') { masteredWords++; sMastered++; } }
+                    // Count each form as its own item toward chapter + overall totals.
+                    if (!isExtra) {
+                        formStatuses.forEach(f => {
+                            totalWords++; sTotal++;
+                            if (f.status === 'green') { masteredWords++; sMastered++; }
+                        });
+                    }
 
-                    // Tag the row so the status bar can count + filter.
-                    row.dataset.wordStatus = worst;
+                    // Tag the row with EVERY form's status so the status bar can
+                    // count + filter per form.
+                    row.dataset.formStatuses = JSON.stringify(formStatuses.map(f => f.status));
 
-                    // Render the indicator (dot + optional fire badge).
-                    let ind = '<span class="vocab-score-dot ' + worst + '"></span>';
+                    // Render one dot per form (kana first, then each kanji form),
+                    // each labelled with its form + status, plus the fire badge.
+                    let ind = formStatuses.map(f =>
+                        '<span class="vocab-score-dot ' + f.status + '" title="' + f.form + ': ' + f.status + '"></span>'
+                    ).join('');
                     if (totalCount >= 10) ind += ' 🔥 <span class="vocab-fire-badge">' + (Math.floor(totalCount/10)*10) + '+</span>';
 
                     // Avoid double-prefixing on re-runs (cloud sync update).
@@ -1836,11 +1842,13 @@
                 const content = section.querySelector('.week-content');
                 if (!content) return;
 
-                // Count rows by word-status for this chapter.
+                // Count each FORM (kana + kanji items) for this chapter.
                 const counts = { red: 0, amber: 0, green: 0, untested: 0 };
                 section.querySelectorAll('tbody tr').forEach(row => {
-                    const s = row.dataset.wordStatus || 'untested';
-                    if (s in counts) counts[s]++;
+                    let arr;
+                    try { arr = JSON.parse(row.dataset.formStatuses || '[]'); } catch (e) { arr = []; }
+                    if (!arr.length) arr = ['untested'];
+                    arr.forEach(s => { if (s in counts) counts[s]++; });
                 });
 
                 let bar = content.querySelector(':scope > .status-bar');
@@ -1887,8 +1895,11 @@
 
         function applyChapterFilter(section, status) {
             section.querySelectorAll('tbody tr').forEach(row => {
-                const s = row.dataset.wordStatus || 'untested';
-                row.classList.toggle('row-hidden', !!status && s !== status);
+                // A row stays visible if ANY of its forms matches the filter.
+                let arr;
+                try { arr = JSON.parse(row.dataset.formStatuses || '[]'); } catch (e) { arr = []; }
+                if (!arr.length) arr = ['untested'];
+                row.classList.toggle('row-hidden', !!status && arr.indexOf(status) === -1);
             });
             // Hide whole categories whose rows are all filtered out.
             section.querySelectorAll('.category').forEach(cat => {

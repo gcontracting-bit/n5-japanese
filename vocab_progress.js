@@ -29,9 +29,12 @@
     return 'untested';
   }
 
-  // Word-level RAG = worst of (kana form, any TESTED kanji form). Mirrors the
-  // per-row logic in vocabulary.html applyScores(). Extra-vocab words are
-  // excluded from the totals, exactly like the vocab page's bar.
+  // Each FORM (the kana form + every kanji form) is an independent item with
+  // its own status. We do NOT merge a word's forms into a single status — this
+  // mirrors the per-form logic in vocabulary.html applyScores() (and the
+  // per-card model in flashcards.html), so the dashboard wheel, the vocab bar,
+  // and the flashcards deck can never disagree. Extra-vocab words are excluded
+  // from the totals, exactly like the vocab page's bar.
   // list item: { kana: string, kanji: string[], en: string, extra: boolean }
   function compute(list, scores) {
     var total = 0, mastered = 0;
@@ -40,17 +43,11 @@
     list.forEach(function (w) {
       if (!w || w.extra) return;
       var en = w.en;
-      var worst = statusFromEntry(scores[w.kana + '|' + en]);
-      (w.kanji || []).forEach(function (k) {
-        var e = scores[k + '|' + en];
-        var s = statusFromEntry(e);
-        // Untested kanji forms don't penalize a word whose kana form was quizzed.
-        if (e && (e.total > 0 || e.state)) {
-          if (STATUS_RANK[s] < STATUS_RANK[worst]) worst = s;
-        }
+      var forms = [w.kana].concat(w.kanji || []);
+      forms.forEach(function (f) {
+        total++;
+        if (statusFromEntry(scores[f + '|' + en]) === 'green') mastered++;
       });
-      total++;
-      if (worst === 'green') mastered++;
     });
     return { mastered: mastered, total: total };
   }
