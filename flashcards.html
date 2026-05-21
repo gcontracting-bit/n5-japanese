@@ -2153,27 +2153,57 @@
             document.querySelectorAll('.filter-chips input[type="checkbox"]:not([data-status])').forEach(c => c.checked = false);
         }
 
-        // ============ ENTRY EXPANSION (kana + optional kanji) ============
-        // An "entry" in fcData can have an optional `k:` kanji form. When
-        // present, the entry expands into TWO cards: one for the kana side and
-        // one for the kanji side. Each card has its own scoreKey, so kana and
-        // kanji are tracked independently in vocab_scores.
+        // ============ ENTRY EXPANSION (kana + every kanji form) ============
+        // An entry expands into one card per FORM: the kana card, plus one card
+        // for each kanji writing of the word. Each card has its own scoreKey
+        // (japanese|english), so kana and kanji are tracked as independent items
+        // in vocab_scores — matching the per-form model on vocabulary.html.
         //
-        // For backward compat, entries WITHOUT a `k` field are returned as a
-        // single-element array containing the entry itself (same object
-        // reference) — so existing identity checks like
-        // `fcData[k].includes(card)` keep working unchanged.
+        // Kanji forms come from two sources, unioned and de-duped:
+        //   1. an entry's own optional `k` field, and
+        //   2. the canonical `vocab_word_list` vocabulary.html publishes — it is
+        //      the source of truth for the word list (parsed from the Genki
+        //      tables), so the deck drills EXACTLY the forms the vocab page
+        //      counts, even for kana-only fcData entries that carry no `k`.
+        // If vocab_word_list is unavailable (vocabulary.html never opened on this
+        // device) we fall back to the entry's own `k` only — no regression.
+        //
+        // Entries with no kanji form at all still return a single-element array
+        // containing the entry itself (same object reference), so identity checks
+        // like `fcData[k].includes(card)` keep working unchanged.
+        let _vocabFormsMap = null;
+        function vocabFormsMap() {
+            if (_vocabFormsMap) return _vocabFormsMap;
+            const map = {};
+            try {
+                const list = JSON.parse(localStorage.getItem('vocab_word_list') || '[]');
+                if (Array.isArray(list)) {
+                    list.forEach(w => {
+                        if (!w || !w.kana || !Array.isArray(w.kanji) || !w.kanji.length) return;
+                        map[w.kana + '|' + w.en] = w.kanji.filter(Boolean);
+                    });
+                }
+            } catch (e) {}
+            _vocabFormsMap = map;
+            return map;
+        }
+
+        function makeKanjiCard(entry, kanji) {
+            return { j: kanji, r: entry.r, e: entry.e, em: entry.em, _isKanjiForm: true, _baseEntry: entry };
+        }
+
         function expandEntry(entry) {
-            if (!entry || !entry.k) return [entry];
-            const kanjiCard = {
-                j: entry.k,
-                r: entry.r,
-                e: entry.e,
-                em: entry.em,
-                _isKanjiForm: true,
-                _baseEntry: entry
-            };
-            return [entry, kanjiCard];
+            if (!entry) return [entry];
+            const cards = [entry];
+            const seen = {};
+            if (entry.k) { cards.push(makeKanjiCard(entry, entry.k)); seen[entry.k] = true; }
+            const extra = vocabFormsMap()[entry.j + '|' + entry.e];
+            if (extra) {
+                extra.forEach(k => {
+                    if (k && k !== entry.j && !seen[k]) { cards.push(makeKanjiCard(entry, k)); seen[k] = true; }
+                });
+            }
+            return cards;
         }
 
         // ============ STATUS FILTER ============
@@ -2256,6 +2286,9 @@
 
         // ============ START SESSION ============
         function startSession() {
+            // Rebuild the kana|en -> kanji-forms map from the latest published
+            // vocab_word_list (it can change if vocabulary.html was reopened).
+            _vocabFormsMap = null;
             // Gather selected categories — exclude the secondary "status" chips
             // so an empty status selection doesn't trip the "no categories" check.
             const checked = Array.from(
