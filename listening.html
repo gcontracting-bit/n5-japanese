@@ -44,6 +44,7 @@
         .chapter-header h2 { font-size: 1.2em; color: #c05621; }
         .chapter-count { font-size: 0.85em; color: #888; }
         .chapter-toggle {
+            display: inline-block; /* required so the rotate() below actually applies */
             font-size: 1.2em; color: #999; transition: transform 0.2s;
             margin-left: 8px;
         }
@@ -238,7 +239,7 @@
                 var rdFiles = chData.reading || [];
                 var chTotal = tbFiles.length + wbFiles.length + rdFiles.length;
 
-                html += '<div class="chapter-section">';
+                html += '<div class="chapter-section collapsed">';
                 html += '<div class="chapter-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
                 html += '<h2>' + escapeHtml(CHAPTER_NAMES[chKey] || chKey) + '</h2>';
                 html += '<span><span class="chapter-count">' + chTotal + ' track' + (chTotal !== 1 ? 's' : '') + '</span>';
