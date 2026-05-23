@@ -319,6 +319,15 @@
             font-size: 0.85em;
             color: #888;
         }
+        .verb-key {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin: 0 0 16px;
+            font-size: 0.85em;
+            color: #6b5b4d;
+        }
+        .verb-key > span { display: inline-flex; align-items: center; gap: 6px; }
 
         .verb-table-wrap {
             overflow-x: auto;
@@ -410,13 +419,13 @@
         <div class="card">
             <h2>
                 <span class="toggle-arrow">▶</span>
-                The Three Verb Groups
+                The Three Verb Types
             </h2>
             <div class="section-content collapsed">
                 <table>
                     <thead>
                         <tr>
-                            <th>Group</th>
+                            <th>Type</th>
                             <th>Name</th>
                             <th>Dictionary Form</th>
                             <th>Examples</th>
@@ -424,19 +433,19 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Group 1</strong></td>
+                            <td><strong>U</strong></td>
                             <td>U-verbs / Godan</td>
                             <td>Dict form ends in -u consonant (ku, gu, su, tsu, nu, bu, mu, ru*)</td>
                             <td>書く <span class="romaji">kaku</span>, 話す <span class="romaji">hanasu</span>, 買う <span class="romaji">kau</span></td>
                         </tr>
                         <tr>
-                            <td><strong>Group 2</strong></td>
+                            <td><strong>Ru</strong></td>
                             <td>Ru-verbs / Ichidan</td>
                             <td>Dict form ends in -iru or -eru</td>
                             <td>食べる <span class="romaji">taberu</span>, 見る <span class="romaji">miru</span></td>
                         </tr>
                         <tr>
-                            <td><strong>Group 3</strong></td>
+                            <td><strong>Irr</strong></td>
                             <td>Irregular</td>
                             <td>Only two verbs</td>
                             <td>する <span class="romaji">suru</span>, 来る <span class="romaji">kuru</span></td>
@@ -444,7 +453,7 @@
                     </tbody>
                 </table>
                 <div class="note">
-                    <strong>Note:</strong> Some -iru/-eru verbs are actually Group 1 (帰る <span class="romaji">kaeru</span>, 知る <span class="romaji">shiru</span>, 入る <span class="romaji">hairu</span>). These must be memorized!
+                    <strong>Note:</strong> Some -iru/-eru verbs are actually U-verbs (帰る <span class="romaji">kaeru</span>, 知る <span class="romaji">shiru</span>, 入る <span class="romaji">hairu</span>). These must be memorized!
                 </div>
             </div>
         </div>
@@ -460,10 +469,10 @@
                     <thead>
                         <tr>
                             <th>Form</th>
-                            <th>書く <span class="romaji">(Grp 1)</span></th>
-                            <th>食べる <span class="romaji">(Grp 2)</span></th>
-                            <th>する <span class="romaji">(Irr.)</span></th>
-                            <th>来る <span class="romaji">(Irr.)</span></th>
+                            <th>書く <span class="romaji">(U)</span></th>
+                            <th>食べる <span class="romaji">(Ru)</span></th>
+                            <th>する <span class="romaji">(Irr)</span></th>
+                            <th>来る <span class="romaji">(Irr)</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -525,7 +534,7 @@
             </h2>
             <div class="section-content collapsed">
                 <h3>
-                    <span class="badge badge-group1">Group 1</span>
+                    <span class="badge badge-group1">U</span>
                 </h3>
                 <table class="te-form-table">
                     <thead>
@@ -585,18 +594,18 @@
                 </table>
 
                 <h3>
-                    <span class="badge badge-group2">Group 2</span>
+                    <span class="badge badge-group2">Ru</span>
                 </h3>
                 <p>Drop る, add て</p>
                 <p style="font-family: Arial, sans-serif;">食べる → 食べて <span class="romaji">tabete</span> &nbsp; | &nbsp; 見る → 見て <span class="romaji">mite</span></p>
 
                 <h3>
-                    <span class="badge badge-group3">Group 3 (Irregular)</span>
+                    <span class="badge badge-group3">Irr (Irregular)</span>
                 </h3>
                 <p style="font-family: Arial, sans-serif;">
                     する → して <span class="romaji">shite</span>
                     <br>来る → 来て <span class="romaji">kite</span>
-                    <br>行く → 行って <span class="romaji">itte</span> <span class="warning-badge">Exception!</span>
+                    <br>行く → 行って <span class="romaji">itte</span> <span title="irregular form">❗</span>
                 </p>
             </div>
         </div>
@@ -612,10 +621,10 @@
                     <thead>
                         <tr>
                             <th>Form</th>
-                            <th>書く <span class="romaji">(Grp 1)</span></th>
-                            <th>食べる <span class="romaji">(Grp 2)</span></th>
-                            <th>する</th>
-                            <th>来る</th>
+                            <th>書く <span class="romaji">(U)</span></th>
+                            <th>食べる <span class="romaji">(Ru)</span></th>
+                            <th>する <span class="romaji">(Irr)</span></th>
+                            <th>来る <span class="romaji">(Irr)</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -656,143 +665,143 @@
         <div class="card">
             <h2>
                 <span class="toggle-arrow">▶</span>
-                Common N5 Verbs — Group Identification
+                Common N5 Verbs — Type Identification
             </h2>
             <div class="section-content collapsed">
                 <table>
                     <thead>
                         <tr>
+                            <th>Type</th>
                             <th>Verb</th>
                             <th>Reading</th>
                             <th>Meaning</th>
-                            <th>Group</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr class="exception">
+                            <td><span class="badge badge-group1">U</span> <span title="Conjugates irregularly — differs from the normal pattern">❗</span></td>
                             <td>行く</td>
                             <td><span class="romaji">iku</span></td>
                             <td>to go</td>
-                            <td><span class="badge badge-group1">Group 1</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group1">U</span></td>
                             <td>書く</td>
                             <td><span class="romaji">kaku</span></td>
                             <td>to write</td>
-                            <td><span class="badge badge-group1">Group 1</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group1">U</span></td>
                             <td>話す</td>
                             <td><span class="romaji">hanasu</span></td>
                             <td>to speak</td>
-                            <td><span class="badge badge-group1">Group 1</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group1">U</span></td>
                             <td>読む</td>
                             <td><span class="romaji">yomu</span></td>
                             <td>to read</td>
-                            <td><span class="badge badge-group1">Group 1</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group1">U</span></td>
                             <td>飲む</td>
                             <td><span class="romaji">nomu</span></td>
                             <td>to drink</td>
-                            <td><span class="badge badge-group1">Group 1</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group1">U</span></td>
                             <td>買う</td>
                             <td><span class="romaji">kau</span></td>
                             <td>to buy</td>
-                            <td><span class="badge badge-group1">Group 1</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group1">U</span></td>
                             <td>待つ</td>
                             <td><span class="romaji">matsu</span></td>
                             <td>to wait</td>
-                            <td><span class="badge badge-group1">Group 1</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group1">U</span></td>
                             <td>乗る</td>
                             <td><span class="romaji">noru</span></td>
                             <td>to ride</td>
-                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
                         </tr>
                         <tr class="exception">
+                            <td><span class="badge badge-group1">U</span> <span title="U-verb that looks like a Ru-verb">⚠️</span></td>
                             <td>帰る</td>
                             <td><span class="romaji">kaeru</span></td>
                             <td>to return</td>
-                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
                         </tr>
                         <tr class="exception">
+                            <td><span class="badge badge-group1">U</span> <span title="U-verb that looks like a Ru-verb">⚠️</span></td>
                             <td>知る</td>
                             <td><span class="romaji">shiru</span></td>
                             <td>to know</td>
-                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
                         </tr>
                         <tr class="exception">
+                            <td><span class="badge badge-group1">U</span> <span title="U-verb that looks like a Ru-verb">⚠️</span></td>
                             <td>入る</td>
                             <td><span class="romaji">hairu</span></td>
                             <td>to enter</td>
-                            <td><span class="badge badge-group1">Group 1</span> <span class="warning-badge">Exception!</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group2">Ru</span></td>
                             <td>食べる</td>
                             <td><span class="romaji">taberu</span></td>
                             <td>to eat</td>
-                            <td><span class="badge badge-group2">Group 2</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group2">Ru</span></td>
                             <td>見る</td>
                             <td><span class="romaji">miru</span></td>
                             <td>to see</td>
-                            <td><span class="badge badge-group2">Group 2</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group2">Ru</span></td>
                             <td>起きる</td>
                             <td><span class="romaji">okiru</span></td>
                             <td>to wake up</td>
-                            <td><span class="badge badge-group2">Group 2</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group2">Ru</span></td>
                             <td>寝る</td>
                             <td><span class="romaji">neru</span></td>
                             <td>to sleep</td>
-                            <td><span class="badge badge-group2">Group 2</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group2">Ru</span></td>
                             <td>かける</td>
                             <td><span class="romaji">kakeru</span></td>
                             <td>to make a call</td>
-                            <td><span class="badge badge-group2">Group 2</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group2">Ru</span></td>
                             <td>教える</td>
                             <td><span class="romaji">oshieru</span></td>
                             <td>to teach</td>
-                            <td><span class="badge badge-group2">Group 2</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group2">Ru</span></td>
                             <td>出る</td>
                             <td><span class="romaji">deru</span></td>
                             <td>to leave</td>
-                            <td><span class="badge badge-group2">Group 2</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group3">Irr</span></td>
                             <td>する</td>
                             <td><span class="romaji">suru</span></td>
                             <td>to do</td>
-                            <td><span class="badge badge-group3">Group 3</span></td>
                         </tr>
                         <tr>
+                            <td><span class="badge badge-group3">Irr</span></td>
                             <td>来る</td>
                             <td><span class="romaji">kuru</span></td>
                             <td>to come</td>
-                            <td><span class="badge badge-group3">Group 3</span></td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="note">
-                    <strong>Warning:</strong> The verbs marked with "Exception!" end in -iru or -eru but are actually Group 1 verbs. These must be memorized individually!
+                    <strong>Warning:</strong> The verbs marked with ⚠️ end in -iru or -eru but are actually U-verbs. These must be memorized individually!
                 </div>
             </div>
         </div>
@@ -805,7 +814,7 @@
             </h2>
             <div class="section-content">
                 <div class="note">
-                    Filter by group, then read across for every conjugation. Conjugations are shown in
+                    Filter by type, then read across for every conjugation. Conjugations are shown in
                     <strong>kanji form</strong> (the <em>Kana</em> column gives the dictionary reading) and are
                     generated by rule. The <span class="particle-demo">～を</span>-style tag in the English column
                     shows the particle the verb takes.
@@ -814,16 +823,19 @@
                 <div class="verb-filter">
                     <span class="vf-label">Filter:</span>
                     <button class="vf-btn active" data-f="all" onclick="filterVerbs('all', this)">All</button>
-                    <button class="vf-btn" data-f="u" onclick="filterVerbs('u', this)">U-verbs (う / Grp 1)</button>
-                    <button class="vf-btn" data-f="ru" onclick="filterVerbs('ru', this)">Ru-verbs (る / Grp 2)</button>
-                    <button class="vf-btn" data-f="irr" onclick="filterVerbs('irr', this)">Irregular (Grp 3)</button>
+                    <button class="vf-btn" data-f="u" onclick="filterVerbs('u', this)">U-verbs (う)</button>
+                    <button class="vf-btn" data-f="ru" onclick="filterVerbs('ru', this)">Ru-verbs (る)</button>
+                    <button class="vf-btn" data-f="irr" onclick="filterVerbs('irr', this)">Irregular</button>
                     <span class="vf-count" id="verb-count"></span>
+                </div>
+                <div class="verb-key">
+                    <span>⚠️ = U-verb that looks like a Ru-verb (ends in る but conjugates as a U-verb)</span>
+                    <span>❗ = conjugates irregularly (differs from the normal pattern)</span>
                 </div>
                 <div class="verb-table-wrap">
                     <table id="verb-conj-table">
                         <thead>
                             <tr>
-                                <th>Lesson</th>
                                 <th>Type</th>
                                 <th>Kana</th>
                                 <th>Kanji</th>
@@ -839,6 +851,7 @@
                                 <th>Past neg.<span class="hd-sub">plain −（なかった）</span></th>
                                 <th>Volitional<span class="hd-sub">（ましょう）</span></th>
                                 <th>Want<span class="hd-sub">（たい）</span></th>
+                                <th>Lesson</th>
                             </tr>
                         </thead>
                         <tbody id="verb-conj-body"></tbody>
@@ -1080,7 +1093,7 @@
             return f;
         }
 
-        const TYPE_LABEL = { u: 'U', ru: 'RU', irr: 'IRR' };
+        const TYPE_LABEL = { u: 'U', ru: 'Ru', irr: 'Irr' };
 
         function render() {
             const body = document.getElementById('verb-conj-body');
@@ -1089,10 +1102,11 @@
                 const f = conjugate(v);
                 const kanji = v.j || '—';
                 const particle = v.p ? '<span class="particle">～' + v.p + '</span>' : '';
-                const exc = v.x ? '<span class="vtype-x" title="Looks like a ru-verb but is an u-verb">⚠ exc.</span>' : '';
+                const exc = v.x ? ' <span title="U-verb that looks like a Ru-verb">⚠️</span>' : '';
+                // ❗ = conjugates irregularly: ～いく (て-form 行って) and ～がある (neg. ない)
+                const irr = (v.c !== 'irr' && (/いく$/.test(v.k) || /ある$/.test(v.k))) ? ' <span title="Conjugates irregularly — differs from the normal pattern">❗</span>' : '';
                 return '<tr data-c="' + v.c + '">' +
-                    '<td>L' + v.L + '</td>' +
-                    '<td><span class="vtype ' + v.c + '">' + TYPE_LABEL[v.c] + '</span>' + exc + '</td>' +
+                    '<td><span class="vtype ' + v.c + '">' + TYPE_LABEL[v.c] + '</span>' + exc + irr + '</td>' +
                     '<td>' + v.k + '</td>' +
                     '<td>' + kanji + '</td>' +
                     '<td class="v-en">' + particle + v.en + '</td>' +
@@ -1107,6 +1121,7 @@
                     '<td>' + f.plainPastNeg + '</td>' +
                     '<td>' + f.vol + '</td>' +
                     '<td>' + f.tai + '</td>' +
+                    '<td>L' + v.L + '</td>' +
                     '</tr>';
             }).join('');
             body.innerHTML = rows;
@@ -1131,19 +1146,19 @@
 
         // ----- Excel / CSV export of the FULL table (all verbs, all forms) -----
         const EXPORT_HEADERS = [
-            'Lesson', 'Type', 'Exception', 'Kana', 'Kanji', 'English', 'Particle',
+            'Type', 'Exception', 'Kana', 'Kanji', 'English', 'Particle',
             'Dictionary (plain +)', 'Present (polite +)', 'Neg. present (polite -)',
             'Past (polite +)', 'Past neg. (polite -)', 'Te-form',
-            'Plain neg.', 'Plain past', 'Plain past neg.', 'Volitional', 'Want (tai)'
+            'Plain neg.', 'Plain past', 'Plain past neg.', 'Volitional', 'Want (tai)', 'Lesson'
         ];
         function buildVerbAOA() {
             const aoa = [EXPORT_HEADERS.slice()];
             VERBS.forEach(function (v) {
                 const f = conjugate(v);
                 aoa.push([
-                    'L' + v.L, TYPE_LABEL[v.c], v.x ? 'yes' : '', v.k, v.j || '', v.en, v.p || '',
+                    TYPE_LABEL[v.c], v.x ? 'yes' : '', v.k, v.j || '', v.en, v.p || '',
                     f.dict, f.masu, f.masuNeg, f.masuPast, f.masuPastNeg, f.te,
-                    f.plainNeg, f.plainPast, f.plainPastNeg, f.vol, f.tai
+                    f.plainNeg, f.plainPast, f.plainPastNeg, f.vol, f.tai, 'L' + v.L
                 ]);
             });
             return aoa;
