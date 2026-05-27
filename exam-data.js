@@ -84,10 +84,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "これ ＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["わたし", "は", "の", "かばん"], answer: 4, explanation: "これはわたしのかばんです。★ = かばん" },
-            { stem: "Put the words in order:", context: "＿＿ ★ ＿＿ ＿＿ ですか。", reorder: true, options: ["は", "おくに", "どちら", "さんの"], answer: 3, explanation: "～さんのおくにはどちらですか。★ = どちら" },
-            { stem: "Put the words in order:", context: "あの ＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["せんせい", "の", "だいがく", "ひと は"], answer: 1, explanation: "あのひとはだいがくのせんせいです。★ = せんせい" },
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ ですか。", reorder: true, options: ["この", "は", "いくら", "とけい"], answer: 3, explanation: "このとけいはいくらですか。★ = いくら" }
+            { stem: "Put the words in order:", context: "これ ＿＿ ＿＿ ＿＿ ★ です。", reorder: true, options: ["わたし", "は", "の", "かばん"], answer: 4, explanation: "これはわたしのかばんです。★ = かばん" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ ですか。", reorder: true, options: ["は", "おくに", "どちら", "さんの"], answer: 3, explanation: "～さんのおくにはどちらですか。★ = どちら" },
+            { stem: "Put the words in order:", context: "あの ＿＿ ＿＿ ＿＿ ★ です。", reorder: true, options: ["せんせい", "の", "だいがく", "ひとは"], answer: 1, explanation: "あのひとはだいがくのせんせいです。★ = せんせい" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ ですか。", reorder: true, options: ["この", "は", "いくら", "とけい"], answer: 3, explanation: "このとけいはいくらですか。★ = いくら" }
           ]
         },
         {
@@ -202,7 +202,7 @@ var EXAM_DATA = {
             { stem: "きむらさんは<u>せんせい</u>です。", options: ["先生", "先性", "千生", "先正"], answer: 1, explanation: "せんせい is written 先生 (teacher)." },
             { stem: "あの<u>とけい</u>はたかいです。", options: ["時計", "時形", "侍計", "時景"], answer: 1, explanation: "とけい is written 時計 (clock/watch)." },
             { stem: "この<u>でんわ</u>はあたらしいです。", options: ["電話", "伝話", "電語", "電和"], answer: 1, explanation: "でんわ is written 電話 (telephone)." },
-            { stem: "<u>にほん</u>のだいがくにいます。", options: ["二本", "日本", "二本", "日元"], answer: 2, explanation: "にほん is written 日本 (Japan)." }
+            { stem: "<u>にほん</u>のだいがくにいます。", options: ["二本", "日本", "日木", "日元"], answer: 2, explanation: "にほん is written 日本 (Japan)." }
           ]
         },
         {
@@ -250,10 +250,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ ですか。", reorder: true, options: ["は", "あれ", "なん", "は"], answer: 3, explanation: "あれはなんですか。★ = なん" },
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["ともだち", "わたし", "の", "は やまださん"], answer: 1, explanation: "わたしのともだちはやまださんです。★ = ともだち" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ か。", reorder: true, options: ["です", "なん", "あれ", "は"], answer: 2, explanation: "あれはなんですか。★ = なん" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["ともだち", "わたし", "の", "はやまださん"], answer: 1, explanation: "わたしのともだちはやまださんです。★ = ともだち" },
             { stem: "Put the words in order:", context: "あの ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["は", "です", "にほんじん", "ひと"], answer: 3, explanation: "あのひとはにほんじんです。★ = にほんじん" },
-            { stem: "Put the words in order:", context: "＿＿ ★ ＿＿ ＿＿ です。", reorder: true, options: ["がくせい", "も", "やまださん", "は"], answer: 2, explanation: "やまださんもがくせいです。★ = も" }
+            { stem: "Put the words in order:", context: "＿＿ ★ ＿＿ ＿＿ です。", reorder: true, options: ["やまださん", "も", "だいがくの", "がくせい"], answer: 2, explanation: "やまださんもだいがくのがくせいです。★ = も" }
           ]
         },
         {
@@ -429,10 +429,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "わたしは ＿＿ ＿＿ ★ ＿＿ します。", reorder: true, options: ["で", "まいにち", "べんきょう", "としょかん"], answer: 3, explanation: "わたしはまいにちとしょかんでべんきょうします。★ = べんきょう" },
-            { stem: "Put the words in order:", context: "＿＿ ★ ＿＿ ＿＿ か。", reorder: true, options: ["に", "なにを", "しました", "きのう"], answer: 2, explanation: "きのうなにをしましたか。★ = なにを" },
-            { stem: "Put the words in order:", context: "つくえ ＿＿ ＿＿ ★ ＿＿ あります。", reorder: true, options: ["に", "の", "ほんが", "うえ"], answer: 3, explanation: "つくえのうえにほんがあります。★ = ほんが" },
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ います。", reorder: true, options: ["の", "ねこが", "いすの", "した に"], answer: 2, explanation: "いすのしたにねこがいます。★ = ねこが" }
+            { stem: "Put the words in order:", context: "わたしは ＿＿ ＿＿ ＿＿ ★ します。", reorder: true, options: ["で", "まいにち", "べんきょう", "としょかん"], answer: 3, explanation: "わたしはまいにちとしょかんでべんきょうします。★ = べんきょう" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ か。", reorder: true, options: ["きのう", "しました", "なにを", "あなたは"], answer: 3, explanation: "あなたはきのうなにをしましたか。★ = なにを" },
+            { stem: "Put the words in order:", context: "つくえ ＿＿ ＿＿ ＿＿ ★ あります。", reorder: true, options: ["に", "の", "ほんが", "うえ"], answer: 3, explanation: "つくえのうえにほんがあります。★ = ほんが" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ います。", reorder: true, options: ["ねこが", "した", "いすの", "に"], answer: 1, explanation: "いすのしたにねこがいます。★ = ねこが" }
           ]
         },
         {
@@ -595,9 +595,9 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "わたしは ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["いきました", "きのう", "に", "えきへ"], answer: 4, explanation: "わたしはきのうえきへいきました。★ = えきへ" },
-            { stem: "Put the words in order:", context: "へやに ＿＿ ＿＿ ★ ＿＿ あります。", reorder: true, options: ["が", "と", "いす", "つくえ"], answer: 1, explanation: "へやにつくえといすがあります。★ = が" },
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ ますか。", reorder: true, options: ["なんで", "に", "がっこう", "いき"], answer: 4, explanation: "なんでがっこうにいきますか。★ = いき" },
+            { stem: "Put the words in order:", context: "わたしは ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["いきました", "きのう", "に", "えき"], answer: 4, explanation: "わたしはきのうえきにいきました。★ = えき" },
+            { stem: "Put the words in order:", context: "へやに ＿＿ ＿＿ ＿＿ ★ あります。", reorder: true, options: ["が", "と", "いす", "つくえ"], answer: 1, explanation: "へやにつくえといすがあります。★ = が" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ ますか。", reorder: true, options: ["なんで", "に", "がっこう", "いき"], answer: 4, explanation: "なんでがっこうにいきますか。★ = いき" },
             { stem: "Put the words in order:", context: "にちようび ＿＿ ★ ＿＿ ＿＿ ませんか。", reorder: true, options: ["を", "いっしょに", "テニス", "し"], answer: 3, explanation: "にちようびいっしょにテニスをしませんか。★ = テニス" }
           ]
         },
@@ -774,10 +774,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "この ＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["とても", "は", "まち", "きれい"], answer: 4, explanation: "このまちはとてもきれいです。★ = きれい" },
+            { stem: "Put the words in order:", context: "この ＿＿ ＿＿ ＿＿ ★ です。", reorder: true, options: ["とても", "は", "まち", "きれい"], answer: 4, explanation: "このまちはとてもきれいです。★ = きれい" },
             { stem: "Put the words in order:", context: "ここで ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["は", "すって", "たばこを", "いけません"], answer: 2, explanation: "ここでたばこをすってはいけません。★ = すって" },
-            { stem: "Put the words in order:", context: "いま ＿＿ ＿＿ ★ ＿＿ います。", reorder: true, options: ["が", "あめ", "ふって", "そとで"], answer: 3, explanation: "いまそとであめがふっています。★ = ふって" },
-            { stem: "Put the words in order:", context: "メアリーさんは ＿＿ ★ ＿＿ ＿＿ です。", reorder: true, options: ["にほんご", "とても", "が", "じょうず"], answer: 1, explanation: "メアリーさんはにほんごがとてもじょうずです。★ = にほんご" }
+            { stem: "Put the words in order:", context: "いま ＿＿ ＿＿ ＿＿ ★ います。", reorder: true, options: ["が", "あめ", "ふって", "そとで"], answer: 3, explanation: "いまそとであめがふっています。★ = ふって" },
+            { stem: "Put the words in order:", context: "メアリーさんは ★ ＿＿ ＿＿ ＿＿ です。", reorder: true, options: ["にほんご", "とても", "が", "じょうず"], answer: 1, explanation: "メアリーさんはにほんごがとてもじょうずです。★ = にほんご" }
           ]
         },
         {
@@ -940,10 +940,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "きのうの ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["は", "テスト", "かったです", "むずかし"], answer: 3, explanation: "きのうのテストはむずかしかったです。★ = かったです" },
-            { stem: "Put the words in order:", context: "すみません ＿＿ ＿＿ ★ ＿＿ か。", reorder: true, options: ["ても", "ここで", "いいです", "たべ"], answer: 3, explanation: "すみません、ここでたべてもいいですか。★ = いいです" },
-            { stem: "Put the words in order:", context: "わたしは ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["が", "おんがく", "です", "すき"], answer: 2, explanation: "わたしはおんがくがすきです。★ = おんがく" },
-            { stem: "Put the words in order:", context: "あさ ＿＿ ＿＿ ★ ＿＿ たべます。", reorder: true, options: ["あびて", "シャワーを", "あさごはんを", "から"], answer: 3, explanation: "あさシャワーをあびてからあさごはんをたべます。★ = あさごはんを" }
+            { stem: "Put the words in order:", context: "きのうの ＿＿ ＿＿ ＿＿ ★ 。", reorder: true, options: ["は", "テスト", "かったです", "むずかし"], answer: 3, explanation: "きのうのテストはむずかしかったです。★ = かったです" },
+            { stem: "Put the words in order:", context: "すみません ＿＿ ＿＿ ＿＿ ★ か。", reorder: true, options: ["ても", "ここで", "いいです", "たべ"], answer: 3, explanation: "すみません、ここでたべてもいいですか。★ = いいです" },
+            { stem: "Put the words in order:", context: "わたしは ★ ＿＿ ＿＿ ＿＿ 。", reorder: true, options: ["が", "おんがく", "です", "すき"], answer: 2, explanation: "わたしはおんがくがすきです。★ = おんがく" },
+            { stem: "Put the words in order:", context: "あさ ＿＿ ＿＿ ＿＿ ★ たべます。", reorder: true, options: ["あびて", "シャワーを", "あさごはんを", "から"], answer: 3, explanation: "あさシャワーをあびてからあさごはんをたべます。★ = あさごはんを" }
           ]
         },
         {
@@ -1119,10 +1119,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "わたしは ＿＿ ★ ＿＿ ＿＿ おもいます。", reorder: true, options: ["ふる", "と", "あした あめが", ""], answer: 2, explanation: "わたしはあしたあめがふるとおもいます。★ = と" },
+            { stem: "Put the words in order:", context: "わたしは ＿＿ ＿＿ ＿＿ ★ おもいます。", reorder: true, options: ["ふる", "あめが", "と", "あした"], answer: 3, explanation: "わたしはあしたあめがふるとおもいます。★ = と" },
             { stem: "Put the words in order:", context: "せんせいは ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["と", "いいました", "しなさい", "べんきょう"], answer: 1, explanation: "せんせいはべんきょうしなさいといいました。★ = と" },
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["ほしい", "あたらしい", "が", "パソコン"], answer: 1, explanation: "あたらしいパソコンがほしいです。★ = ほしい" },
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ ください。", reorder: true, options: ["を", "ないで", "しゃしん", "とら"], answer: 2, explanation: "しゃしんをとらないでください。★ = ないで" }
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ です。", reorder: true, options: ["ほしい", "あたらしい", "が", "パソコン"], answer: 1, explanation: "あたらしいパソコンがほしいです。★ = ほしい" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ ください。", reorder: true, options: ["を", "ないで", "しゃしん", "とら"], answer: 2, explanation: "しゃしんをとらないでください。★ = ないで" }
           ]
         },
         {
@@ -1295,9 +1295,9 @@ var EXAM_DATA = {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
             { stem: "Put the words in order:", context: "やまださんは ＿＿ ＿＿ ★ ＿＿ います。", reorder: true, options: ["にほんに", "と", "いきたい", "おもって"], answer: 2, explanation: "やまださんはにほんにいきたいとおもっています。★ = と" },
-            { stem: "Put the words in order:", context: "せんせいは ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["しゅくだいを", "と", "しなさい", "いいました"], answer: 2, explanation: "せんせいはしゅくだいをしなさいといいました。★ = と" },
-            { stem: "Put the words in order:", context: "しゅうまつ ＿＿ ＿＿ ★ ＿＿ しました。", reorder: true, options: ["たり", "よんだり", "えいがを", "みたり ほんを"], answer: 1, explanation: "しゅうまつえいがをみたりほんをよんだりしました。★ = たり" },
-            { stem: "Put the words in order:", context: "この ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["ください", "に", "ないで", "へやで たべ"], answer: 3, explanation: "このへやでたべないでください。★ = ないで" }
+            { stem: "Put the words in order:", context: "せんせいは ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["しゅくだいを", "と", "しなさい", "いいました"], answer: 2, explanation: "せんせいはしゅくだいをしなさいといいました。★ = と" },
+            { stem: "Put the words in order:", context: "しゅうまつ ＿＿ ＿＿ ★ ＿＿ しました。", reorder: true, options: ["よんだり", "ほんを", "えいがを", "みたり"], answer: 2, explanation: "しゅうまつえいがをみたりほんをよんだりしました。★ = ほんを" },
+            { stem: "Put the words in order:", context: "この ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["ください", "へやで", "ないで", "たべ"], answer: 3, explanation: "このへやでたべないでください。★ = ないで" }
           ]
         },
         {
@@ -1474,7 +1474,7 @@ var EXAM_DATA = {
             { stem: "あした友達にあう（　　　）に、プレゼントをかいます。", options: ["まえ", "あと", "とき", "ため"], answer: 1, explanation: "〜まえに (before meeting)." },
             { stem: "さいきんにほんごが（　　　）なりました。", options: ["じょうずに", "じょうずく", "じょうずで", "じょうず"], answer: 1, explanation: "な-adj + になる: じょうずになる (become good at)." },
             { stem: "きのうおさけを（　　　）すぎました。", options: ["のみ", "のむ", "のんで", "のんだ"], answer: 1, explanation: "〜すぎる uses masu-stem: のみすぎる (drink too much)." },
-            { stem: "にほんにいく（　　　）まえに、にほんごをべんきょうします。", options: ["の", "が", "を", "は"], answer: 1, explanation: "Verb dictionary form + まえに needs no particle, but のまえに is also acceptable." },
+            { stem: "りょこう（　　　）まえに、にほんごをべんきょうします。", options: ["の", "が", "を", "は"], answer: 1, explanation: "Noun + の + まえに. りょこうのまえに = before the trip." },
             { stem: "すずしく（　　　）きました。", options: ["する", "なる", "なって", "して"], answer: 3, explanation: "すずしくなってきました (it's been getting cooler)." },
             { stem: "りょこうのよやくを（　　　）つもりです。", options: ["する", "し", "して", "した"], answer: 1, explanation: "〜つもりです uses dictionary form: するつもり." }
           ]
@@ -1483,8 +1483,8 @@ var EXAM_DATA = {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
             { stem: "Put the words in order:", context: "おすしを ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["が", "こと", "たべた", "あります"], answer: 2, explanation: "おすしをたべたことがあります。★ = こと" },
-            { stem: "Put the words in order:", context: "にほんごは ＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["より", "えいご", "むずかしい", ""], answer: 3, explanation: "にほんごはえいごよりむずかしいです。★ = むずかしい" },
-            { stem: "Put the words in order:", context: "きせつの ＿＿ ＿＿ ★ ＿＿ すきですか。", reorder: true, options: ["いつが", "いちばん", "中で", ""], answer: 1, explanation: "きせつの中でいつがいちばんすきですか。★ = いつが" },
+            { stem: "Put the words in order:", context: "にほんごは ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["です", "むずかしい", "えいご", "より"], answer: 2, explanation: "にほんごはえいごよりむずかしいです。★ = むずかしい" },
+            { stem: "Put the words in order:", context: "きせつの ＿＿ ＿＿ ★ ＿＿ すきですか。", reorder: true, options: ["いちばん", "いつが", "で", "中"], answer: 2, explanation: "きせつの中でいつがいちばんすきですか。★ = いつが" },
             { stem: "Put the words in order:", context: "きのう ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["すぎました", "を", "たべ", "おかし"], answer: 3, explanation: "きのうおかしをたべすぎました。★ = たべ" }
           ]
         },
@@ -1657,10 +1657,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "にほんに ＿＿ ★ ＿＿ ＿＿ ありません。", reorder: true, options: ["が", "こと", "いった", ""], answer: 2, explanation: "にほんにいったことがありません。★ = こと" },
-            { stem: "Put the words in order:", context: "夏 ＿＿ ＿＿ ★ ＿＿ です。", reorder: true, options: ["すき", "が", "のほう", "より冬"], answer: 1, explanation: "夏より冬のほうがすきです。★ = すき" },
-            { stem: "Put the words in order:", context: "だんだん ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["なって", "きました", "あたたかく", ""], answer: 2, explanation: "だんだんあたたかくなってきました。★ = きました" },
-            { stem: "Put the words in order:", context: "しけんの ＿＿ ★ ＿＿ ＿＿ いいです。", reorder: true, options: ["べんきょうした", "に", "ほうが", "まえ"], answer: 1, explanation: "しけんのまえにべんきょうしたほうがいいです。★ = べんきょうした" }
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ ありません。", reorder: true, options: ["が", "こと", "にほんに", "いった"], answer: 2, explanation: "にほんにいったことがありません。★ = こと" },
+            { stem: "Put the words in order:", context: "夏 ＿＿ ＿＿ ＿＿ ★ です。", reorder: true, options: ["すき", "が", "のほう", "より冬"], answer: 1, explanation: "夏より冬のほうがすきです。★ = すき" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ 。", reorder: true, options: ["なって", "きました", "だんだん", "あたたかく"], answer: 2, explanation: "だんだんあたたかくなってきました。★ = きました" },
+            { stem: "Put the words in order:", context: "しけんの ＿＿ ＿＿ ★ ＿＿ いいです。", reorder: true, options: ["べんきょうした", "に", "ほうが", "まえ"], answer: 1, explanation: "しけんのまえにべんきょうしたほうがいいです。★ = べんきょうした" }
           ]
         },
         {
@@ -1845,10 +1845,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "あした ＿＿ ＿＿ ★ ＿＿ いけません。", reorder: true, options: ["は", "おきなくて", "はやく", ""], answer: 2, explanation: "あしたはやくおきなくてはいけません。★ = おきなくて" },
-            { stem: "Put the words in order:", context: "ともだちが ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["を", "くれました", "おみやげ", "かって"], answer: 2, explanation: "ともだちがおみやげをかってくれました。★ = くれました" },
-            { stem: "Put the words in order:", context: "どうして ＿＿ ＿＿ ★ ＿＿ か。", reorder: true, options: ["んです", "に", "おくれた", "じゅぎょう"], answer: 1, explanation: "どうしてじゅぎょうにおくれたんですか。★ = んです" },
-            { stem: "Put the words in order:", context: "あした ＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["は", "あめ", "でしょう", ""], answer: 3, explanation: "あしたはあめでしょう。★ = でしょう" }
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ いけません。", reorder: true, options: ["は", "おきなくて", "あした", "はやく"], answer: 2, explanation: "あしたはやくおきなくてはいけません。★ = おきなくて" },
+            { stem: "Put the words in order:", context: "ともだちが ＿＿ ＿＿ ＿＿ ★ 。", reorder: true, options: ["を", "くれました", "おみやげ", "かって"], answer: 2, explanation: "ともだちがおみやげをかってくれました。★ = くれました" },
+            { stem: "Put the words in order:", context: "どうして ＿＿ ＿＿ ＿＿ ★ か。", reorder: true, options: ["んです", "に", "おくれた", "じゅぎょう"], answer: 1, explanation: "どうしてじゅぎょうにおくれたんですか。★ = んです" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ 。", reorder: true, options: ["は", "でしょう", "あした", "あめ"], answer: 2, explanation: "あしたはあめでしょう。★ = でしょう" }
           ]
         },
         {
@@ -2020,10 +2020,10 @@ var EXAM_DATA = {
         {
           label: "問題6 — Rearrange the words to make a correct sentence. Choose what goes in the ★ position.",
           questions: [
-            { stem: "Put the words in order:", context: "あした ＿＿ ＿＿ ★ ＿＿ なりません。", reorder: true, options: ["しなければ", "レポートを", "ださ", "なくては"], answer: 1, explanation: "あしたレポートをださなくてはなりません。★ = しなければ... actually: ださなくてはなりません。★ = ださ" },
-            { stem: "Put the words in order:", context: "おかあさんが ＿＿ ＿＿ ★ ＿＿ 。", reorder: true, options: ["くれました", "セーターを", "あんで", ""], answer: 1, explanation: "おかあさんがセーターをあんでくれました。★ = くれました" },
-            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ んですか。", reorder: true, options: ["どうして", "やすんだ", "がっこうを", ""], answer: 2, explanation: "どうしてがっこうをやすんだんですか。★ = やすんだ" },
-            { stem: "Put the words in order:", context: "＿＿ ★ ＿＿ ＿＿ 。", reorder: true, options: ["は", "はれるでしょう", "あした", ""], answer: 2, explanation: "あしたははれるでしょう。★ = はれるでしょう" }
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ★ ＿＿ なりません。", reorder: true, options: ["なくては", "ださ", "あした", "レポートを"], answer: 2, explanation: "あしたレポートをださなくてはなりません。★ = ださ" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ 。", reorder: true, options: ["あんで", "くれました", "おかあさんが", "セーターを"], answer: 2, explanation: "おかあさんがセーターをあんでくれました。★ = くれました" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ んですか。", reorder: true, options: ["を", "やすんだ", "どうして", "がっこう"], answer: 2, explanation: "どうしてがっこうをやすんだんですか。★ = やすんだ" },
+            { stem: "Put the words in order:", context: "＿＿ ＿＿ ＿＿ ★ 。", reorder: true, options: ["は", "でしょう", "あした", "はれる"], answer: 2, explanation: "あしたははれるでしょう。★ = でしょう" }
           ]
         },
         {
@@ -2218,11 +2218,11 @@ var EXAM_DATA = {
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "きのう　＿　＿　★　＿　ました。", reorder: true, context: "きのう ＿ ＿ ★ ＿ ました。", options: ["おかあさんに", "でんわを", "かけ", "うちから"], answer: 3, explanation: "きのう うちから おかあさんに でんわを かけました。★ = でんわを" },
-            { stem: "わたしは　＿　＿　★　＿　です。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ です。", options: ["の", "が", "すき", "さかな"], answer: 3, explanation: "わたしは さかな の すし が すきです。★ = すき" },
+            { stem: "きのう　＿　＿　★　＿　ました。", reorder: true, context: "きのう ＿ ＿ ★ ＿ ました。", options: ["おかあさんに", "でんわを", "かけ", "うちから"], answer: 2, explanation: "きのううちからおかあさんにでんわをかけました。★ = でんわを" },
+            { stem: "わたしは　＿　＿　★　＿　すきです。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ すきです。", options: ["の", "が", "すし", "さかな"], answer: 3, explanation: "わたしは さかな の すし が すきです。★ = すし" },
             { stem: "この　＿　＿　★　＿　か。", reorder: true, context: "この ＿ ＿ ★ ＿ か。", options: ["いくら", "は", "かばん", "です"], answer: 1, explanation: "この かばん は いくら です か。★ = いくら" },
-            { stem: "あした　＿　＿　★　＿　ませんか。", reorder: true, context: "あした ＿ ＿ ★ ＿ ませんか。", options: ["に", "いっしょに", "えいが", "いき"], answer: 4, explanation: "あした いっしょに えいが に いきませんか。★ = いき" },
-            { stem: "にほんご　＿　＿　★　＿　います。", reorder: true, context: "にほんご ＿ ＿ ★ ＿ います。", options: ["を", "べんきょう", "て", "し"], answer: 3, explanation: "にほんご を べんきょう し て います。★ = て" }
+            { stem: "あした　＿　＿　★　＿　ませんか。", reorder: true, context: "あした ＿ ＿ ＿ ★ ませんか。", options: ["に", "いっしょに", "えいが", "いき"], answer: 4, explanation: "あした いっしょに えいが に いきませんか。★ = いき" },
+            { stem: "にほんご　＿　＿　★　＿　います。", reorder: true, context: "にほんご ＿ ＿ ＿ ★ います。", options: ["を", "べんきょう", "て", "し"], answer: 3, explanation: "にほんご を べんきょう し て います。★ = て" }
           ]
         },
         {
@@ -2428,7 +2428,7 @@ var EXAM_DATA = {
             { stem: "わたしはきのうともだち（　　　）てがみをかきました。", options: ["を", "が", "に", "で"], answer: 3, explanation: "に marks the recipient: wrote a letter TO a friend." },
             { stem: "にほんごのじゅぎょうは９じ（　　　）はじまります。", options: ["に", "で", "を", "が"], answer: 1, explanation: "に marks a specific time." },
             { stem: "でんしゃ（　　　）のりおくれましたから、ちこくしました。", options: ["を", "に", "が", "で"], answer: 2, explanation: "に marks the vehicle you miss riding: のりおくれる." },
-            { stem: "もう（　　　）ごはんをたべましたか。", options: ["まだ", "いつも", "ぜんぜん", "もう is already in stem — pick the best particle: N/A—"], answer: 1, explanation: "もう…ましたか uses もう to ask if something has been done yet. (Trick: もう is in the sentence already.)" },
+            { stem: "もうひるごはんをたべましたか。——いいえ、（　　　）たべていません。", options: ["まだ", "もう", "ぜんぜん", "よく"], answer: 1, explanation: "もう…か is answered in the negative with まだ…ていません (not yet)." },
             { stem: "あしたテストがある（　　　）、きょうはべんきょうします。", options: ["から", "でも", "けど", "し"], answer: 1, explanation: "から marks the reason: because there's a test." },
             { stem: "すずきさんはピアノ（　　　）ひくのがじょうずです。", options: ["で", "を", "が", "に"], answer: 2, explanation: "を marks the direct object of ひく." },
             { stem: "あには（　　　）がたかいです。", options: ["め", "せ", "ゆび", "て"], answer: 2, explanation: "せがたかい means tall (height is tall)." },
@@ -2443,11 +2443,11 @@ var EXAM_DATA = {
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "わたしは　＿　＿　★　＿　です。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ です。", options: ["ほう", "の", "が", "コーヒー"], answer: 1, explanation: "わたしは コーヒー の ほう が すきです。★ = ほう" },
-            { stem: "あした　＿　＿　★　＿　ください。", reorder: true, context: "あした ＿ ＿ ★ ＿ ください。", options: ["もって", "を", "きて", "かさ"], answer: 3, explanation: "あした かさ を もって きて ください。★ = きて" },
-            { stem: "この　＿　＿　★　＿　ました。", reorder: true, context: "この ＿ ＿ ★ ＿ ました。", options: ["は", "つくり", "ケーキ", "はは"], answer: 2, explanation: "この ケーキ は はは が つくり ました。★ = つくり" },
-            { stem: "えきから　＿　＿　★　＿　です。", reorder: true, context: "えきから ＿ ＿ ★ ＿ です。", options: ["ぐらい", "１０ぷん", "あるいて", "の"], answer: 1, explanation: "えきから あるいて １０ぷん ぐらい です。★ = ぐらい" },
-            { stem: "にほんで　＿　＿　★　＿　たいです。", reorder: true, context: "にほんで ＿ ＿ ★ ＿ たいです。", options: ["いろいろな", "み", "ところ", "を"], answer: 2, explanation: "にほんで いろいろな ところ を み たいです。★ = み" }
+            { stem: "わたしは　＿　＿　★　＿　すきです。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ すきです。", options: ["ほう", "の", "が", "コーヒー"], answer: 1, explanation: "わたしは コーヒー の ほう が すきです。★ = ほう" },
+            { stem: "あした　＿　＿　★　＿　ください。", reorder: true, context: "あした ＿ ＿ ＿ ★ ください。", options: ["もって", "を", "きて", "かさ"], answer: 3, explanation: "あした かさ を もって きて ください。★ = きて" },
+            { stem: "この　＿　＿　＿　★　ました。", reorder: true, context: "この ＿ ＿ ＿ ★ ました。", options: ["ケーキ", "は", "ははが", "つくり"], answer: 4, explanation: "この ケーキ は ははが つくり ました。★ = つくり" },
+            { stem: "えきから　＿　＿　★　＿　です。", reorder: true, context: "えきから ＿ ＿ ★ ＿ です。", options: ["ところ", "１０ぷん", "ぐらいの", "あるいて"], answer: 3, explanation: "えきから あるいて １０ぷん ぐらいの ところ です。★ = ぐらいの" },
+            { stem: "にほんで　＿　＿　★　＿　たいです。", reorder: true, context: "にほんで ＿ ＿ ＿ ★ たいです。", options: ["いろいろな", "み", "ところ", "を"], answer: 2, explanation: "にほんで いろいろな ところ を み たいです。★ = み" }
           ]
         },
         {
@@ -2668,11 +2668,11 @@ var EXAM_DATA = {
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "せんせいは　＿　＿　★　＿　くれました。", reorder: true, context: "せんせいは ＿ ＿ ★ ＿ くれました。", options: ["にほんごを", "わたしに", "おしえて", "やさしく"], answer: 3, explanation: "せんせいは わたしに やさしく にほんごを おしえて くれました。★ = おしえて" },
-            { stem: "この　＿　＿　★　＿　です。", reorder: true, context: "この ＿ ＿ ★ ＿ です。", options: ["は", "まち", "しずかな", "とても"], answer: 3, explanation: "この まち は とても しずかな まちです。★ = しずかな" },
-            { stem: "きのう　＿　＿　★　＿　ました。", reorder: true, context: "きのう ＿ ＿ ★ ＿ ました。", options: ["ともだちと", "おいしい", "たべ", "ラーメンを"], answer: 3, explanation: "きのう ともだちと おいしい ラーメンを たべ ました。★ = たべ" },
-            { stem: "いもうとは　＿　＿　★　＿　います。", reorder: true, context: "いもうとは ＿ ＿ ★ ＿ います。", options: ["を", "ピアノ", "て", "ならっ"], answer: 3, explanation: "いもうとは ピアノ を ならっ て います。★ = て" },
-            { stem: "にほんに　＿　＿　★　＿　です。", reorder: true, context: "にほんに ＿ ＿ ★ ＿ です。", options: ["ことがない", "いった", "まだ", "わたしは"], answer: 1, explanation: "わたしは まだ にほんに いった ことがない です。★ = ことがない" }
+            { stem: "せんせいは　＿　＿　★　＿　くれました。", reorder: true, context: "せんせいは ＿ ＿ ＿ ★ くれました。", options: ["にほんごを", "わたしに", "おしえて", "やさしく"], answer: 3, explanation: "せんせいは わたしに やさしく にほんごを おしえて くれました。★ = おしえて" },
+            { stem: "この　＿　＿　＿　★　まちです。", reorder: true, context: "この ＿ ＿ ＿ ★ まちです。", options: ["は", "まち", "しずかな", "とても"], answer: 3, explanation: "この まち は とても しずかな まちです。★ = しずかな" },
+            { stem: "きのう　＿　＿　★　＿　ました。", reorder: true, context: "きのう ＿ ＿ ＿ ★ ました。", options: ["ともだちと", "おいしい", "たべ", "ラーメンを"], answer: 3, explanation: "きのう ともだちと おいしい ラーメンを たべ ました。★ = たべ" },
+            { stem: "いもうとは　＿　＿　★　＿　います。", reorder: true, context: "いもうとは ＿ ＿ ＿ ★ います。", options: ["を", "ピアノ", "て", "ならっ"], answer: 3, explanation: "いもうとは ピアノ を ならっ て います。★ = て" },
+            { stem: "わたしは　＿　＿　＿　★　です。", reorder: true, context: "わたしは ＿ ＿ ＿ ★ です。", options: ["にほんに", "いった", "まだ", "ことがない"], answer: 4, explanation: "わたしは まだ にほんに いった ことがない です。★ = ことがない" }
           ]
         },
         {
@@ -2892,11 +2892,11 @@ var EXAM_DATA = {
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "あのひとは　＿　＿　★　＿　みえます。", reorder: true, context: "あのひとは ＿ ＿ ★ ＿ みえます。", options: ["に", "わかく", "とても", "じっさいより"], answer: 2, explanation: "あのひとは じっさいより とても わかく みえます。★ = わかく" },
-            { stem: "でんしゃの　＿　＿　★　＿　ました。", reorder: true, context: "でんしゃの ＿ ＿ ★ ＿ ました。", options: ["かさを", "なかに", "わすれて", "し"], answer: 3, explanation: "でんしゃの なかに かさを わすれて しまいました。★ = わすれて" },
-            { stem: "にほんに　＿　＿　★　＿　です。", reorder: true, context: "にほんに ＿ ＿ ★ ＿ です。", options: ["いちねん", "もう", "すんで", "になります"], answer: 4, explanation: "にほんに すんで もう いちねん になります。★ = になります" },
-            { stem: "ははは　＿　＿　★　＿　くれました。", reorder: true, context: "ははは ＿ ＿ ★ ＿ くれました。", options: ["わたしに", "セーターを", "あたたかい", "つくって"], answer: 4, explanation: "ははは わたしに あたたかい セーターを つくって くれました。★ = つくって" },
-            { stem: "たなかさんは　＿　＿　★　＿　います。", reorder: true, context: "たなかさんは ＿ ＿ ★ ＿ います。", options: ["うたを", "たのしそうに", "うたって", "あの"], answer: 3, explanation: "たなかさんは たのしそうに あの うたを うたって います。★ = うたって" }
+            { stem: "あのひとは　＿　＿　＿　★　みえます。", reorder: true, context: "あのひとは ＿ ＿ ＿ ★ みえます。", options: ["じっさい", "より", "とても", "わかく"], answer: 4, explanation: "あのひとは じっさい より とても わかく みえます。★ = わかく" },
+            { stem: "でんしゃの　＿　＿　★　＿　ました。", reorder: true, context: "でんしゃの ＿ ＿ ★ ＿ ました。", options: ["かさを", "なかに", "わすれて", "しまい"], answer: 3, explanation: "でんしゃの なかに かさを わすれて しまいました。★ = わすれて" },
+            { stem: "にほんに　＿　＿　＿　★　。", reorder: true, context: "にほんに ＿ ＿ ＿ ★ 。", options: ["いちねん", "もう", "すんで", "になります"], answer: 4, explanation: "にほんに すんで もう いちねん になります。★ = になります" },
+            { stem: "ははは　＿　＿　★　＿　くれました。", reorder: true, context: "ははは ＿ ＿ ＿ ★ くれました。", options: ["わたしに", "セーターを", "あたたかい", "つくって"], answer: 4, explanation: "ははは わたしに あたたかい セーターを つくって くれました。★ = つくって" },
+            { stem: "たなかさんは　＿　＿　★　＿　います。", reorder: true, context: "たなかさんは ＿ ＿ ＿ ★ います。", options: ["うたを", "たのしそうに", "うたって", "あの"], answer: 3, explanation: "たなかさんは たのしそうに あの うたを うたって います。★ = うたって" }
           ]
         },
         {
@@ -2995,7 +2995,7 @@ var EXAM_DATA = {
           audio: "W09-A.mp3",
           transcript: "<p>おとこ：にほんでいちばんいきたいところはどこですか。<br>おんな：きょうとです。おてらやじんじゃがみたいです。<br>おとこ：わたしはおおさかにいきたいです。おいしいたべものがたくさんありますから。<br>おんな：おおさかもいいですね。たこやきがゆうめいですよね。</p>",
           questions: [
-            { stem: "おんなのひとはどこにいきたいですか。", options: ["とうきょう", "おおさか", "きょうと", "ならら"], answer: 3, explanation: "きょうとです。" },
+            { stem: "おんなのひとはどこにいきたいですか。", options: ["とうきょう", "おおさか", "きょうと", "なら"], answer: 3, explanation: "きょうとです。" },
             { stem: "おとこのひとはなぜおおさかにいきたいですか。", options: ["おてらがあるから", "ともだちがいるから", "おいしいたべものがあるから", "やすいから"], answer: 3, explanation: "おいしいたべものがたくさんありますから。" }
           ]
         },
@@ -3049,7 +3049,7 @@ var EXAM_DATA = {
             { stem: "わたしは<u>音楽</u>がすきです。", options: ["おとがく", "おんがく", "おんらく", "いんがく"], answer: 2, explanation: "音楽 is read おんがく (music)." },
             { stem: "<u>水曜日</u>にテストがあります。", options: ["かようび", "もくようび", "すいようび", "きんようび"], answer: 3, explanation: "水曜日 is read すいようび (Wednesday)." },
             { stem: "<u>旅行</u>がたのしかったです。", options: ["りょこう", "りょうこう", "たびこう", "りょぎょう"], answer: 1, explanation: "旅行 is read りょこう (travel)." },
-            { stem: "この<u>料理</u>はおいしいです。", options: ["りょうり", "りょり", "りょうい", "りょうり"], answer: 1, explanation: "料理 is read りょうり (cooking/food)." },
+            { stem: "この<u>料理</u>はおいしいです。", options: ["りょうり", "りょり", "りょうい", "りょうじ"], answer: 1, explanation: "料理 is read りょうり (cooking/food)." },
             { stem: "<u>駅</u>のちかくにすんでいます。", options: ["まち", "えき", "むら", "みせ"], answer: 2, explanation: "駅 is read えき (station)." },
             { stem: "<u>仕事</u>がいそがしいです。", options: ["しごと", "しこと", "つかえもの", "じごと"], answer: 1, explanation: "仕事 is read しごと (work/job)." },
             { stem: "<u>晩御飯</u>はなにをたべますか。", options: ["ばんごはん", "ひるごはん", "あさごはん", "ゆうごはん"], answer: 1, explanation: "晩御飯 is read ばんごはん (dinner)." }
@@ -3118,10 +3118,10 @@ var EXAM_DATA = {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
             { stem: "あした　＿　＿　★　＿　か。", reorder: true, context: "あした ＿ ＿ ★ ＿ か。", options: ["なに", "を", "し", "ます"], answer: 3, explanation: "あした なに を し ます か。★ = し" },
-            { stem: "いちばん　＿　＿　★　＿　です。", reorder: true, context: "いちばん ＿ ＿ ★ ＿ です。", options: ["きせつ", "はる", "が", "すきな"], answer: 4, explanation: "いちばん すきな きせつ は はる です。★ = すきな — Wait, recount: いちばん すきな きせつ が はる です。★ = すきな" },
-            { stem: "まいにち　＿　＿　★　＿　います。", reorder: true, context: "まいにち ＿ ＿ ★ ＿ います。", options: ["かんじ", "を", "おぼえて", "あたらしい"], answer: 3, explanation: "まいにち あたらしい かんじ を おぼえて います。★ = おぼえて" },
-            { stem: "ははに　＿　＿　★　＿　もらいました。", reorder: true, context: "ははに ＿ ＿ ★ ＿ もらいました。", options: ["を", "つくって", "おべんとう", "おいしい"], answer: 2, explanation: "ははに おいしい おべんとう を つくって もらいました。★ = つくって" },
-            { stem: "わたしは　＿　＿　★　＿　おもいます。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ おもいます。", options: ["と", "にほんは", "きれいだ", "とても"], answer: 1, explanation: "わたしは にほんは とても きれいだ と おもいます。★ = と" }
+            { stem: "いちばん　＿　★　＿　＿　です。", reorder: true, context: "いちばん ★ ＿ ＿ ＿ です。", options: ["きせつ", "はる", "が", "すきな"], answer: 4, explanation: "いちばんすきなきせつがはるです。★ = すきな" },
+            { stem: "まいにち　＿　＿　★　＿　います。", reorder: true, context: "まいにち ＿ ＿ ＿ ★ います。", options: ["かんじ", "を", "おぼえて", "あたらしい"], answer: 3, explanation: "まいにち あたらしい かんじ を おぼえて います。★ = おぼえて" },
+            { stem: "ははに　＿　＿　★　＿　もらいました。", reorder: true, context: "ははに ＿ ＿ ＿ ★ もらいました。", options: ["を", "つくって", "おべんとう", "おいしい"], answer: 2, explanation: "ははに おいしい おべんとう を つくって もらいました。★ = つくって" },
+            { stem: "わたしは　＿　＿　★　＿　おもいます。", reorder: true, context: "わたしは ＿ ＿ ＿ ★ おもいます。", options: ["と", "にほんは", "きれいだ", "とても"], answer: 1, explanation: "わたしは にほんは とても きれいだ と おもいます。★ = と" }
           ]
         },
         {
