@@ -409,7 +409,12 @@
             try { wordList = JSON.parse(localStorage.getItem('vocab_word_list') || 'null'); } catch(e) {}
 
             if (window.VocabProgress && Array.isArray(wordList) && wordList.length) {
-                var r = VocabProgress.compute(wordList, vocabScores);
+                // Pass kanji_scores so kanji-form vocab items can also be
+                // credited as green when every component character is mastered
+                // on the kanji page / kanji-category flashcards. Without this
+                // the wheel ignores all the user's kanji study for multi-char
+                // forms like 弁護士 and stalls in the kana-form bucket.
+                var r = VocabProgress.compute(wordList, vocabScores, kanjiScores);
                 setWheel('vocab', r.mastered, r.total);
             } else {
                 // Fallbacks until the vocab page has been opened on this device:
