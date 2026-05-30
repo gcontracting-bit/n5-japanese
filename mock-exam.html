@@ -264,7 +264,7 @@
             </div>
         </div>
         <div class="exam-instructions">
-            <strong>How to use:</strong> Levels 1–6 are cumulative chapter reviews (~50 questions). <strong>Level 7</strong> has 5 full-length JLPT N5 mock exams (~80 questions each) with Vocabulary, Grammar, Reading, and Listening sections — matching the real exam. Click <strong>Take Exam</strong> for interactive mode with timer, or <strong>Show Answers</strong> to study.
+            <strong>How to use:</strong> Levels 1–6 are cumulative chapter reviews (~50 questions). <strong>Level 7</strong> has 5 full-length JLPT N5 mock exams (~80 questions each) with Vocabulary, Grammar・Reading (one combined section, as on the real exam), and Listening — matching the real exam's three test parts. Note: these full mocks are pitched slightly harder than the real N5 (a few N4-level grammar points are included) so you over-prepare. Click <strong>Take Exam</strong> for interactive mode with timer, or <strong>Show Answers</strong> to study.
         </div>
         <div id="exam-container"></div>
     </div>
@@ -299,6 +299,22 @@ function hideTimer() {
     timerRunning = false;
 }
 
+// ─── Helpers ───
+// Count the questions in a level's first exam variant (variants are parallel,
+// so the first one is representative for the header summary).
+function countLevelQuestions(level) {
+    var variants = Object.keys(level.exams || {});
+    if (!variants.length) return 0;
+    var exam = level.exams[variants[0]];
+    var n = 0;
+    (exam.sections || []).forEach(function(sec) {
+        (sec.parts || []).forEach(function(part) {
+            n += (part.questions || []).length;
+        });
+    });
+    return n;
+}
+
 // ─── Render Engine ───
 function renderExams() {
     var container = document.getElementById('exam-container');
@@ -318,8 +334,9 @@ function renderExams() {
         // Header
         var header = document.createElement('div');
         header.className = 'level-header';
+        var qCount = countLevelQuestions(level);
         header.innerHTML = '<div><div class="level-title">' + (unlocked ? '' : '🔒 ') + level.title + '</div>' +
-            '<div class="level-meta">' + level.subtitle + ' · ~50 questions · ' + level.timeMinutes + ' min</div></div>' +
+            '<div class="level-meta">' + level.subtitle + ' · ~' + qCount + ' questions · ' + level.timeMinutes + ' min</div></div>' +
             '<div class="level-toggle">▶</div>';
         header.onclick = function() {
             this.classList.toggle('open');
@@ -662,6 +679,11 @@ function submitExam(levelKey, variantKey) {
 
     var scoreHtml = '<div class="score-title ' + (passed ? 'pass' : 'fail') + '">' +
         (passed ? '🎉 PASS — ' : '❌ NOT YET — ') + totalPct + '% (' + totalCorrect + '/' + totalQ + ')</div>';
+    // This mock deliberately uses a stricter 60% bar (and 50% per section) than the
+    // real JLPT N5, which passes at 80/180 ≈ 44% with section minimums. Aiming above
+    // this tougher bar builds in a safety margin for exam day.
+    scoreHtml += '<div class="score-detail" style="margin-bottom:8px;color:#718096;">' +
+        'Pass bar here: <strong>60%</strong> overall &amp; <strong>50%</strong> per section — intentionally stricter than the real N5 (80/180 ≈ 44%) so you over-prepare.</div>';
 
     // Section cards
     scoreHtml += '<div class="score-grid">';

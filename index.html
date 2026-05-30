@@ -238,7 +238,7 @@
                     </svg>
                     <div style="position: relative; z-index: 1; text-align: center;">
                         <div class="percentage" id="wheel-pct-kanji">0%</div>
-                        <div id="wheel-count-kanji" style="font-size: 0.85em; color: #666; margin-top: 5px;">0 / 103</div>
+                        <div id="wheel-count-kanji" style="font-size: 0.85em; color: #666; margin-top: 5px;">0 / 119</div>
                     </div>
                 </div>
                 <div class="wheel-label">Kanji N5</div>
@@ -387,7 +387,7 @@
             // Fall back to streak >= 1 for legacy entries without a status field.
             var kanjiScores = {};
             try { kanjiScores = JSON.parse(localStorage.getItem('kanji_scores') || '{}'); } catch(e) {}
-            var KANJI_TOTAL = 103;
+            var KANJI_TOTAL = 119;
             var kanjiKnown = 0;
             Object.keys(kanjiScores).forEach(function(k) {
                 var s = kanjiScores[k];
