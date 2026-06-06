@@ -576,6 +576,13 @@
             opacity: 0.7;
         }
 
+        /* Large kana answer options (JLPT-style reading questions) */
+        .quiz-option.kana-opt {
+            font-size: 1.9em;
+            padding: 16px 14px;
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+        }
+
         /* Score indicators on quiz card */
         .score-indicator {
             display: inline-flex;
@@ -889,7 +896,8 @@
             <div class="filter-group" id="quiz-type-filter">
                 <div class="filter-group-label">Quiz Type (quiz mode only)</div>
                 <div class="filter-chips">
-                    <label class="chip"><input type="checkbox" value="mc"> Multiple Choice</label>
+                    <label class="chip"><input type="checkbox" value="mc"> Multiple Choice (English Meaning)</label>
+                    <label class="chip"><input type="checkbox" value="mc_reading"> Multiple Choice (Kana Reading — JLPT style)</label>
                     <label class="chip"><input type="checkbox" value="type_meaning"> Type English Meaning</label>
                     <label class="chip"><input type="checkbox" value="type_romaji"> Type Romaji Reading</label>
                 </div>
@@ -2519,9 +2527,70 @@
         }
 
         // ============ QUIZ MODE ============
-        // Question types: 'mc' = multiple choice, 'type_meaning' = type the English, 'type_romaji' = type the romaji
+        // Question types: 'mc' = multiple choice (English meaning),
+        // 'mc_reading' = multiple choice with kana reading options (JLPT N5 style),
+        // 'type_meaning' = type the English, 'type_romaji' = type the romaji
         let currentQuestionType = 'mc';
-        let enabledQuizTypes = ['mc', 'type_meaning', 'type_romaji'];
+        let enabledQuizTypes = ['mc', 'mc_reading', 'type_meaning', 'type_romaji'];
+
+        // ---- Romaji → hiragana converter (for JLPT-style reading options) ----
+        const ROMAJI_KANA = {
+            kya:'きゃ',kyu:'きゅ',kyo:'きょ',sha:'しゃ',shu:'しゅ',sho:'しょ',
+            cha:'ちゃ',chu:'ちゅ',cho:'ちょ',nya:'にゃ',nyu:'にゅ',nyo:'にょ',
+            hya:'ひゃ',hyu:'ひゅ',hyo:'ひょ',mya:'みゃ',myu:'みゅ',myo:'みょ',
+            rya:'りゃ',ryu:'りゅ',ryo:'りょ',gya:'ぎゃ',gyu:'ぎゅ',gyo:'ぎょ',
+            jya:'じゃ',jyu:'じゅ',jyo:'じょ',bya:'びゃ',byu:'びゅ',byo:'びょ',
+            pya:'ぴゃ',pyu:'ぴゅ',pyo:'ぴょ',
+            shi:'し',chi:'ち',tsu:'つ',
+            ka:'か',ki:'き',ku:'く',ke:'け',ko:'こ',
+            sa:'さ',si:'し',su:'す',se:'せ',so:'そ',
+            ta:'た',ti:'ち',tu:'つ',te:'て',to:'と',
+            na:'な',ni:'に',nu:'ぬ',ne:'ね',no:'の',
+            ha:'は',hi:'ひ',hu:'ふ',fu:'ふ',he:'へ',ho:'ほ',
+            ma:'ま',mi:'み',mu:'む',me:'め',mo:'も',
+            ya:'や',yu:'ゆ',yo:'よ',
+            ra:'ら',ri:'り',ru:'る',re:'れ',ro:'ろ',
+            wa:'わ',wo:'を',
+            ga:'が',gi:'ぎ',gu:'ぐ',ge:'げ',go:'ご',
+            za:'ざ',zi:'じ',ji:'じ',zu:'ず',ze:'ぜ',zo:'ぞ',
+            ja:'じゃ',ju:'じゅ',jo:'じょ',
+            da:'だ',di:'ぢ',du:'づ',de:'で','do':'ど',
+            ba:'ば',bi:'び',bu:'ぶ',be:'べ',bo:'ぼ',
+            pa:'ぱ',pi:'ぴ',pu:'ぷ',pe:'ぺ',po:'ぽ',
+            a:'あ',i:'い',u:'う',e:'え',o:'お',n:'ん','-':'ー'
+        };
+
+        function romajiToKana(romaji) {
+            const r = String(romaji).toLowerCase().trim();
+            let out = '';
+            let i = 0;
+            while (i < r.length) {
+                // Sokuon: doubled consonant (kk, tt, pp...) → っ ("nn" is NOT sokuon)
+                if (i + 1 < r.length && r[i] === r[i + 1] &&
+                    'bcdfghjklmpqrstvwxyz'.indexOf(r[i]) !== -1 && r[i] !== 'n') {
+                    out += 'っ';
+                    i++;
+                    continue;
+                }
+                let matched = false;
+                for (let len = 3; len >= 1; len--) {
+                    const chunk = r.substr(i, len);
+                    if (ROMAJI_KANA[chunk]) {
+                        out += ROMAJI_KANA[chunk];
+                        i += len;
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) { out += r[i]; i++; }
+            }
+            return out;
+        }
+
+        // First reading when an entry lists alternatives ("shi/yon" → "shi")
+        function firstReading(r) {
+            return String(r).replace(/\(.*?\)/g, '').split('/')[0].trim();
+        }
 
         function loadQuizTypes() {
             enabledQuizTypes = Array.from(document.querySelectorAll('#quiz-type-filter input:checked')).map(function(c) { return c.value; });
@@ -2570,10 +2639,52 @@
 
             const card = activeCards[quizIndex];
             currentQuestionType = pickQuestionType();
+            // Kana cards already test reading; kana-reading MC only makes sense
+            // for kanji/vocab cards, so fall back to regular MC for kana.
+            if (currentQuestionType === 'mc_reading' && isKanaCard(card)) {
+                currentQuestionType = 'mc';
+            }
             const scoreHTML = buildScoreHTML(card);
             const promptSize = getFontSize(card.j).replace('em', '') * 1.5 + 'em';
 
-            if (currentQuestionType === 'mc') {
+            if (currentQuestionType === 'mc_reading') {
+                // JLPT N5 style: kanji shown, pick the correct reading in hiragana
+                const correctAns = romajiToKana(firstReading(card.r));
+
+                // Distractors: readings of other kanji (or vocab) cards, in kana
+                const cardIsKanji = isKanjiCard(card);
+                let candidates = [];
+                const sourceCats = cardIsKanji
+                    ? kanjiCategories
+                    : Object.keys(fcData).filter(function(k) { return /^ch\d+$/.test(k) || k === 'extra'; });
+                sourceCats.forEach(function(k) {
+                    if (fcData[k]) fcData[k].forEach(function(c) {
+                        if (!c.r) return;
+                        const kana = romajiToKana(firstReading(c.r));
+                        if (kana && kana !== correctAns) candidates.push(kana);
+                    });
+                });
+                candidates = [...new Set(candidates)];
+                // Prefer confusable distractors: similar length to the correct reading
+                candidates.sort(function(a, b) {
+                    return Math.abs(a.length - correctAns.length) - Math.abs(b.length - correctAns.length);
+                });
+                let nearPool = candidates.slice(0, 10);
+                let options = shuffle(nearPool).slice(0, 3);
+                options.push(correctAns);
+                options = shuffle(options);
+
+                container.innerHTML = '<div class="quiz-card">'
+                    + '<div class="quiz-prompt" style="font-size:' + promptSize + '">' + card.j + '</div>'
+                    + (scoreHTML ? '<div class="score-indicator">' + scoreHTML + '</div>' : '')
+                    + '<div class="quiz-type-label" style="margin-bottom:10px;">Choose the correct reading:</div>'
+                    + '<div class="quiz-options">'
+                    + options.map(function(a) {
+                        return '<button class="quiz-option kana-opt" onclick="checkMC(this,\'' + a.replace(/'/g, "\\'") + '\',\'' + correctAns.replace(/'/g, "\\'") + '\')">' + a + '</button>';
+                    }).join('')
+                    + '</div></div>';
+
+            } else if (currentQuestionType === 'mc') {
                 // Multiple choice — use romaji distractors for kana/katakana, meanings for vocab/kanji
                 const cardIsKana = isKanaCard(card);
                 const cardIsKanji = isKanjiCard(card);
