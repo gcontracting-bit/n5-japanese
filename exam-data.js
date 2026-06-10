@@ -2146,48 +2146,48 @@ var EXAM_DATA = {
         {
           label: "問題1 — Choose the correct reading for the underlined kanji",
           questions: [
-            { stem: "わたしは<u>大学</u>でにほんごをべんきょうしています。", options: ["だいがく", "おおがく", "たいがく", "だいかく"], answer: 1, explanation: "大学 is read だいがく (university)." },
-            { stem: "<u>先生</u>はきょうしつにいます。", options: ["せんせ", "さきせい", "せんせい", "しんせい"], answer: 3, explanation: "先生 is read せんせい (teacher)." },
-            { stem: "<u>天気</u>がいいですから、さんぽしましょう。", options: ["てんき", "てんぎ", "あまき", "てんけ"], answer: 1, explanation: "天気 is read てんき (weather)." },
-            { stem: "あの<u>映画</u>はとてもおもしろかったです。", options: ["えいか", "えいが", "えいかく", "えが"], answer: 2, explanation: "映画 is read えいが (movie)." },
-            { stem: "<u>新聞</u>をよむのがすきです。", options: ["しんもん", "しんぶん", "しんぷん", "にいぶん"], answer: 2, explanation: "新聞 is read しんぶん (newspaper)." },
-            { stem: "<u>毎朝</u>六時におきます。", options: ["まいちょう", "まいあさ", "もうあさ", "まいさ"], answer: 2, explanation: "毎朝 is read まいあさ (every morning)." },
-            { stem: "この<u>写真</u>はきれいですね。", options: ["しゃしん", "しゃじん", "じゃしん", "すいしん"], answer: 1, explanation: "写真 is read しゃしん (photograph)." },
-            { stem: "<u>食堂</u>でひるごはんをたべました。", options: ["しょくどう", "しょくとう", "たべどう", "じきどう"], answer: 1, explanation: "食堂 is read しょくどう (cafeteria)." }
+            { stem: "あしたは<u>雨</u>ですか。", options: ["ゆき", "あめ", "くもり", "はれ"], answer: 2, explanation: "雨 = あめ (rain)." },
+            { stem: "せいとは<u>百人</u>います。", options: ["びゃくじん", "びゃくにん", "ひゃくじん", "ひゃくにん"], answer: 4, explanation: "百人 = ひゃくにん（百 ひゃく ＋ 人 にん）." },
+            { stem: "きれいな<u>空</u>ですね。", options: ["にわ", "うみ", "そら", "いえ"], answer: 3, explanation: "空 = そら (sky)." },
+            { stem: "パンを<u>半分</u>たべました。", options: ["はんふん", "はんぷん", "ほんぶん", "はんぶん"], answer: 4, explanation: "半分 = はんぶん (half)." },
+            { stem: "ぎんこうとスーパーの<u>間</u>にみせがあります。", options: ["あいだ", "あいた", "ま", "かん"], answer: 1, explanation: "間 = あいだ (between)." },
+            { stem: "きょうは<u>天気</u>がいいです。", options: ["でんき", "てんき", "てんけ", "でんけ"], answer: 2, explanation: "天気 = てんき (weather)." },
+            { stem: "ちちは<u>会社</u>ではたらいています。", options: ["かいしゃ", "がいしゃ", "かいじゃ", "けいしゃ"], answer: 1, explanation: "会社 = かいしゃ (company)." },
+            { stem: "<u>魚</u>がたくさんいますよ。", options: ["とり", "いぬ", "さかな", "ねこ"], answer: 3, explanation: "魚 = さかな (fish)." }
           ]
         },
         {
           label: "問題2 — Choose the correct writing for the underlined word",
           questions: [
-            { stem: "<u>がくせい</u>はきょうしつにいます。", options: ["学性", "楽生", "学生", "額生"], answer: 3, explanation: "がくせい is written 学生 (student)." },
-            { stem: "あした<u>びょういん</u>にいきます。", options: ["病院", "美容院", "病因", "美院"], answer: 1, explanation: "びょういん is written 病院 (hospital)." },
-            { stem: "でんしゃの<u>きっぷ</u>をかいました。", options: ["記符", "切手", "切符", "気符"], answer: 3, explanation: "きっぷ is written 切符 (ticket)." },
-            { stem: "<u>としょかん</u>でほんをかりました。", options: ["図書間", "図所館", "図書館", "途書館"], answer: 3, explanation: "としょかん is written 図書館 (library)." },
-            { stem: "<u>でんわ</u>ばんごうをおしえてください。", options: ["電和", "電話", "伝話", "電化"], answer: 2, explanation: "でんわ is written 電話 (telephone)." },
-            { stem: "きのう<u>かいもの</u>にいきました。", options: ["買物", "買い物", "会い物", "貝い物"], answer: 2, explanation: "かいもの is written 買い物 (shopping)." }
+            { stem: "ヤンさんの<u>がっこう</u>はどこですか。", options: ["宇校", "学枚", "学校", "宇枚"], answer: 3, explanation: "がっこう = 学校." },
+            { stem: "このカメラは<u>たかい</u>ですね。", options: ["古い", "新しい", "高い", "安い"], answer: 3, explanation: "たかい = 高い (expensive)." },
+            { stem: "きのうは<u>かいしゃ</u>をやすみました。", options: ["公仕", "会社", "公社", "会仕"], answer: 2, explanation: "かいしゃ = 会社." },
+            { stem: "まだ<u>いわ</u>ないでください。", options: ["立わ", "行わ", "言わ", "食わ"], answer: 3, explanation: "いう = 言う (to say)." },
+            { stem: "<u>らいげつ</u>けっこんします。", options: ["今月", "来月", "今週", "来週"], answer: 2, explanation: "らいげつ = 来月 (next month)." },
+            { stem: "このざっしを<u>みて</u>ください。", options: ["見て", "買て", "目て", "貝て"], answer: 1, explanation: "みる = 見る (to look)." }
           ]
         },
         {
           label: "問題3 — Choose the best word to fill in the blank",
           questions: [
-            { stem: "あさごはんのまえに、かおを（　　　）。", options: ["あらいます", "あびます", "みがきます", "きります"], answer: 1, explanation: "かおをあらいます means to wash one's face." },
-            { stem: "すみません、ちょっと（　　　）をかしてください。", options: ["かさ", "えんぴつ", "くるま", "でんわ"], answer: 2, explanation: "えんぴつをかして means lend me a pencil." },
-            { stem: "きょうはあついですから、まどを（　　　）ください。", options: ["しめて", "あけて", "けして", "つけて"], answer: 2, explanation: "あけて means open — you open the window when it's hot." },
-            { stem: "しけんは（　　　）でしたか。——とてもむずかしかったです。", options: ["いつ", "どこ", "どう", "だれ"], answer: 3, explanation: "どう asks how (the exam was)." },
-            { stem: "わたしのしゅみは（　　　）をひくことです。", options: ["ギター", "サッカー", "えいが", "テニス"], answer: 1, explanation: "ギターをひく means to play guitar." },
-            { stem: "あたまが（　　　）ですから、くすりをのみます。", options: ["いたい", "たかい", "さむい", "おもい"], answer: 1, explanation: "あたまがいたい means to have a headache." },
-            { stem: "パーティーに（　　　）きてください。", options: ["あそびに", "ぜひ", "たぶん", "まっすぐ"], answer: 2, explanation: "ぜひ means by all means / definitely." },
-            { stem: "たなかさんは（　　　）がじょうずです。", options: ["りょうり", "べんきょう", "しごと", "びょうき"], answer: 1, explanation: "りょうりがじょうず means good at cooking." }
+            { stem: "このへやはあついですから、（　　　）をあけましょう。", options: ["おふろ", "まど", "テーブル", "エアコン"], answer: 2, explanation: "まど (window)." },
+            { stem: "しらないことばがありましたから、せんせいに（　　　）しました。", options: ["しつもん", "じゅぎょう", "べんきょう", "れんしゅう"], answer: 1, explanation: "しつもん (a question)." },
+            { stem: "つよいかぜが（　　　）います。", options: ["いそいで", "はしって", "とんで", "ふいて"], answer: 4, explanation: "かぜがふく (the wind blows)." },
+            { stem: "このコーヒーは、さとうをたくさんいれましたから、（　　　）です。", options: ["からい", "あまい", "まるい", "わかい"], answer: 2, explanation: "あまい (sweet)." },
+            { stem: "うちはえきにちかいですから、（　　　）です。", options: ["じょうぶ", "へた", "いっぱい", "べんり"], answer: 4, explanation: "べんり (convenient)." },
+            { stem: "なつやすみはまいにち（　　　）でおよぎました。", options: ["プール", "レストラン", "ビル", "エレベーター"], answer: 1, explanation: "プール (pool)." },
+            { stem: "きのうはがっこうでたくさんかんじを（　　　）。", options: ["おぼえました", "こまりました", "もちました", "うりました"], answer: 1, explanation: "おぼえる (to learn/memorize)." },
+            { stem: "そのナイフでりんごを（　　　）ください。", options: ["しめて", "きって", "つけて", "あけて"], answer: 2, explanation: "きる (to cut)." }
           ]
         },
         {
           label: "問題4 — Choose the sentence with the closest meaning",
           questions: [
-            { stem: "やまださんはうたがじょうずです。", options: ["やまださんはうたがへたです。", "やまださんはうたがうまいです。", "やまださんはうたがすきです。", "やまださんはうたをうたいません。"], answer: 2, explanation: "じょうず and うまい both mean skilled/good at." },
-            { stem: "このへやはあまりひろくないです。", options: ["このへやはとてもひろいです。", "このへやはちょっとせまいです。", "このへやはきれいです。", "このへやはくらいです。"], answer: 2, explanation: "あまりひろくない (not very wide) = ちょっとせまい (a bit narrow)." },
-            { stem: "わたしはにくをたべません。", options: ["わたしはにくがすきです。", "わたしはやさいをたべません。", "わたしはにくをたべたくないです。", "わたしはにくをたべました。"], answer: 3, explanation: "たべません (don't eat) is close to たべたくない (don't want to eat)." },
-            { stem: "あしたはたぶんあめでしょう。", options: ["あしたはきっとあめです。", "あしたはあめがふるかもしれません。", "あしたはあめじゃないです。", "あしたはくもりです。"], answer: 2, explanation: "たぶん〜でしょう and 〜かもしれません both express probability." },
-            { stem: "このしごとはかんたんです。", options: ["このしごとはむずかしくないです。", "このしごとはたいへんです。", "このしごとはながいです。", "このしごとはおもしろいです。"], answer: 1, explanation: "かんたん (easy) = むずかしくない (not difficult)." }
+            { stem: "これはりょうしんのしゃしんです。", options: ["これはあねといもうとのしゃしんです。", "これはあにとおとうとのしゃしんです。", "これはちちとははのしゃしんです。", "これはそふとそぼのしゃしんです。"], answer: 3, explanation: "りょうしん (parents) = ちちとはは." },
+            { stem: "このダンスはやさしいです。", options: ["このダンスはかんたんです。", "このダンスはたいへんです。", "このダンスはたのしいです。", "このダンスはつまらないです。"], answer: 1, explanation: "やさしい = かんたん (easy)." },
+            { stem: "ふくをせんたくしました。", options: ["ふくをきました。", "ふくをぬぎました。", "ふくをわたしました。", "ふくをあらいました。"], answer: 4, explanation: "せんたくする = あらう (to wash)." },
+            { stem: "このへやはくらいですね。", options: ["このへやはあかるいですね。", "このへやはあかるくないですね。", "このへやはしずかですね。", "このへやはしずかじゃないですね。"], answer: 2, explanation: "くらい = あかるくない (not bright)." },
+            { stem: "リーさんはもりさんにペンをかしました。", options: ["もりさんはリーさんにペンをかりました。", "もりさんはリーさんにペンをもらいました。", "リーさんはもりさんにペンをかりました。", "リーさんはもりさんにペンをもらいました。"], answer: 1, explanation: "AがBにかす = BがAにかりる." }
           ]
         }
       ]
@@ -2200,76 +2200,76 @@ var EXAM_DATA = {
         {
           label: "問題5 — Choose the best answer to fill in the blank",
           questions: [
-            { stem: "としょかん（　　　）ほんをかりました。", options: ["を", "に", "で", "へ"], answer: 3, explanation: "で marks the place where an action occurs." },
-            { stem: "まいにちコーヒー（　　　）のみます。", options: ["が", "を", "に", "で"], answer: 2, explanation: "を marks the direct object." },
-            { stem: "ともだち（　　　）えいがをみにいきました。", options: ["で", "と", "が", "を"], answer: 2, explanation: "と means together with." },
-            { stem: "わたしはにほんご（　　　）はなすことができます。", options: ["を", "が", "で", "に"], answer: 3, explanation: "で marks the language used." },
-            { stem: "たなかさんはいま、ごはんを（　　　）います。", options: ["たべる", "たべ", "たべて", "たべた"], answer: 3, explanation: "て form + いる = ongoing action (is eating)." },
-            { stem: "あしたは（　　　）つもりです。", options: ["やすむ", "やすんで", "やすみ", "やすんだ"], answer: 1, explanation: "Dictionary form + つもり = plan to do." },
-            { stem: "にほんにいったこと（　　　）ありますか。", options: ["を", "が", "に", "は"], answer: 2, explanation: "〜たことがある uses が." },
-            { stem: "しずかに（　　　）ください。", options: ["する", "して", "した", "します"], answer: 2, explanation: "して is the て form of する." },
-            { stem: "あめ（　　　）ふっていますから、かさをもっていきましょう。", options: ["を", "は", "が", "に"], answer: 3, explanation: "が marks the subject in a subordinate clause." },
-            { stem: "この本はあの本（　　　）おもしろいです。", options: ["ほうが", "のほうが", "よりも", "より"], answer: 4, explanation: "Aより B = B is more ~ than A." },
-            { stem: "にほんごのべんきょうは（　　　）すぎます。", options: ["むずかし", "むずかしい", "むずかしく", "むずかしくて"], answer: 1, explanation: "い-adj stem + すぎる: むずかし + すぎる." },
-            { stem: "きょうはさむいですから、コートを（　　　）ほうがいいです。", options: ["きる", "きた", "きて", "きない"], answer: 2, explanation: "た form + ほうがいい = had better do." },
-            { stem: "でんしゃのなかで（　　　）はいけません。", options: ["たべる", "たべて", "たべては", "たべなくて"], answer: 3, explanation: "〜てはいけません means must not do." }
+            { stem: "わたしはあしたのひこうき（　　　）国へかえります。", options: ["を", "か", "で", "に"], answer: 3, explanation: "で marks means of transport." },
+            { stem: "デパートでかばん（　　　）くつをかいました。", options: ["や", "は", "も", "へ"], answer: 1, explanation: "や lists examples." },
+            { stem: "わたしはまいあさ７時に家（　　　）でます。", options: ["に", "が", "と", "を"], answer: 4, explanation: "を marks the place left (出る)." },
+            { stem: "きのうスーパーで田中さん（　　　）あいました。", options: ["の", "を", "に", "で"], answer: 3, explanation: "〜に会う." },
+            { stem: "うちのほんだなは、ちち（　　　）つくりました。", options: ["を", "が", "の", "に"], answer: 2, explanation: "が marks the subject who made it." },
+            { stem: "りんごを五つ（　　　）１０００円でした。", options: ["を", "に", "で", "や"], answer: 3, explanation: "で marks the amount (five for...)." },
+            { stem: "きのうはさむかったですが、きょう（　　　）さむくないです。", options: ["に", "は", "も", "を"], answer: 2, explanation: "は marks contrast." },
+            { stem: "このまちは、うみがきれい（　　　）、しずかです。", options: ["や", "と", "で", "も"], answer: 3, explanation: "な-adj ＋ で connects clauses." },
+            { stem: "ちちはコーヒーを（　　　）ながらしんぶんをよみます。", options: ["飲み", "飲む", "飲んで", "飲んだ"], answer: 1, explanation: "stem ＋ ながら = while doing." },
+            { stem: "わたしはちいさいとき、なっとうがすき（　　　）でした。", options: ["ない", "じゃない", "ありません", "じゃありません"], answer: 4, explanation: "好きじゃありませんでした (past neg na-adj)." },
+            { stem: "いちごのケーキを二つ（　　　）。", options: ["どうぞ", "ください", "ありますか", "ほしいですか"], answer: 2, explanation: "〜をください." },
+            { stem: "にちようびにうちでべんきょうします。キムさんも（　　　）。", options: ["来ませんか", "来ませんでしたか", "来ていますか", "来ていましたか"], answer: 1, explanation: "〜ませんか invites." },
+            { stem: "らいしゅうのげつようびに（　　　）きてください。", options: ["あまり", "また", "たくさん", "だんだん"], answer: 2, explanation: "また (again)." }
           ]
         },
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "きのう　＿　＿　★　＿　ました。", reorder: true, context: "きのう ＿ ＿ ★ ＿ ました。", options: ["おかあさんに", "でんわを", "かけ", "うちから"], answer: 2, explanation: "きのううちからおかあさんにでんわをかけました。★ = でんわを" },
-            { stem: "わたしは　＿　＿　★　＿　すきです。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ すきです。", options: ["の", "が", "すし", "さかな"], answer: 3, explanation: "わたしは さかな の すし が すきです。★ = すし" },
-            { stem: "この　＿　＿　★　＿　か。", reorder: true, context: "この ＿ ＿ ★ ＿ か。", options: ["いくら", "は", "かばん", "です"], answer: 1, explanation: "この かばん は いくら です か。★ = いくら" },
-            { stem: "あした　＿　＿　★　＿　ませんか。", reorder: true, context: "あした ＿ ＿ ＿ ★ ませんか。", options: ["に", "いっしょに", "えいが", "いき"], answer: 4, explanation: "あした いっしょに えいが に いきませんか。★ = いき" },
-            { stem: "にほんご　＿　＿　★　＿　います。", reorder: true, context: "にほんご ＿ ＿ ＿ ★ います。", options: ["を", "べんきょう", "て", "し"], answer: 3, explanation: "にほんご を べんきょう し て います。★ = て" }
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "すみません、つぎの ＿ ＿ ★ ＿ まがってください。", options: ["みぎ", "しんごう", "に", "を"], answer: 1, explanation: "Correct: すみません、つぎのしんごうをみぎにまがってください。  ★ = みぎ" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ ほしいです。", options: ["の", "が", "にほん", "くるま"], answer: 4, explanation: "Correct: わたしはにほんのくるまがほしいです。  ★ = くるま" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "この ＿ ＿ ★ ＿ か。", options: ["いくら", "かばん", "です", "は"], answer: 1, explanation: "Correct: このかばんはいくらですか。  ★ = いくら" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "あした ＿ ＿ ＿ ★ ませんか。", options: ["えいが", "に", "いき", "いっしょに"], answer: 3, explanation: "Correct: あしたいっしょにえいがにいきませんか。  ★ = いき" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "きのう ＿ ＿ ★ ＿ ました。", options: ["かけ", "ははに", "うちから", "でんわを"], answer: 4, explanation: "Correct: きのううちからははにでんわをかけました。  ★ = でんわを" }
           ]
         },
         {
           label: "問題7 — Read the text and fill in the blanks",
-          passage: "<p>わたしはまいにちあさ６じにおきます。おきてから、かおをあらって、あさごはんを（ 1 ）。それから、でんしゃで（ 2 ）にいきます。がっこうで４じかんじゅぎょうがあります。ひるやすみにともだちと（ 3 ）でおべんとうをたべます。ばんごはんはたいてい（ 4 ）でつくります。よる１１じごろ（ 5 ）。</p>",
+          passage: "<p>わたしのまちには、ふるくてゆうめいなおてらがあります。せんしゅうのにちようび、わたしはともだち（ 1 ）そのおてらへいきました。あさはあめがふっていました（ 2 ）、ひるからはれました。おてらのにわはとてもきれいで、しゃしんを（ 3 ）とりました。おてらのちかくのみせで、おいしいおちゃ（ 4 ）のみました。たのしかったですから、こんど（ 5 ）いきたいです。</p>",
           questions: [
-            { stem: "（ 1 ）にはいることばはどれですか。", options: ["たべます", "のみます", "つくります", "かいます"], answer: 1, explanation: "あさごはんをたべます (eat breakfast)." },
-            { stem: "（ 2 ）にはいることばはどれですか。", options: ["かいしゃ", "がっこう", "びょういん", "デパート"], answer: 2, explanation: "がっこうにいきます (go to school) — follows with じゅぎょう." },
-            { stem: "（ 3 ）にはいることばはどれですか。", options: ["しょくどう", "としょかん", "きょうしつ", "トイレ"], answer: 1, explanation: "しょくどうでたべます (eat in the cafeteria)." },
-            { stem: "（ 4 ）にはいることばはどれですか。", options: ["レストラン", "じぶん", "ともだち", "コンビニ"], answer: 2, explanation: "じぶんでつくります (make it myself)." },
-            { stem: "（ 5 ）にはいることばはどれですか。", options: ["おきます", "ねます", "でかけます", "かえります"], answer: 2, explanation: "よる１１じごろねます (go to bed around 11 PM)." }
+            { stem: "（ 1 ）にはいることばはどれですか。", options: ["を", "と", "へ", "の"], answer: 2, explanation: "ともだちと (with a friend)." },
+            { stem: "（ 2 ）にはいることばはどれですか。", options: ["から", "ので", "が", "し"], answer: 3, explanation: "が (but) — contrast." },
+            { stem: "（ 3 ）にはいることばはどれですか。", options: ["たくさん", "あまり", "ぜんぜん", "だんだん"], answer: 1, explanation: "たくさんとりました (took many)." },
+            { stem: "（ 4 ）にはいることばはどれですか。", options: ["が", "を", "に", "で"], answer: 2, explanation: "おちゃをのみました (object)." },
+            { stem: "（ 5 ）にはいることばはどれですか。", options: ["まだ", "もう", "ちょっと", "また"], answer: 4, explanation: "またいきたい (again)." }
           ]
         },
         {
           label: "問題8 — Read the passage and answer the question",
-          passage: "<p>きのう、わたしはともだちのたなかさんとこうえんにいきました。てんきがよくて、こうえんにはひとがたくさんいました。わたしたちはベンチにすわって、おべんとうをたべました。たなかさんがつくったおにぎりはとてもおいしかったです。ごごからあめがふりましたから、はやくうちにかえりました。</p>",
+          passage: "<p>わたしはまいあさパンとたまごをたべて、がっこうへいきます。でも、けさはなにもたべませんでした。おきるのがおそかったからです。バナナをがっこうへもっていきました。</p>",
           questions: [
-            { stem: "きのうのてんきはどうでしたか。", options: ["あさからあめでした。", "いちにちくもりでした。", "あさはいいてんきでしたが、ごごあめがふりました。", "いちにちいいてんきでした。"], answer: 3, explanation: "Morning was good weather, rain came in the afternoon." }
+            { stem: "けさ「わたし」はがっこうへいくまえに、なにをたべましたか。", options: ["パンとたまごをたべました。", "ごはんをたべました。", "なにもたべませんでした。", "バナナをたべました。"], answer: 3, explanation: "遅く起きたので何も食べず、バナナは持っていっただけ。" }
           ]
         },
         {
           label: "問題8b — Short passage reading",
-          passage: "<p>メアリーさんへ<br>あしたのパーティーのことですが、ばしょがかわりました。まえはレストランでしたが、やまださんのうちになりました。じかんはおなじで、ごご６じからです。やまださんのうちはえきから あるいて１０ぷんです。わからなかったら、でんわしてください。<br>スミスより</p>",
+          passage: "<p>「にほんご１」クラスのみなさんへ<br>きょう、せんせいはおひるまでおやすみです。ごぜんの「にほんご１」のクラスはありません。「にほんご１」のしゅくだいは らいしゅう だしてください。</p>",
           questions: [
-            { stem: "パーティーはどこでしますか。", options: ["レストラン", "メアリーさんのうち", "やまださんのうち", "えきのちかく"], answer: 3, explanation: "The venue changed to やまださんのうち (Yamada's house)." }
+            { stem: "「にほんご１」のがくせいは、しゅくだいをいつだしますか。", options: ["きょうのごぜん", "きょうのごご", "あした", "らいしゅう"], answer: 4, explanation: "宿題は来週出す。" }
           ]
         },
         {
           label: "問題8c — Short passage reading",
-          passage: "<p>わたしはまいにちにほんごをべんきょうしています。いちばんむずかしいのはかんじです。かんじはたくさんあって、よみかたもいろいろあります。でも、すこしずつおぼえています。いちにちに５つずつあたらしいかんじをべんきょうしています。</p>",
+          passage: "<p>ボゴさんへ<br>１０じごろ、ゆうびんきょくのひとがこのにもつをとりにきます。にもつとおかねをわたしてください。おかねはなかにしさんがもっています。ゆうびんきょくのひとがくるまえに、もらいにいってください。<br>ただ</p>",
           questions: [
-            { stem: "このひとにとっていちばんむずかしいのはなんですか。", options: ["ぶんぽう", "かんじ", "かいわ", "リスニング"], answer: 2, explanation: "いちばんむずかしいのはかんじです。" }
+            { stem: "ボゴさんは、はじめになにをしますか。", options: ["なかにしさんにおかねをもらう", "なかにしさんににもつをわたす", "ゆうびんきょくのひとににもつをもらう", "ゆうびんきょくへいく"], answer: 1, explanation: "まず中西さんにお金をもらいに行く。" }
           ]
         },
         {
           label: "問題9 — Read the passage and answer the questions",
-          passage: "<p>わたしはこんどのなつやすみに、かぞくでおきなわにりょこうするつもりです。おきなわはうみがきれいで、たべものもおいしいです。せんしゅう、インターネットでホテルをよやくしました。ひこうきのチケットはちちがかいました。おきなわではうみであそんだり、おいしいものをたべたりしたいです。いもうとはイルカをみたいといっています。よっかかんのりょこうですから、いっぱいたのしみたいです。</p>",
+          passage: "<p>これはチンさんがかいたさくぶんです。<br>わたしはきのうのにちようび、ともだちとサッカーをしました。あさからゆうがたまでしましたから、とてもつかれました。ゆうべはばんごはんのあとですぐにねました。ですから、きょうのかんじテストのべんきょうができませんでした。けさは８じにおきて、すぐかんじのテキストをべんきょうしました。それからがっこうへいきました。しかし、きょうしつでかんじをべんきょうしているひとはいませんでした。テストはきょうではなくて、あしたでした。</p>",
           questions: [
-            { stem: "だれがひこうきのチケットをかいましたか。", options: ["わたし", "おとうさん", "おかあさん", "いもうと"], answer: 2, explanation: "ちちがかいました (father bought them)." },
-            { stem: "いもうとはおきなわでなにがしたいですか。", options: ["うみであそびたい", "おいしいものをたべたい", "イルカをみたい", "ホテルにとまりたい"], answer: 3, explanation: "いもうとはイルカをみたいといっています。" }
+            { stem: "どうしてけさは８じにおきましたか。", options: ["サッカーがしたかったから", "かんじテストのべんきょうがしたかったから", "あさごはんがたべたかったから", "ねるのがおそかったから"], answer: 2, explanation: "前夜に勉強できず、早く起きて勉強したかったから。" },
+            { stem: "チンさんはなにをまちがえましたか。", options: ["テストのきょうしつ", "テストのひ", "テキストのページ", "テストのかんじ"], answer: 2, explanation: "テストは今日ではなく明日だった（日にち）。" }
           ]
         },
         {
           label: "問題10 — Look at the information and answer the question",
-          passage: "<p><b>【にほんごクラスのおしらせ】</b><br>クラス：しょきゅう（N5レベル）<br>ようび：まいしゅうかようびとmokuようび<br>じかん：ごご２：００〜３：３０<br>ばしょ：コミュニティセンター ２かい<br>きかん：６がつ１にち〜８がつ３１にち（ぜん２０かい）<br>りょうきん：１０,０００えん（テキストだい べつ）<br>もうしこみ：５がつ２０にちまでにメールでもうしこんでください。<br>メール：nihongo@center.jp<br>※ていいんは１５めいです。</p>",
+          passage: "<p><b>たかぎだいがくへくるひとへ</b><br>えきからだいがくまでのいきかた<br>①はなだえき → バス（４５ふん・３００円）→ あるいて１ぷん　ぜんぶで４６ぷん／３００円<br>②はなだえき → でんしゃ（２５ふん・４５０円）→ あるいて５ふん　ぜんぶで３０ぷん／５５０円<br>③いとかわえき → ちかてつ（３０ぷん・４３０円）→ あるいて１０ぷん　ぜんぶで４０ぷん／４３０円<br>④いとかわえき → でんしゃ（２５ふん・４３０円）→ あるいて１０ぷん　ぜんぶで３５ふん／４３０円</p>",
           questions: [
-            { stem: "このクラスはしゅうになんかいありますか。", options: ["１かい", "２かい", "３かい", "まいにち"], answer: 2, explanation: "かようびとmokuようび — twice a week." }
+            { stem: "パブロさんははなだえきかいとかわえきからのります。おかねは５００円までで、じかんはみじかいほうがいいです。どのいきかたがいいですか。", options: ["①", "②", "③", "④"], answer: 4, explanation: "②は550円で高い。500円以内で最短（35分）は④。" }
           ]
         }
       ]
@@ -2371,48 +2371,48 @@ var EXAM_DATA = {
         {
           label: "問題1 — Choose the correct reading for the underlined kanji",
           questions: [
-            { stem: "<u>学生</u>はみんなしんせつです。", options: ["がくせ", "がくせい", "がくしょう", "かくせい"], answer: 2, explanation: "学生 is read がくせい (student)." },
-            { stem: "<u>銀行</u>はどこにありますか。", options: ["ぎんこう", "きんこう", "ぎんぎょう", "きんぎょう"], answer: 1, explanation: "銀行 is read ぎんこう (bank)." },
-            { stem: "<u>今朝</u>はとてもさむかったです。", options: ["こんちょう", "けさ", "いまあさ", "こんさ"], answer: 2, explanation: "今朝 is read けさ (this morning)." },
-            { stem: "<u>病院</u>でくすりをもらいました。", options: ["びょいん", "びょういん", "びょうえん", "びょいいん"], answer: 2, explanation: "病院 is read びょういん (hospital)." },
-            { stem: "あの<u>建物</u>はなんですか。", options: ["たてもの", "けんもの", "たちもの", "けんぶつ"], answer: 1, explanation: "建物 is read たてもの (building)." },
-            { stem: "<u>午後</u>にテストがあります。", options: ["ごこ", "ごご", "こご", "うご"], answer: 2, explanation: "午後 is read ごご (afternoon)." },
-            { stem: "<u>切手</u>をかってきてください。", options: ["きって", "せって", "きて", "きっしゅ"], answer: 1, explanation: "切手 is read きって (stamp)." },
-            { stem: "<u>外国</u>にすみたいです。", options: ["がいこく", "そとくに", "がいごく", "そとこく"], answer: 1, explanation: "外国 is read がいこく (foreign country)." }
+            { stem: "いすの<u>上</u>にねこがいます。", options: ["した", "うえ", "まえ", "よこ"], answer: 2, explanation: "上 = うえ (on top)." },
+            { stem: "きのうから<u>目</u>がいたいです。", options: ["め", "みみ", "あたま", "おなか"], answer: 1, explanation: "目 = め (eye)." },
+            { stem: "<u>父</u>のしゅみはテニスです。", options: ["あに", "はは", "ちち", "あね"], answer: 3, explanation: "父 = ちち (my father)." },
+            { stem: "きのうたなかさんに<u>話し</u>ました。", options: ["はなし", "かし", "かえし", "わたし"], answer: 1, explanation: "話す = はなす (to speak)." },
+            { stem: "アパートの<u>南</u>がわにこうえんがあります。", options: ["ひがし", "みなみ", "きた", "にし"], answer: 2, explanation: "南 = みなみ (south)." },
+            { stem: "このとけいは<u>八百</u>円です。", options: ["はちひゃく", "はっひゃく", "はっぴゃく", "はちびゃく"], answer: 3, explanation: "八百 = はっぴゃく (sound change)." },
+            { stem: "けさは<u>四時</u>におきました。", options: ["よんじ", "よじ", "くじ", "しじ"], answer: 2, explanation: "四時 = よじ (four o'clock)." },
+            { stem: "にほんごのせんせいは<u>何人</u>いますか。", options: ["なんひと", "なににん", "なんにん", "なにひと"], answer: 3, explanation: "何人 = なんにん (how many people)." }
           ]
         },
         {
           label: "問題2 — Choose the correct writing for the underlined word",
           questions: [
-            { stem: "らいしゅうの<u>すいようび</u>はやすみです。", options: ["水曜日", "木曜日", "水様日", "水要日"], answer: 1, explanation: "すいようび is written 水曜日 (Wednesday)." },
-            { stem: "<u>きょうだい</u>はなんにんいますか。", options: ["兄台", "兄弟", "教大", "京大"], answer: 2, explanation: "きょうだい is written 兄弟 (siblings)." },
-            { stem: "この<u>くすり</u>をのんでください。", options: ["草", "薬", "楽", "串"], answer: 2, explanation: "くすり is written 薬 (medicine)." },
-            { stem: "<u>えいご</u>がはなせますか。", options: ["英語", "映語", "栄語", "永語"], answer: 1, explanation: "えいご is written 英語 (English language)." },
-            { stem: "ここから<u>えき</u>まであるきます。", options: ["液", "駅", "役", "益"], answer: 2, explanation: "えき is written 駅 (station)." },
-            { stem: "<u>しゃしん</u>をとりましょう。", options: ["社真", "写信", "写真", "者真"], answer: 3, explanation: "しゃしん is written 写真 (photograph)." }
+            { stem: "ぎんこうはあの<u>おおきい</u>ビルにあります。", options: ["大い", "太きい", "大きい", "犬きい"], answer: 3, explanation: "おおきい = 大きい." },
+            { stem: "わたしはまいにちパンを<u>たべ</u>ます。", options: ["飲べ", "食べ", "飽べ", "館べ"], answer: 2, explanation: "たべる = 食べる." },
+            { stem: "きのう<u>ともだち</u>とうみへいきました。", options: ["友だち", "反だち", "皮だち", "支だち"], answer: 1, explanation: "ともだち = 友だち." },
+            { stem: "りんごが<u>みっつ</u>あります。", options: ["五つ", "七つ", "三つ", "六つ"], answer: 3, explanation: "みっつ = 三つ." },
+            { stem: "<u>らいねん</u>、にほんへいきます。", options: ["来年", "今年", "来月", "今月"], answer: 1, explanation: "らいねん = 来年." },
+            { stem: "おがわさんはいま<u>しんぶん</u>をよんでいます。", options: ["親聞", "新間", "新聞", "親間"], answer: 3, explanation: "しんぶん = 新聞." }
           ]
         },
         {
           label: "問題3 — Choose the best word to fill in the blank",
           questions: [
-            { stem: "ねつがあるので、がっこうを（　　　）。", options: ["やめます", "やすみます", "おわります", "とめます"], answer: 2, explanation: "やすみます means to take a day off (from being sick)." },
-            { stem: "テストのまえに、よく（　　　）してください。", options: ["べんきょう", "さんぽ", "りょこう", "うんどう"], answer: 1, explanation: "べんきょうしてください means please study." },
-            { stem: "このかわは（　　　）ですから、きをつけてください。", options: ["ふかい", "ながい", "ひくい", "おおきい"], answer: 1, explanation: "かわがふかい means the river is deep." },
-            { stem: "でんきを（　　　）ください。へやがくらいです。", options: ["けして", "つけて", "しめて", "きって"], answer: 2, explanation: "でんきをつけて means turn on the light." },
-            { stem: "にほんの（　　　）にはゆきがたくさんふります。", options: ["なつ", "はる", "ふゆ", "あき"], answer: 3, explanation: "ふゆ (winter) — snow falls a lot in winter." },
-            { stem: "パーティーに（　　　）をよびましょう。", options: ["としょかん", "ともだち", "でんしゃ", "しゅくだい"], answer: 2, explanation: "ともだちをよぶ means to invite friends." },
-            { stem: "きのうは（　　　）がつよくて、さむかったです。", options: ["かぜ", "あめ", "ゆき", "くもり"], answer: 1, explanation: "かぜがつよい means the wind is strong." },
-            { stem: "あねは（　　　）でやさしいひとです。", options: ["しずか", "にぎやか", "げんき", "きれい"], answer: 1, explanation: "しずかでやさしい means quiet and kind." }
+            { stem: "へやが（　　　）ですから、ストーブをつけましょう。", options: ["つめたい", "ぬるい", "あつい", "さむい"], answer: 4, explanation: "さむい (cold) — turn on heater." },
+            { stem: "つぎの（　　　）ででんしゃをおります。", options: ["かいだん", "しんごう", "かど", "えき"], answer: 4, explanation: "えき (station) — get off." },
+            { stem: "なつやすみはかぞくとやまに（　　　）。", options: ["のぼります", "あるきます", "あがります", "のります"], answer: 1, explanation: "やまにのぼる (climb a mountain)." },
+            { stem: "きのうは（　　　）がたくさんふりました。", options: ["そら", "くもり", "みず", "ゆき"], answer: 4, explanation: "ゆきがふる (snow falls)." },
+            { stem: "えんぴつを４（　　　）かいました。", options: ["ほん", "まい", "さつ", "だい"], answer: 1, explanation: "ほん counts long thin objects (pencils)." },
+            { stem: "さとうさんはめがねを（　　　）います。", options: ["かけて", "はいて", "きて", "かぶって"], answer: 1, explanation: "めがねをかける (wear glasses)." },
+            { stem: "かぜが（　　　）ですから、まどをしめましょう。", options: ["たかい", "つよい", "ながい", "ひろい"], answer: 2, explanation: "かぜがつよい (strong wind)." },
+            { stem: "わたしはうたが（　　　）じゃありませんから、うたいたくないです。", options: ["にぎやか", "たいせつ", "じょうず", "べんり"], answer: 3, explanation: "じょうずじゃない (not good at)." }
           ]
         },
         {
           label: "問題4 — Choose the sentence with the closest meaning",
           questions: [
-            { stem: "たなかさんはもうかえりました。", options: ["たなかさんはまだいます。", "たなかさんはもういません。", "たなかさんはこれからかえります。", "たなかさんはかえりたいです。"], answer: 2, explanation: "もうかえりました = already left, so もういません (no longer here)." },
-            { stem: "このレストランのりょうりはあまりおいしくないです。", options: ["このレストランのりょうりはとてもおいしいです。", "このレストランのりょうりはまずいです。", "このレストランのりょうりはたかいです。", "このレストランのりょうりはすくないです。"], answer: 2, explanation: "あまりおいしくない (not very tasty) ≈ まずい (not good)." },
-            { stem: "わたしはまいにちうんどうしなくてはいけません。", options: ["わたしはうんどうがすきです。", "わたしはうんどうしたくないです。", "わたしはまいにちうんどうしなければなりません。", "わたしはうんどうしません。"], answer: 3, explanation: "しなくてはいけません and しなければなりません both mean must do." },
-            { stem: "きょうはなにもしたくないです。", options: ["きょうはいそがしいです。", "きょうはやすみたいです。", "きょうはたのしいです。", "きょうはがんばりたいです。"], answer: 2, explanation: "なにもしたくない (don't want to do anything) ≈ やすみたい (want to rest)." },
-            { stem: "このえいがはおもしろくなかったです。", options: ["このえいがはつまらなかったです。", "このえいがはたのしかったです。", "このえいがはながかったです。", "このえいがはこわかったです。"], answer: 1, explanation: "おもしろくない (not interesting) ≈ つまらない (boring)." }
+            { stem: "あそこはとしょかんです。", options: ["あそこはごはんやおかしをつくるところです。", "あそこはほんやざっしをかりるところです。", "あそこはかみやからだをあらうところです。", "あそこははがきやきってをかうところです。"], answer: 2, explanation: "図書館 = 本や雑誌を借りる所。" },
+            { stem: "まいばんテレビでニュースをみます。", options: ["まいにちゆうがたテレビでニュースをみます。", "まいにちあさテレビでニュースをみます。", "まいにちひるテレビでニュースをみます。", "まいにちよるテレビでニュースをみます。"], answer: 4, explanation: "まいばん = まいにちよる (every night)." },
+            { stem: "おとうとはあのレストランではたらいています。", options: ["おとうとはあのレストランでやすんでいます。", "おとうとはあのレストランでしょくじをしています。", "おとうとはあのレストランでしごとをしています。", "おとうとはあのレストランでまっています。"], answer: 3, explanation: "はたらく = しごとをする." },
+            { stem: "あのみせはしずかじゃありませんでした。", options: ["あのみせはせまかったです。", "あのみせはくらかったです。", "あのみせはきたなかったです。", "あのみせはうるさかったです。"], answer: 4, explanation: "しずかじゃない = うるさい (noisy)." },
+            { stem: "じゅぎょうでむずかしいかんじをならいました。", options: ["じゅぎょうでむずかしいかんじをみせました。", "じゅぎょうでむずかしいかんじをおしえました。", "じゅぎょうでむずかしいかんじをまちがえました。", "じゅぎょうでむずかしいかんじをべんきょうしました。"], answer: 4, explanation: "ならう = べんきょうする (learn)." }
           ]
         }
       ]
@@ -2425,76 +2425,76 @@ var EXAM_DATA = {
         {
           label: "問題5 — Choose the best answer to fill in the blank",
           questions: [
-            { stem: "わたしはきのうともだち（　　　）てがみをかきました。", options: ["を", "が", "に", "で"], answer: 3, explanation: "に marks the recipient: wrote a letter TO a friend." },
-            { stem: "にほんごのじゅぎょうは９じ（　　　）はじまります。", options: ["に", "で", "を", "が"], answer: 1, explanation: "に marks a specific time." },
-            { stem: "でんしゃ（　　　）のりおくれましたから、ちこくしました。", options: ["を", "に", "が", "で"], answer: 2, explanation: "に marks the vehicle you miss riding: のりおくれる." },
-            { stem: "もうひるごはんをたべましたか。——いいえ、（　　　）たべていません。", options: ["まだ", "もう", "ぜんぜん", "よく"], answer: 1, explanation: "もう…か is answered in the negative with まだ…ていません (not yet)." },
-            { stem: "あしたテストがある（　　　）、きょうはべんきょうします。", options: ["から", "でも", "けど", "し"], answer: 1, explanation: "から marks the reason: because there's a test." },
-            { stem: "すずきさんはピアノ（　　　）ひくのがじょうずです。", options: ["で", "を", "が", "に"], answer: 2, explanation: "を marks the direct object of ひく." },
-            { stem: "あには（　　　）がたかいです。", options: ["め", "せ", "ゆび", "て"], answer: 2, explanation: "せがたかい means tall (height is tall)." },
-            { stem: "やまださんはきのう（　　　）そうです。", options: ["いそがし", "いそがしい", "いそがしかった", "いそがしく"], answer: 3, explanation: "Past tense + そうです for hearsay: was apparently busy." },
-            { stem: "しゅくだいを（　　　）から、あそびにいきます。", options: ["する", "して", "した", "しない"], answer: 2, explanation: "〜てから means after doing." },
-            { stem: "このまちにはおてらが（　　　）あります。", options: ["たくさん", "すこし", "あまり", "ぜんぜん"], answer: 1, explanation: "たくさんあります means there are many." },
-            { stem: "さいふを（　　　）しまいました。", options: ["なくす", "なくし", "なくして", "なくした"], answer: 3, explanation: "〜てしまいました — unfortunately lost the wallet." },
-            { stem: "せんせいがにほんご（　　　）はなしました。", options: ["を", "に", "で", "が"], answer: 3, explanation: "で marks the language/means used." },
-            { stem: "テストは（　　　）なかったです。", options: ["むずかしい", "むずかし", "むずかしく", "むずかしくて"], answer: 3, explanation: "い-adj negative past: むずかしく + なかった." }
+            { stem: "わたしはまいにち１じかん、かんじ（　　　）べんきょうをします。", options: ["に", "と", "の", "を"], answer: 3, explanation: "の links nouns (漢字の勉強)." },
+            { stem: "せんせい「あした、テスト（　　　）ありません。」", options: ["を", "は", "の", "が"], answer: 2, explanation: "は emphasizes in negatives." },
+            { stem: "みかんやりんご（　　　）のくだものがすきです。", options: ["も", "と", "か", "など"], answer: 4, explanation: "〜など (and so on)." },
+            { stem: "やまぐちさんのいえはにわ（　　　）ひろいです。", options: ["の", "が", "を", "や"], answer: 2, explanation: "が marks subject (garden is wide)." },
+            { stem: "コーヒーとこうちゃ（　　　）どちらがすきですか。", options: ["へ", "も", "と", "が"], answer: 3, explanation: "AとBとどちら." },
+            { stem: "すこしやすんで、なに（　　　）のみませんか。", options: ["は", "を", "か", "に"], answer: 3, explanation: "なにか (something)." },
+            { stem: "「えいがをみますか。」「はい、（　　　）みます。」", options: ["ときどき", "あまり", "ずっと", "だんだん"], answer: 1, explanation: "ときどき (sometimes)." },
+            { stem: "「いまよんでいる（　　　）ざっしはなんのざっしですか。」", options: ["これの", "あれの", "その", "どの"], answer: 3, explanation: "その modifies a noun (that magazine)." },
+            { stem: "「あめとクッキーとチョコレートがあります。（　　　）がいいですか。」", options: ["どれ", "どんな", "どっち", "どこ"], answer: 1, explanation: "どれ (which of 3+)." },
+            { stem: "やまださんはいま、（　　　）中です。", options: ["電話", "電話の", "電話する", "電話している"], answer: 1, explanation: "電話中 (in a call)." },
+            { stem: "わたしはいつもしけんがおわった（　　　）りょこうにいきます。", options: ["が", "から", "まえに", "あとで"], answer: 4, explanation: "〜たあとで (after)." },
+            { stem: "やすみのひは、おんがくをきいたり、ほんを（　　　）います。", options: ["読んだり", "読んだりして", "読んでいて", "読んでから"], answer: 2, explanation: "〜たり〜たりして." },
+            { stem: "「なまえはカタカナで（　　　）。」", options: ["しますね", "かきませんよ", "ほしいですか", "おねがいします"], answer: 4, explanation: "おねがいします (please)." }
           ]
         },
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "わたしは　＿　＿　★　＿　すきです。", reorder: true, context: "わたしは ＿ ＿ ★ ＿ すきです。", options: ["ほう", "の", "が", "コーヒー"], answer: 1, explanation: "わたしは コーヒー の ほう が すきです。★ = ほう" },
-            { stem: "あした　＿　＿　★　＿　ください。", reorder: true, context: "あした ＿ ＿ ＿ ★ ください。", options: ["もって", "を", "きて", "かさ"], answer: 3, explanation: "あした かさ を もって きて ください。★ = きて" },
-            { stem: "この　＿　＿　＿　★　ました。", reorder: true, context: "この ＿ ＿ ＿ ★ ました。", options: ["ケーキ", "は", "ははが", "つくり"], answer: 4, explanation: "この ケーキ は ははが つくり ました。★ = つくり" },
-            { stem: "えきから　＿　＿　★　＿　です。", reorder: true, context: "えきから ＿ ＿ ★ ＿ です。", options: ["ところ", "１０ぷん", "ぐらいの", "あるいて"], answer: 3, explanation: "えきから あるいて １０ぷん ぐらいの ところ です。★ = ぐらいの" },
-            { stem: "にほんで　＿　＿　★　＿　たいです。", reorder: true, context: "にほんで ＿ ＿ ＿ ★ たいです。", options: ["いろいろな", "み", "ところ", "を"], answer: 2, explanation: "にほんで いろいろな ところ を み たいです。★ = み" }
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "こうえん ＿ ＿ ★ ＿ います。", options: ["は", "に", "たくさん", "とりが"], answer: 4, explanation: "Correct: こうえんにはとりがたくさんいます。  ★ = とりが" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "きょねんのたんじょうびに ＿ ＿ ★ ＿ まいにちかぶっています。", options: ["ぼうしを", "あに", "もらった", "に"], answer: 3, explanation: "Correct: きょねんのたんじょうびにあににもらったぼうしをまいにちかぶっています。  ★ = もらった" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "きのう ＿ ★ ＿ ＿ 。", options: ["ばんごはんを", "ちかくの", "たべました", "レストランで"], answer: 4, explanation: "Correct: きのうちかくのレストランでばんごはんをたべました。  ★ = レストランで" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "もっと ＿ ＿ ★ ＿ ありませんか。", options: ["かばんは", "いろ", "あかるい", "の"], answer: 4, explanation: "Correct: もっとあかるいいろのかばんはありませんか。  ★ = の" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ＿ ＿ ★ ざっしをかいました。", options: ["ある", "えきの", "ほんやで", "ちかくに"], answer: 3, explanation: "Correct: えきのちかくにあるほんやでざっしをかいました。  ★ = ほんやで" }
           ]
         },
         {
           label: "問題7 — Read the text and fill in the blanks",
-          passage: "<p>わたしのかぞくは5にんです。ちちとはは、あにとあねとわたしです。ちちは（ 1 ）ではたらいています。ははは（ 2 ）にいます。あには（ 3 ）で、とうきょうにすんでいます。あねはまだ（ 4 ）です。わたしはいちばん（ 5 ）です。</p>",
+          passage: "<p>わたしのにちようび　キム・スミン<br>まいしゅうにちようびのあさ、さんぽをしています。いつもあさ６じにおきて、ひとりで（ 1 ）。せんしゅうは、さくらがわまで１じかんくらいあるきました。（ 2 ）さくらがわのちかくのきっさてんにいきました。きっさてんでコーヒーをのんで、いえへかえりました。こんしゅう（ 3 ）さくらがわへさんぽにいきたいです。わたしはにちようび、タイりょうりのレストランではたらいています。みせのなまえ（ 4 ）「サワディカ」です。せんしゅう、にほんじんのともだちがたべに（ 5 ）。</p>",
           questions: [
-            { stem: "（ 1 ）にはいることばはどれですか。", options: ["がっこう", "かいしゃ", "びょういん", "うち"], answer: 2, explanation: "かいしゃではたらいています (works at a company)." },
-            { stem: "（ 2 ）にはいることばはどれですか。", options: ["うち", "かいしゃ", "デパート", "ぎんこう"], answer: 1, explanation: "はははうちにいます (mother is at home)." },
-            { stem: "（ 3 ）にはいることばはどれですか。", options: ["がくせい", "しゃかいじん", "こども", "せんせい"], answer: 2, explanation: "しゃかいじん (working adult) — lives in Tokyo on his own." },
-            { stem: "（ 4 ）にはいることばはどれですか。", options: ["しゃかいじん", "がくせい", "せんせい", "いしゃ"], answer: 2, explanation: "まだがくせいです (still a student)." },
-            { stem: "（ 5 ）にはいることばはどれですか。", options: ["わかい", "おおきい", "ちいさい", "ふるい"], answer: 1, explanation: "いちばんわかいです (the youngest)." }
+            { stem: "（ 1 ）にはいることばはどれですか。", options: ["さんぽしました", "さんぽします", "さんぽしません", "さんぽしませんでした"], answer: 2, explanation: "毎週の習慣なので現在形（さんぽします）。" },
+            { stem: "（ 2 ）にはいることばはどれですか。", options: ["それから", "つぎのにちようびに", "６じに", "まいとし"], answer: 1, explanation: "それから (then)." },
+            { stem: "（ 3 ）にはいることばはどれですか。", options: ["は", "も", "を", "に"], answer: 2, explanation: "こんしゅうも (this week too)." },
+            { stem: "（ 4 ）にはいることばはどれですか。", options: ["の", "に", "は", "で"], answer: 3, explanation: "なまえは「…」です (topic)." },
+            { stem: "（ 5 ）にはいることばはどれですか。", options: ["いきました", "きました", "いったからです", "きたからです"], answer: 2, explanation: "ともだちが来ました (came toward me)." }
           ]
         },
         {
           label: "問題8 — Read the passage and answer the question",
-          passage: "<p>きのう、かいしゃのひとたちとカラオケにいきました。たなかさんはうたがとてもじょうずで、みんなびっくりしました。わたしはうたがあまりじょうずじゃないですが、たのしかったです。３じかんぐらいうたって、１１じごろかえりました。</p>",
+          passage: "<p>ヨウさんへ<br>あさって、はるやまこうえんにもっていくおかしはもうかいましたか。わたしはあした、いもうととスーパーのちかくにあるおかしやへかいにいきます。いっしょにいきませんか。<br>リン</p>",
           questions: [
-            { stem: "だれがうたがじょうずでしたか。", options: ["わたし", "たなかさん", "みんな", "かいしゃのひと"], answer: 2, explanation: "たなかさんはうたがとてもじょうずで。" }
+            { stem: "リンさんは、いつ、どこでおかしをかいますか。", options: ["あした、スーパーで", "あした、おかしやで", "あさって、スーパーで", "あさって、おかしやで"], answer: 2, explanation: "明日、お菓子屋へ買いに行く。" }
           ]
         },
         {
           label: "問題8b — Short passage reading",
-          passage: "<p>すずきさんへ<br>きょうのじゅぎょうのノートをコピーしました。あしたがっこうでわたします。それから、らいしゅうのすいようびにレポートをだすのをわすれないでくださいね。<br>やまもとより</p>",
+          passage: "<p>８がつ２４にち（ど）のパーティーでうたうひとへ<br>２１にち（すい）の４じから６じまで、うたのれんしゅうをします。おとこのがくせいは１ばんきょうしつ、おんなのがくせいは３ばんきょうしつにきてください。５じからは、３ばんきょうしつでいっしょにれんしゅうします。</p>",
           questions: [
-            { stem: "やまもとさんはあしたなにをしますか。", options: ["レポートをだす", "ノートをかす", "ノートをコピーする", "ノートをわたす"], answer: 4, explanation: "あしたがっこうでわたします (will hand over the notes tomorrow)." }
+            { stem: "おとこのがくせいは、どこでうたのれんしゅうをしますか。", options: ["４じから６じまで１ばんきょうしつ", "４じから６じまで３ばんきょうしつ", "４じからは１ばん、５じからは３ばんきょうしつ", "４じからは３ばん、５じからは１ばんきょうしつ"], answer: 3, explanation: "男子は4時に1番、5時から3番で合流。" }
           ]
         },
         {
           label: "問題8c — Short passage reading",
-          passage: "<p>わたしはいぬがすきです。いまマンションにすんでいますから、いぬをかうことができません。でも、まいしゅうどようびにどうぶつカフェにいきます。そこでいぬとあそぶことができます。いつかひろいうちにすんで、おおきいいぬをかいたいです。</p>",
+          passage: "<p>レナさんはらいしゅうからにほんごがっこうにいきます。がっこうでつかうテキストはきのうかいました。じしょはおにいさんにもらいました。ノートとえんぴつはきょうのごごかいにいきます。</p>",
           questions: [
-            { stem: "このひとはなぜいぬをかっていませんか。", options: ["いぬがきらいだから", "おかねがないから", "マンションにすんでいるから", "じかんがないから"], answer: 3, explanation: "マンションにすんでいますから、かうことができません。" }
+            { stem: "レナさんがもうもっているものはなんですか。", options: ["テキストとじしょ", "ノートとえんぴつ", "テキストとノート", "じしょとえんぴつ"], answer: 1, explanation: "テキスト（買った）と辞書（もらった）。" }
           ]
         },
         {
           label: "問題9 — Read the passage and answer the questions",
-          passage: "<p>わたしはにほんにきて１ねんになります。はじめはにほんごがぜんぜんわかりませんでした。でも、まいにちにほんじんのともだちとはなして、だんだんわかるようになりました。いまはかんたんなかいわはできます。でも、しんぶんをよむのはまだむずかしいです。らいねんN4のしけんをうけるつもりです。</p>",
+          passage: "<p>せんげつ、えきのまえにあるホテルのきっさてん「リボン」で、もりさんとケーキをたべました。「リボン」のケーキはとてもおいしかったですから、「またたべたいですね」といいました。<br>きのう、もりさんがあそびにきました。わたしはもりさんがくるまえに、「リボン」にケーキをかいにいきました。ばんごはんのあとで、いっしょにたべました。でも、せんげつ「リボン」でたべたケーキのほうがおいしかったです。もりさんは「しずかなホテルのきっさてんで、きれいなおんがくをききながらたべたからですよ」といいました。</p>",
           questions: [
-            { stem: "このひとはいまにほんごでなにができますか。", options: ["しんぶんがよめる", "かんたんなかいわができる", "なんでもできる", "にほんごがぜんぜんわからない"], answer: 2, explanation: "いまはかんたんなかいわはできます。" },
-            { stem: "このひとはらいねんなにをするつもりですか。", options: ["にほんにくる", "N5のしけんをうける", "N4のしけんをうける", "くにへかえる"], answer: 3, explanation: "らいねんN4のしけんをうけるつもりです。" }
+            { stem: "きのう、もりさんと「わたし」はどこでケーキをたべましたか。", options: ["えきのきっさてん", "ホテルのきっさてん", "「わたし」のうち", "もりさんのうち"], answer: 3, explanation: "きのうは家で食べた（買って帰った）。" },
+            { stem: "せんげつのケーキのほうがおいしかったのは、どうしてですか。", options: ["うちでつくったから", "あたらしいケーキだから", "しずかなみせできれいなおんがくをききながらたべたから", "ともだちとたべたから"], answer: 3, explanation: "店の静かな雰囲気の中で食べたから。" }
           ]
         },
         {
           label: "問題10 — Look at the information and answer the question",
-          passage: "<p><b>【としょかんのおしらせ】</b><br>あたらしいかいかんじかん：<br>げつようび〜きんようび：ごぜん９：００〜ごご７：００<br>どようび：ごぜん１０：００〜ごご５：００<br>にちようび・しゅくじつ：おやすみ<br>※ほんは２しゅうかんかりることができます。いちどに５さつまでです。<br>※カードをわすれたひとはほんをかりることができません。</p>",
+          passage: "<p><b>なつのりょこう（XYZりょこう）</b><br>①やまのはなのしゃしんをとりましょう。でんしゃでたつきまちへ。８/２０〜２１（２日）１５,０００円<br>②すずしいやまでやすみましょう。バスでかわきたまちへ。８/２０〜２２（３日）２３,０００円<br>③うみでさかなとあそびましょう。ひこうきではなかまちへ。８/２１〜２４（４日）２８,０００円<br>④きれいなうみでおよぎましょう。でんしゃとバスでにしだまちへ。８/２１〜２２（２日）１８,０００円</p>",
           questions: [
-            { stem: "どようびは何時までとしょかんがあいていますか。", options: ["ごご３じまで", "ごご５じまで", "ごご７じまで", "ごご９じまで"], answer: 2, explanation: "どようび: ごぜん１０：００〜ごご５：００." }
+            { stem: "フォンさんのやすみはふつかかんです。うみへいきたいです。どのりょこうにいきますか。", options: ["①", "②", "③", "④"], answer: 4, explanation: "海は③④、2日間は④（8/21〜22）。" }
           ]
         }
       ]
@@ -2596,48 +2596,48 @@ var EXAM_DATA = {
         {
           label: "問題1 — Choose the correct reading for the underlined kanji",
           questions: [
-            { stem: "<u>会社</u>まであるいて１５ふんです。", options: ["かいしゃ", "あいしゃ", "かいじゃ", "がいしゃ"], answer: 1, explanation: "会社 is read かいしゃ (company)." },
-            { stem: "<u>来週</u>テストがあります。", options: ["こんしゅう", "らいしゅう", "せんしゅう", "まいしゅう"], answer: 2, explanation: "来週 is read らいしゅう (next week)." },
-            { stem: "<u>魚</u>をやいてたべました。", options: ["にく", "さかな", "とり", "やさい"], answer: 2, explanation: "魚 is read さかな (fish)." },
-            { stem: "この<u>部屋</u>はひろいですね。", options: ["へや", "ぶや", "べや", "ぶおく"], answer: 1, explanation: "部屋 is read へや (room)." },
-            { stem: "<u>本屋</u>であたらしいほんをかいました。", options: ["もとや", "ほんや", "ほんおく", "もとおく"], answer: 2, explanation: "本屋 is read ほんや (bookstore)." },
-            { stem: "ここから<u>空港</u>まではバスでいきます。", options: ["くうこう", "そらこう", "くうみなと", "くこう"], answer: 1, explanation: "空港 is read くうこう (airport)." },
-            { stem: "<u>入口</u>はあちらです。", options: ["いりぐち", "にゅうこう", "はいりくち", "でぐち"], answer: 1, explanation: "入口 is read いりぐち (entrance)." },
-            { stem: "<u>手紙</u>をだしにゆうびんきょくにいきます。", options: ["てかみ", "てがみ", "しゅし", "てし"], answer: 2, explanation: "手紙 is read てがみ (letter)." }
+            { stem: "<u>駅</u>のまえでまっています。", options: ["えき", "えぎ", "いき", "せき"], answer: 1, explanation: "駅 = えき (station)." },
+            { stem: "<u>時間</u>がありません。", options: ["じかん", "じっかん", "ときま", "じけん"], answer: 1, explanation: "時間 = じかん (time)." },
+            { stem: "わたしの<u>国</u>はあついです。", options: ["こく", "くに", "ぐん", "こうに"], answer: 2, explanation: "国 = くに (country)." },
+            { stem: "きのう<u>雪</u>がふりました。", options: ["あめ", "ゆき", "くも", "かぜ"], answer: 2, explanation: "雪 = ゆき (snow)." },
+            { stem: "ひとが<u>多い</u>です。", options: ["おおい", "おうい", "たい", "おおきい"], answer: 1, explanation: "多い = おおい (many)." },
+            { stem: "みずを<u>飲み</u>ます。", options: ["のみ", "よみ", "かみ", "つみ"], answer: 1, explanation: "飲む = のむ (to drink)." },
+            { stem: "<u>電車</u>でいきます。", options: ["でんしゃ", "でんちゃ", "てんしゃ", "でんしや"], answer: 1, explanation: "電車 = でんしゃ (train)." },
+            { stem: "これは<u>五百</u>円です。", options: ["ごひゃく", "ごびゃく", "こひゃく", "ごっぴゃく"], answer: 1, explanation: "五百 = ごひゃく." }
           ]
         },
         {
           label: "問題2 — Choose the correct writing for the underlined word",
           questions: [
-            { stem: "<u>おんがく</u>をきくのがすきです。", options: ["音学", "音楽", "温楽", "音額"], answer: 2, explanation: "おんがく is written 音楽 (music)." },
-            { stem: "あの<u>はし</u>をわたってください。", options: ["端", "箸", "橋", "階"], answer: 3, explanation: "はし (bridge) is written 橋." },
-            { stem: "<u>にわ</u>にきれいなはながあります。", options: ["庭", "苑", "園", "畑"], answer: 1, explanation: "にわ is written 庭 (garden)." },
-            { stem: "きょうの<u>てんき</u>はくもりです。", options: ["天記", "天気", "転気", "天期"], answer: 2, explanation: "てんき is written 天気 (weather)." },
-            { stem: "<u>かんじ</u>のべんきょうはたいへんです。", options: ["漢事", "感字", "漢字", "幹字"], answer: 3, explanation: "かんじ is written 漢字 (kanji)." },
-            { stem: "<u>ちかてつ</u>でかいしゃにいきます。", options: ["地下鉄", "近下鉄", "地化鉄", "地下轍"], answer: 1, explanation: "ちかてつ is written 地下鉄 (subway)." }
+            { stem: "<u>やま</u>にのぼります。", options: ["川", "山", "出", "止"], answer: 2, explanation: "やま = 山." },
+            { stem: "<u>せんせい</u>はやさしいです。", options: ["先生", "失生", "先性", "生先"], answer: 1, explanation: "せんせい = 先生." },
+            { stem: "つめたい<u>みず</u>をのみます。", options: ["木", "水", "氷", "永"], answer: 2, explanation: "みず = 水." },
+            { stem: "このほんは<u>やすい</u>です。", options: ["安い", "高い", "守い", "案い"], answer: 1, explanation: "やすい = 安い (cheap)." },
+            { stem: "がっこうへ<u>いき</u>ます。", options: ["行き", "符き", "街き", "往き"], answer: 1, explanation: "いく = 行く." },
+            { stem: "<u>しろい</u>はなです。", options: ["百い", "白い", "自い", "日い"], answer: 2, explanation: "しろい = 白い (white)." }
           ]
         },
         {
           label: "問題3 — Choose the best word to fill in the blank",
           questions: [
-            { stem: "シャワーを（　　　）から、でかけます。", options: ["あびて", "あらって", "のんで", "あけて"], answer: 1, explanation: "シャワーをあびる means to take a shower." },
-            { stem: "おかねを（　　　）のをわすれました。", options: ["はらう", "もらう", "おろす", "かける"], answer: 3, explanation: "おかねをおろす means to withdraw money." },
-            { stem: "へやの（　　　）をそうじしました。", options: ["まど", "ゆか", "てんき", "でんき"], answer: 2, explanation: "ゆかをそうじする means to clean the floor." },
-            { stem: "あたらしい（　　　）をならいはじめました。", options: ["スポーツ", "でんしゃ", "くうこう", "てんき"], answer: 1, explanation: "あたらしいスポーツをならう means to learn a new sport." },
-            { stem: "かぜを（　　　）しまいました。", options: ["ひいて", "とって", "のんで", "かいて"], answer: 1, explanation: "かぜをひく means to catch a cold." },
-            { stem: "やまださんは（　　　）がながいです。", options: ["かみ", "せ", "あし", "ゆび"], answer: 1, explanation: "かみがながい means to have long hair." },
-            { stem: "くうこうまで（　　　）でいきました。", options: ["タクシー", "じてんしゃ", "あるいて", "はしって"], answer: 1, explanation: "タクシーでいく means to go by taxi (to the airport)." },
-            { stem: "この（　　　）はとてもしずかなまちです。", options: ["あたり", "へん", "きんじょ", "ちかく"], answer: 2, explanation: "このへん (this area) is a common N5 expression." }
+            { stem: "でんしゃの（　　　）をかいました。", options: ["きっぷ", "きって", "てがみ", "ざっし"], answer: 1, explanation: "きっぷ (ticket)." },
+            { stem: "ふゆはとても（　　　）です。", options: ["あつい", "さむい", "つよい", "ながい"], answer: 2, explanation: "ふゆ＝さむい (winter is cold)." },
+            { stem: "くつを（　　　）そとへでます。", options: ["かけて", "はいて", "かぶって", "きて"], answer: 2, explanation: "くつをはく (wear shoes)." },
+            { stem: "バスが（　　　）ですから、たいへんです。", options: ["はやい", "おそい", "たかい", "ひくい"], answer: 2, explanation: "おそい (slow/late)." },
+            { stem: "そぼはとても（　　　）です。", options: ["げんき", "しんせつ", "べんり", "ゆうめい"], answer: 1, explanation: "げんき (healthy)." },
+            { stem: "まいにちピアノの（　　　）をします。", options: ["しつもん", "れんしゅう", "じゅぎょう", "しゅくだい"], answer: 2, explanation: "れんしゅう (practice)." },
+            { stem: "このえんぴつは（　　　）です。", options: ["ながい", "みじかい", "おもい", "かるい"], answer: 2, explanation: "みじかい (short)." },
+            { stem: "あした（　　　）ですから、えいがをみにいきます。", options: ["ひま", "いそがしい", "しずか", "じょうぶ"], answer: 1, explanation: "ひま (free time)." }
           ]
         },
         {
           label: "問題4 — Choose the sentence with the closest meaning",
           questions: [
-            { stem: "パーティーにはだれもきませんでした。", options: ["パーティーにひとがたくさんきました。", "パーティーにひとりもきませんでした。", "パーティーにすこしきました。", "パーティーはありませんでした。"], answer: 2, explanation: "だれもきませんでした = ひとりもきませんでした (nobody came)." },
-            { stem: "わたしはりょうりがにがてです。", options: ["わたしはりょうりがじょうずです。", "わたしはりょうりがすきです。", "わたしはりょうりがうまくできません。", "わたしはりょうりをしません。"], answer: 3, explanation: "にがて (not good at) ≈ うまくできません (can't do well)." },
-            { stem: "このカフェはいつもこんでいます。", options: ["このカフェはいつもすいています。", "このカフェにはいつもひとがたくさんいます。", "このカフェはいつもやすみです。", "このカフェはいつもしまっています。"], answer: 2, explanation: "こんでいる (crowded) = ひとがたくさんいる (many people)." },
-            { stem: "さとうさんはもうすぐきます。", options: ["さとうさんはもうきました。", "さとうさんはまだきていません。", "さとうさんはきません。", "さとうさんはもうかえりました。"], answer: 2, explanation: "もうすぐきます implies まだきていません (not yet arrived)." },
-            { stem: "やまださんはえいごがぺらぺらです。", options: ["やまださんはえいごがはなせません。", "やまださんはえいごがとてもじょうずです。", "やまださんはえいごをべんきょうしています。", "やまださんはえいごがすこしわかります。"], answer: 2, explanation: "ぺらぺら (fluent) = とてもじょうず (very good at)." }
+            { stem: "ちちはまいにちいそがしいです。", options: ["ちちはまいにちひまです。", "ちちはまいにちじかんがありません。", "ちちはまいにちやすみます。", "ちちはまいにちはたらきません。"], answer: 2, explanation: "いそがしい = 時間がない。" },
+            { stem: "わたしはやさいがきらいです。", options: ["わたしはやさいがすきです。", "わたしはやさいをたべたくないです。", "わたしはやさいをよくたべます。", "わたしはやさいがあります。"], answer: 2, explanation: "きらい = 食べたくない。" },
+            { stem: "このかばんはちいさくないです。", options: ["このかばんはおおきいです。", "このかばんはたかいです。", "このかばんはやすいです。", "このかばんはおもいです。"], answer: 1, explanation: "ちいさくない = おおきい。" },
+            { stem: "わたしはまいにちにほんごをべんきょうします。", options: ["わたしはときどきべんきょうします。", "わたしはいちにちもやすまずべんきょうします。", "わたしはぜんぜんべんきょうしません。", "わたしはあまりべんきょうしません。"], answer: 2, explanation: "毎日 = 一日も休まず。" },
+            { stem: "わたしはともだちにプレゼントをあげました。", options: ["ともだちはわたしにプレゼントをあげました。", "ともだちはわたしにプレゼントをくれました。", "わたしはともだちにプレゼントをもらいました。", "ともだちはわたしからプレゼントをもらいました。"], answer: 4, explanation: "私が友達にあげた = 友達が私からもらった。" }
           ]
         }
       ]
@@ -2650,76 +2650,76 @@ var EXAM_DATA = {
         {
           label: "問題5 — Choose the best answer to fill in the blank",
           questions: [
-            { stem: "あした、ともだちにプレゼントを（　　　）つもりです。", options: ["あげる", "もらう", "くれる", "かえす"], answer: 1, explanation: "あげる means to give (I will give a present to my friend)." },
-            { stem: "きのう、はは（　　　）ケーキをつくってもらいました。", options: ["が", "を", "に", "で"], answer: 3, explanation: "に marks the person you receive the favor from." },
-            { stem: "にほんごは（　　　）ほどじょうずになります。", options: ["べんきょうする", "べんきょうした", "べんきょうすれば", "べんきょうして"], answer: 3, explanation: "〜ば〜ほど means the more you ~, the more ~." },
-            { stem: "あめが（　　　）、さんぽにいけません。", options: ["ふるので", "ふるから", "ふって", "ふるけど"], answer: 1, explanation: "ので gives a reason in a polite/objective way." },
-            { stem: "やまださんはテニス（　　　）サッカー（　　　）します。", options: ["と、と", "や、を", "も、も", "で、で"], answer: 3, explanation: "も…も means both ~ and ~." },
-            { stem: "おさけを（　　　）すぎないでください。", options: ["のむ", "のみ", "のんで", "のんだ"], answer: 2, explanation: "Verb stem + すぎる: のみ + すぎる." },
-            { stem: "このかばんはおもくて、（　　　）ことができません。", options: ["もつ", "もち", "もって", "もった"], answer: 1, explanation: "Dictionary form + ことができる." },
-            { stem: "かぎを（　　　）まま、でかけてしまいました。", options: ["かける", "かけない", "かけた", "かけなかった"], answer: 2, explanation: "〜ないまま means in the state of not having done." },
-            { stem: "にほんに（　　　）まえに、すこしにほんごをべんきょうしました。", options: ["くる", "きた", "きて", "こない"], answer: 1, explanation: "Dictionary form + まえに for before doing something." },
-            { stem: "かれはびょうきだった（　　　）、がっこうにきました。", options: ["のに", "から", "ので", "けど"], answer: 1, explanation: "のに expresses 'even though' (despite being sick, came to school)." },
-            { stem: "このにもつを（　　　）くださいませんか。", options: ["もつ", "もって", "もち", "もった"], answer: 2, explanation: "〜てください(ませんか) uses the て form." },
-            { stem: "せんせいにしゅくだいを（　　　）ました。", options: ["だす", "だし", "だして", "だそう"], answer: 2, explanation: "ます stem: だし + ました." },
-            { stem: "にほんのぶんかに（　　　）があります。", options: ["きょうみ", "じかん", "おかね", "りょうり"], answer: 1, explanation: "きょうみがある means to have interest in." }
+            { stem: "なつやすみにくに（　　　）かえります。", options: ["を", "で", "へ", "が"], answer: 3, explanation: "へ marks direction." },
+            { stem: "あさごはん（　　　）たべてから、がっこうへいきます。", options: ["が", "を", "に", "で"], answer: 2, explanation: "を direct object." },
+            { stem: "はし（　　　）ごはんをたべます。", options: ["に", "を", "で", "と"], answer: 3, explanation: "で marks means (with chopsticks)." },
+            { stem: "まいあさ６じ（　　　）おきます。", options: ["に", "を", "へ", "で"], answer: 1, explanation: "に marks a specific time." },
+            { stem: "うち（　　　）えきまであるいて１０ぷんです。", options: ["まで", "から", "に", "で"], answer: 2, explanation: "から marks the starting point." },
+            { stem: "きょうはきのう（　　　）あついです。", options: ["ほど", "より", "しか", "だけ"], answer: 2, explanation: "AよりB (more than A)." },
+            { stem: "おんがくをきき（　　　）べんきょうします。", options: ["ながら", "たり", "ても", "ので"], answer: 1, explanation: "stem ＋ ながら (while)." },
+            { stem: "つかれたときは、やすんだ（　　　）です。", options: ["ほうがいい", "ことがある", "つもり", "でしょう"], answer: 1, explanation: "〜たほうがいい (had better)." },
+            { stem: "「しゅくだいはおわりましたか。」「いいえ、（　　　）です。」", options: ["もう", "まだ", "また", "よく"], answer: 2, explanation: "まだ (not yet)." },
+            { stem: "にほんへいった（　　　）、ともだちにあいました。", options: ["まえ", "あと", "とき", "ごろ"], answer: 3, explanation: "〜たとき (when)." },
+            { stem: "ここでしゃしんをとら（　　　）ください。", options: ["ない", "なくて", "ないで", "なく"], answer: 3, explanation: "〜ないでください (please don't)." },
+            { stem: "わたしはほんをよむ（　　　）すきです。", options: ["のが", "ことを", "をが", "がは"], answer: 1, explanation: "〜のが好き (like doing)." },
+            { stem: "あしたはたぶんはれる（　　　）。", options: ["です", "でしょう", "ました", "ています"], answer: 2, explanation: "たぶん〜でしょう (probably)." }
           ]
         },
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "せんせいは　＿　＿　★　＿　くれました。", reorder: true, context: "せんせいは ＿ ＿ ＿ ★ くれました。", options: ["にほんごを", "わたしに", "おしえて", "やさしく"], answer: 3, explanation: "せんせいは わたしに やさしく にほんごを おしえて くれました。★ = おしえて" },
-            { stem: "この　＿　＿　＿　★　まちです。", reorder: true, context: "この ＿ ＿ ＿ ★ まちです。", options: ["は", "まち", "しずかな", "とても"], answer: 3, explanation: "この まち は とても しずかな まちです。★ = しずかな" },
-            { stem: "きのう　＿　＿　★　＿　ました。", reorder: true, context: "きのう ＿ ＿ ＿ ★ ました。", options: ["ともだちと", "おいしい", "たべ", "ラーメンを"], answer: 3, explanation: "きのう ともだちと おいしい ラーメンを たべ ました。★ = たべ" },
-            { stem: "いもうとは　＿　＿　★　＿　います。", reorder: true, context: "いもうとは ＿ ＿ ＿ ★ います。", options: ["を", "ピアノ", "て", "ならっ"], answer: 3, explanation: "いもうとは ピアノ を ならっ て います。★ = て" },
-            { stem: "わたしは　＿　＿　＿　★　です。", reorder: true, context: "わたしは ＿ ＿ ＿ ★ です。", options: ["にほんに", "いった", "まだ", "ことがない"], answer: 4, explanation: "わたしは まだ にほんに いった ことがない です。★ = ことがない" }
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "わたしは ＿ ★ ＿ ＿ よみます。", options: ["ほんを", "としょかん", "まいにち", "で"], answer: 2, explanation: "Correct: わたしはまいにちとしょかんでほんをよみます。  ★ = としょかん" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ＿ ★ ＿ おいしいです。", options: ["ケーキは", "この", "とても", "みせの"], answer: 1, explanation: "Correct: このみせのケーキはとてもおいしいです。  ★ = ケーキは" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "あした ＿ ＿ ＿ ★ いきます。", options: ["と", "みに", "ともだち", "えいがを"], answer: 2, explanation: "Correct: あしたともだちとえいがをみにいきます。  ★ = みに" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "わたしは ＿ ★ ＿ ＿ おもいます。", options: ["むずかしい", "にほんごは", "と", "えいごより"], answer: 4, explanation: "Correct: わたしはにほんごはえいごよりむずかしいとおもいます。  ★ = えいごより" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ★ ＿ ＿ あびます。", options: ["シャワーを", "いえに", "すぐ", "かえって"], answer: 4, explanation: "Correct: いえにかえってすぐシャワーをあびます。  ★ = かえって" }
           ]
         },
         {
           label: "問題7 — Read the text and fill in the blanks",
-          passage: "<p>わたしのまちはうみのちかくにあります。なつは（ 1 ）におよぎにいきます。ふゆはかぜが（ 2 ）、さむいです。まちにはおおきいデパートは（ 3 ）が、ちいさいおみせがたくさんあります。わたしはこのまちが（ 4 ）です。しょうらいもここに（ 5 ）たいです。</p>",
+          passage: "<p>わたしのまちには おおきいこうえんがあります。わたしはまいあさ、いえのちかく（ 1 ）こうえんでさんぽをします。こうえんにはきれいなはなが（ 2 ）さいています。あさはひとがすくないですから、とても（ 3 ）です。せんしゅうのにちようびは あめでしたから、こうえんへ（ 4 ）。こんどのにちようびは いいてんきだと いいです。はやく（ 5 ）さんぽにいきたいです。</p>",
           questions: [
-            { stem: "（ 1 ）にはいることばはどれですか。", options: ["やま", "うみ", "かわ", "みずうみ"], answer: 2, explanation: "うみのちかく → うみにおよぎにいきます。" },
-            { stem: "（ 2 ）にはいることばはどれですか。", options: ["つよくて", "よわくて", "おおくて", "すくなくて"], answer: 1, explanation: "かぜがつよくて、さむい — strong wind and cold." },
-            { stem: "（ 3 ）にはいることばはどれですか。", options: ["あります", "ありません", "います", "いません"], answer: 2, explanation: "おおきいデパートはありませんが (there isn't a big department store, but…)." },
-            { stem: "（ 4 ）にはいることばはどれですか。", options: ["きらい", "すき", "きれい", "にぎやか"], answer: 2, explanation: "このまちがすきです (I like this town)." },
-            { stem: "（ 5 ）にはいることばはどれですか。", options: ["すみ", "かえり", "はたらき", "あそび"], answer: 1, explanation: "ここにすみたいです (want to live here)." }
+            { stem: "（ 1 ）にはいることばはどれですか。", options: ["を", "の", "へ", "で"], answer: 2, explanation: "いえのちかくのこうえん（の）。" },
+            { stem: "（ 2 ）にはいることばはどれですか。", options: ["たくさん", "あまり", "ぜんぜん", "すこししか"], answer: 1, explanation: "たくさん咲いて (many)." },
+            { stem: "（ 3 ）にはいることばはどれですか。", options: ["にぎやか", "しずか", "べんり", "ゆうめい"], answer: 2, explanation: "人が少ない＝静か。" },
+            { stem: "（ 4 ）にはいることばはどれですか。", options: ["いきました", "いきます", "いきませんでした", "いきましょう"], answer: 3, explanation: "雨だったので行かなかった（過去否定）。" },
+            { stem: "（ 5 ）にはいることばはどれですか。", options: ["まだ", "もう", "また", "ずっと"], answer: 3, explanation: "またさんぽに行きたい (again)." }
           ]
         },
         {
           label: "問題8 — Read the passage and answer the question",
-          passage: "<p>せんしゅうのにちようび、はじめてすしをつくりました。インターネットでレシピをみて、さかなとごはんをかいました。つくるのはむずかしかったですが、いもうとがてつだってくれたので、なんとかできました。あじはまあまあでした。つぎはもっとじょうずにつくりたいです。</p>",
+          passage: "<p>たなかさんへ<br>きょうのかいぎですが、じかんがかわりました。まえは３じからでしたが、４じからになりました。へやもかわって、５かいのかいぎしつです。よろしくおねがいします。<br>やまだ</p>",
           questions: [
-            { stem: "すしをつくるのはどうでしたか。", options: ["かんたんだった", "むずかしかった", "たのしかった", "つまらなかった"], answer: 2, explanation: "つくるのはむずかしかったです。" }
+            { stem: "かいぎはなんじから、どこでしますか。", options: ["３じ・５かい", "４じ・３かい", "４じ・５かい", "３じ・４かい"], answer: 3, explanation: "4時から、5階の会議室。" }
           ]
         },
         {
           label: "問題8b — Short passage reading",
-          passage: "<p>りーさんへ<br>こんどのどようび、うちでバーベキューをします。１２じごろきてください。たべものはこちらでじゅんびしますが、のみものをもってきてくれませんか。にわでやりますから、くつはスニーカーがいいです。<br>たなかより</p>",
+          passage: "<p>わたしのいもうとはこうこうせいです。まいあさ７じはんにいえをでて、じてんしゃでえきまでいきます。それからでんしゃにのって、がっこうへいきます。がっこうはとおいですから、いえをでてから１じかんかかります。</p>",
           questions: [
-            { stem: "りーさんはなにをもっていきますか。", options: ["たべもの", "のみもの", "にく", "くつ"], answer: 2, explanation: "のみものをもってきてくれませんか。" }
+            { stem: "いもうとは どうやってえきまでいきますか。", options: ["あるいて", "じてんしゃで", "でんしゃで", "バスで"], answer: 2, explanation: "自転車で駅まで。" }
           ]
         },
         {
           label: "問題8c — Short passage reading",
-          passage: "<p>にほんではでんしゃがじかんどおりにきます。おくれることはほとんどありません。でも、たいふうのときはでんしゃがとまることがあります。そのときはバスやタクシーでいかなければなりません。</p>",
+          passage: "<p>あした、クラスのみんなでやまにのぼります。あさ８じにがっこうのまえにあつまってください。おべんとうとのみものをわすれないでください。あめのときは、やまにのぼりません。きょうしつでべんきょうします。</p>",
           questions: [
-            { stem: "でんしゃがとまるのはどんなときですか。", options: ["まいにち", "あさ", "たいふうのとき", "よる"], answer: 3, explanation: "たいふうのときはでんしゃがとまることがあります。" }
+            { stem: "あめのとき、あしたなにをしますか。", options: ["やまにのぼる", "がっこうでべんきょうする", "いえでやすむ", "８じにあつまる"], answer: 2, explanation: "雨なら教室で勉強。" }
           ]
         },
         {
           label: "問題9 — Read the passage and answer the questions",
-          passage: "<p>わたしはまいとしふゆにスキーにいきます。ことしは３がつにながのにいきました。ゆきがたくさんあって、とてもたのしかったです。ホテルのおんせんもよかったです。でも、スキーでころんで、あしをすこしけがしました。びょういんにはいきませんでしたが、いたかったです。らいねんはもっとじょうずにすべりたいです。</p>",
+          passage: "<p>わたしのちちはりょうりがとてもじょうずです。まいしゅうにちようびのあさ、かぞくみんなのあさごはんをつくります。ちちのつくるたまごりょうりはせかいでいちばんおいしいです。<br>でも、はははりょうりがあまりすきじゃありません。ですから、わたしはおおきくなったら、ははにおいしいりょうりをつくってあげたいです。いま、ははのりょうりをならっています。</p>",
           questions: [
-            { stem: "このひとはいつながのにいきましたか。", options: ["１がつ", "２がつ", "３がつ", "４がつ"], answer: 3, explanation: "ことしは３がつにながのにいきました。" },
-            { stem: "スキーでなにがありましたか。", options: ["ゆきがなかった", "おんせんにはいった", "ころんでけがをした", "ともだちにあった"], answer: 3, explanation: "スキーでころんで、あしをすこしけがしました。" }
+            { stem: "だれがにちようびのあさごはんをつくりますか。", options: ["ちち", "はは", "わたし", "かぞくみんな"], answer: 1, explanation: "父が日曜の朝ごはんを作る。" },
+            { stem: "「わたし」はいまなにをしていますか。", options: ["りょうりをならっている", "あさごはんをつくっている", "はたらいている", "がっこうへいっている"], answer: 1, explanation: "今、料理を習っている。" }
           ]
         },
         {
           label: "問題10 — Look at the information and answer the question",
-          passage: "<p><b>【さくらまつり】</b><br>ひにち：４がつ５にち（どようび）〜４がつ１３にち（にちようび）<br>じかん：ごぜん１０：００〜ごご８：００（さいしゅうにちは ごご５：００まで）<br>ばしょ：ちゅうおうこうえん<br>イベント：<br>・おちゃたいけん（まいにち ごご２：００〜）むりょう<br>・おはなみコンサート（どようび ごご６：００〜）<br>・やたい（いろいろなたべもの）<br>※ちゅうしゃじょうはありません。でんしゃ・バスでおこしください。</p>",
+          passage: "<p><b>【えいがかんのおしらせ】</b><br>「うみのものがたり」<br>じょうえいじかん：①１０：００　②１３：００　③１６：００　④１９：００<br>りょうきん：おとな１,５００円　こども（１２さいまで）８００円<br>※すいようびはみんな１,０００円です。<br>※よる（④）はこどもははいれません。</p>",
           questions: [
-            { stem: "さいしゅうにちはなんじまでですか。", options: ["ごご３じまで", "ごご５じまで", "ごご８じまで", "ごご１０じまで"], answer: 2, explanation: "さいしゅうにちはごご５：００まで。" }
+            { stem: "１２さいのこどもが すいようびに みたいです。いくらで、どのじかんがだめですか。", options: ["１,０００円・④はだめ", "８００円・①はだめ", "１,５００円・④はだめ", "１,０００円・①はだめ"], answer: 1, explanation: "水曜は皆1000円。夜④は子供不可。" }
           ]
         }
       ]
@@ -2820,48 +2820,48 @@ var EXAM_DATA = {
         {
           label: "問題1 — Choose the correct reading for the underlined kanji",
           questions: [
-            { stem: "<u>電車</u>でかいしゃにいきます。", options: ["でんしゃ", "でんち", "てんしゃ", "でんくるま"], answer: 1, explanation: "電車 is read でんしゃ (train)." },
-            { stem: "<u>図書館</u>はしずかなところです。", options: ["としょかん", "ずしょかん", "としょやかた", "としょかた"], answer: 1, explanation: "図書館 is read としょかん (library)." },
-            { stem: "この<u>道</u>をまっすぐいってください。", options: ["どう", "みち", "ろ", "とおり"], answer: 2, explanation: "道 is read みち (road/way)." },
-            { stem: "<u>朝</u>はやくおきてさんぽします。", options: ["ちょう", "あさ", "ひる", "よる"], answer: 2, explanation: "朝 is read あさ (morning)." },
-            { stem: "<u>家族</u>でりょこうしました。", options: ["かぞく", "いえぞく", "けぞく", "かそく"], answer: 1, explanation: "家族 is read かぞく (family)." },
-            { stem: "あの<u>花</u>はきれいですね。", options: ["か", "はな", "はね", "くさ"], answer: 2, explanation: "花 is read はな (flower)." },
-            { stem: "<u>教室</u>はどこですか。", options: ["きょうしつ", "きょうま", "おしえしつ", "がくしつ"], answer: 1, explanation: "教室 is read きょうしつ (classroom)." },
-            { stem: "きのう<u>買い物</u>にいきました。", options: ["かいもの", "ばいもの", "かいぶつ", "こうもの"], answer: 1, explanation: "買い物 is read かいもの (shopping)." }
+            { stem: "まいにち<u>朝</u>６じにおきます。", options: ["あさ", "ひる", "よる", "ばん"], answer: 1, explanation: "朝 = あさ (morning)." },
+            { stem: "ともだちに<u>手紙</u>をかきました。", options: ["てがみ", "てかみ", "しゅし", "てし"], answer: 1, explanation: "手紙 = てがみ (letter)." },
+            { stem: "あの<u>男</u>のひとはだれですか。", options: ["おとこ", "おんな", "ひと", "だん"], answer: 1, explanation: "男 = おとこ (man)." },
+            { stem: "ここに<u>名前</u>をかいてください。", options: ["なまえ", "なめい", "めいぜん", "なまい"], answer: 1, explanation: "名前 = なまえ (name)." },
+            { stem: "これは<u>三百</u>円です。", options: ["さんひゃく", "さんびゃく", "さんぴゃく", "みびゃく"], answer: 2, explanation: "三百 = さんびゃく (sound change)." },
+            { stem: "みなさん、<u>立って</u>ください。", options: ["たって", "だって", "りって", "まって"], answer: 1, explanation: "立つ = たつ (to stand)." },
+            { stem: "この川はとても<u>長い</u>です。", options: ["ながい", "たかい", "とおい", "おおい"], answer: 1, explanation: "長い = ながい (long)." },
+            { stem: "<u>午前</u>９じにきてください。", options: ["ごぜん", "ごご", "うぜん", "こぜん"], answer: 1, explanation: "午前 = ごぜん (a.m.)." }
           ]
         },
         {
           label: "問題2 — Choose the correct writing for the underlined word",
           questions: [
-            { stem: "<u>おとうと</u>はまだこうこうせいです。", options: ["弟", "兄", "妹", "姉"], answer: 1, explanation: "おとうと is written 弟 (younger brother)." },
-            { stem: "<u>にもつ</u>がおもいです。", options: ["荷物", "似物", "仁物", "荷者"], answer: 1, explanation: "にもつ is written 荷物 (luggage)." },
-            { stem: "<u>いみ</u>がわかりません。", options: ["異味", "意美", "意味", "居味"], answer: 3, explanation: "いみ is written 意味 (meaning)." },
-            { stem: "あの<u>たてもの</u>はゆうめいです。", options: ["建物", "立物", "建者", "達物"], answer: 1, explanation: "たてもの is written 建物 (building)." },
-            { stem: "<u>こたえ</u>がわかりましたか。", options: ["答え", "応え", "堪え", "対え"], answer: 1, explanation: "こたえ is written 答え (answer)." },
-            { stem: "<u>じどうしゃ</u>でいきましょう。", options: ["自動者", "自動車", "自道車", "児動車"], answer: 2, explanation: "じどうしゃ is written 自動車 (car/automobile)." }
+            { stem: "わたしのくには<u>かわ</u>がおおいです。", options: ["川", "州", "河", "水"], answer: 1, explanation: "かわ = 川." },
+            { stem: "にわに<u>おおきい</u>いぬがいます。", options: ["大きい", "太きい", "犬きい", "天きい"], answer: 1, explanation: "おおきい = 大きい." },
+            { stem: "<u>はは</u>はりょうりがじょうずです。", options: ["毎", "母", "海", "梅"], answer: 2, explanation: "はは = 母 (mother)." },
+            { stem: "この本はとても<u>ふるい</u>です。", options: ["古い", "苦い", "固い", "居い"], answer: 1, explanation: "ふるい = 古い (old)." },
+            { stem: "７じにいえを<u>でます</u>。", options: ["出ます", "山ます", "止ます", "内ます"], answer: 1, explanation: "でる = 出る." },
+            { stem: "いま、ほんを<u>よんで</u>います。", options: ["読んで", "語んで", "話んで", "詩んで"], answer: 1, explanation: "よむ = 読む." }
           ]
         },
         {
           label: "問題3 — Choose the best word to fill in the blank",
           questions: [
-            { stem: "でんしゃにかさを（　　　）しまいました。", options: ["わすれて", "おとして", "なくして", "すてて"], answer: 1, explanation: "かさをわすれる means to forget/leave behind an umbrella." },
-            { stem: "もうすこし（　　　）はなしてください。", options: ["はやく", "ゆっくり", "おおきく", "ちいさく"], answer: 2, explanation: "ゆっくりはなして means speak more slowly." },
-            { stem: "この（　　　）はまだあたらしいですよ。", options: ["じしょ", "テスト", "しゅくだい", "レポート"], answer: 1, explanation: "じしょ (dictionary) — a book that can be new." },
-            { stem: "みちを（　　　）ときはきをつけてください。", options: ["わたる", "のぼる", "はしる", "とぶ"], answer: 1, explanation: "みちをわたる means to cross the street." },
-            { stem: "けさ、でんしゃが（　　　）。ちこくしました。", options: ["はやかった", "おくれた", "とまった", "きた"], answer: 2, explanation: "でんしゃがおくれた means the train was late." },
-            { stem: "きのうは（　　　）べんきょうしました。", options: ["いちにちじゅう", "いちねんじゅう", "いつも", "ときどき"], answer: 1, explanation: "いちにちじゅう means all day long." },
-            { stem: "このもんだいの（　　　）をおしえてください。", options: ["こたえ", "はなし", "もの", "こと"], answer: 1, explanation: "こたえをおしえる means to tell the answer." },
-            { stem: "おかあさんに（　　　）をかいてもらいました。", options: ["ほん", "てがみ", "おべんとう", "ノート"], answer: 3, explanation: "おべんとうをつくってもらう — had mother make a lunch." }
+            { stem: "へやがくらいですから、（　　　）をつけてください。", options: ["でんき", "みず", "ドア", "かぎ"], answer: 1, explanation: "でんきをつける (turn on the light)." },
+            { stem: "からだにいいですから、（　　　）をたくさんたべます。", options: ["やさい", "おかし", "あめ", "パン"], answer: 1, explanation: "やさい (vegetables)." },
+            { stem: "まいあさバスに（　　　）かいしゃへいきます。", options: ["のって", "あるいて", "はいって", "おりて"], answer: 1, explanation: "バスにのる (ride a bus)." },
+            { stem: "うちはえきに（　　　）ですから、べんりです。", options: ["とおい", "ちかい", "たかい", "ひろい"], answer: 2, explanation: "ちかい (near)." },
+            { stem: "さむいですから、まどを（　　　）ください。", options: ["あけて", "しめて", "つけて", "けして"], answer: 2, explanation: "まどをしめる (close the window)." },
+            { stem: "「おげんきですか。」「はい、（　　　）です。」", options: ["びょうき", "げんき", "ひま", "じょうず"], answer: 2, explanation: "げんき (well)." },
+            { stem: "よくわかりませんから、（　　　）いってください。", options: ["もういちど", "ときどき", "だんだん", "ぜんぜん"], answer: 1, explanation: "もういちど (once more)." },
+            { stem: "このへやは（　　　）ですから、そうじします。", options: ["きれい", "きたない", "あかるい", "しずか"], answer: 2, explanation: "きたない (dirty) — clean it." }
           ]
         },
         {
           label: "問題4 — Choose the sentence with the closest meaning",
           questions: [
-            { stem: "たなかさんはわたしよりせがたかいです。", options: ["わたしはたなかさんよりせがたかいです。", "わたしはたなかさんよりせがひくいです。", "たなかさんとわたしはおなじせです。", "わたしのほうがたかいです。"], answer: 2, explanation: "If Tanaka is taller than me, I am shorter than Tanaka." },
-            { stem: "きょうはなにもたべていません。", options: ["きょうはたくさんたべました。", "きょうはまだなにもたべていません。", "きょうはすこしたべました。", "きょうはおいしいものをたべました。"], answer: 2, explanation: "なにもたべていない = まだなにもたべていない." },
-            { stem: "おとうとはわたしほどはやくはしれません。", options: ["おとうとはわたしよりはやいです。", "おとうとはわたしとおなじくらいはやいです。", "わたしはおとうとよりはやくはしれます。", "おとうとのほうがはやいです。"], answer: 3, explanation: "おとうとはわたしほど〜ない = I am faster." },
-            { stem: "あのみせのラーメンはいちばんおいしいです。", options: ["あのみせのラーメンはあまりおいしくないです。", "あのみせのラーメンよりおいしいみせがあります。", "あのみせのラーメンがほかのどのみせよりもおいしいです。", "あのみせのラーメンはふつうです。"], answer: 3, explanation: "いちばんおいしい = ほかのどの〜よりもおいしい (the most delicious)." },
-            { stem: "こんどのしゅうまつはべんきょうするつもりです。", options: ["しゅうまつはべんきょうしたくないです。", "しゅうまつにべんきょうするよていです。", "しゅうまつはべんきょうしませんでした。", "しゅうまつにべんきょうしてはいけません。"], answer: 2, explanation: "つもり and よてい both express plans." }
+            { stem: "このまちはにぎやかです。", options: ["このまちはしずかです。", "このまちはひとがおおいです。", "このまちはふるいです。", "このまちはちいさいです。"], answer: 2, explanation: "にぎやか = 人が多い。" },
+            { stem: "わたしはうたがへたです。", options: ["わたしはうたがすきです。", "わたしはうたがじょうずです。", "わたしはうたがじょうずじゃありません。", "わたしはうたをよくうたいます。"], answer: 3, explanation: "へた = じょうずじゃない。" },
+            { stem: "このりょうりはまずいです。", options: ["このりょうりはおいしいです。", "このりょうりはおいしくないです。", "このりょうりはあまいです。", "このりょうりはからいです。"], answer: 2, explanation: "まずい = おいしくない。" },
+            { stem: "きのうかいしゃをやすみました。", options: ["きのうかいしゃへいきました。", "きのうかいしゃへいきませんでした。", "きのうかいしゃではたらきました。", "きのうかいしゃにいました。"], answer: 2, explanation: "休んだ = 行かなかった。" },
+            { stem: "わたしはせんせいに本をもらいました。", options: ["せんせいはわたしに本をもらいました。", "せんせいはわたしに本をくれました。", "わたしはせんせいに本をあげました。", "わたしはせんせいに本をかしました。"], answer: 2, explanation: "私がもらった = 先生がくれた。" }
           ]
         }
       ]
@@ -2874,76 +2874,76 @@ var EXAM_DATA = {
         {
           label: "問題5 — Choose the best answer to fill in the blank",
           questions: [
-            { stem: "きのうかった（　　　）はとてもおもしろいです。", options: ["ほんが", "ほんは", "ほんを", "ほん"], answer: 4, explanation: "Relative clause modifies ほん directly: きのうかったほん." },
-            { stem: "にほんごを（　　　）ために、にほんにきました。", options: ["べんきょうする", "べんきょうした", "べんきょうして", "べんきょう"], answer: 1, explanation: "Dictionary form + ために = in order to." },
-            { stem: "わたしはせんせいに（　　　）られました。", options: ["しかる", "しかり", "しかれ", "しか"], answer: 3, explanation: "Passive form: しかる → しかられる." },
-            { stem: "ともだちがわたし（　　　）にほんごをおしえてくれました。", options: ["を", "に", "が", "で"], answer: 2, explanation: "に marks the person receiving the favor." },
-            { stem: "このスカートはちょっとみじか（　　　）です。", options: ["い", "く", "すぎる", "すぎ"], answer: 4, explanation: "い-adj stem + すぎ: みじか + すぎ." },
-            { stem: "しけんにうかる（　　　）、まいにちべんきょうしています。", options: ["ように", "つもりで", "ために", "ことに"], answer: 1, explanation: "ように marks a goal/hope: so that I can pass." },
-            { stem: "たなかさんがきた（　　　）、みんなうれしそうでした。", options: ["とき", "から", "ので", "でも"], answer: 1, explanation: "とき marks the time: when Tanaka came." },
-            { stem: "おかねが（　　　）、りょこうにいけません。", options: ["なくて", "ないから", "なくても", "ないので"], answer: 1, explanation: "なくて connects a reason to a result." },
-            { stem: "やまださんはりょうりがつくれる（　　　）おどれます。", options: ["し", "でも", "から", "ので"], answer: 1, explanation: "し lists reasons: can cook and also can dance." },
-            { stem: "（　　　）すれば、にほんごがじょうずになりますか。", options: ["どう", "なに", "いつ", "どこ"], answer: 1, explanation: "どうすれば means how should I / what should I do." },
-            { stem: "にちようびはたいてい（　　　）か（　　　）かします。", options: ["さんぽする、かいものする", "さんぽし、かいものし", "さんぽした、かいものした", "さんぽして、かいものして"], answer: 1, explanation: "Dictionary form + か + dictionary form + か + する." },
-            { stem: "ちちはわたしに（　　　）をくれました。", options: ["おかし", "おかしが", "おかしを", "おかしの"], answer: 1, explanation: "Direct object of くれる: おかし を → but くれました already has に; おかし is the object." },
-            { stem: "このかんじの（　　　）かたがわかりません。", options: ["よむ", "よみ", "よんで", "よんだ"], answer: 2, explanation: "Verb stem + かた = way of doing: よみかた." }
+            { stem: "きのう、ともだち（　　　）でんわではなしました。", options: ["を", "が", "と", "へ"], answer: 3, explanation: "ともだちと (with a friend)." },
+            { stem: "かべ（　　　）えがあります。", options: ["を", "に", "で", "へ"], answer: 2, explanation: "に marks the location of existence." },
+            { stem: "わたしはおんがく（　　　）すきです。", options: ["を", "に", "が", "で"], answer: 3, explanation: "〜が好き." },
+            { stem: "こうえん（　　　）さんぽします。", options: ["に", "へ", "を", "が"], answer: 3, explanation: "を marks the path (walk through the park)." },
+            { stem: "きのうはあめでした。きょう（　　　）あめです。", options: ["は", "が", "も", "を"], answer: 3, explanation: "も (also)." },
+            { stem: "にちようびはほんをよんだり、テレビをみ（　　　）します。", options: ["たり", "ながら", "ても", "ので"], answer: 1, explanation: "〜たり〜たり." },
+            { stem: "ねる（　　　）はをみがきます。", options: ["あとで", "まえに", "とき", "ながら"], answer: 2, explanation: "〜まえに (before)." },
+            { stem: "あたらしいくるまが（　　　）です。", options: ["ほしい", "たい", "すき", "いる"], answer: 1, explanation: "〜がほしい (want a thing)." },
+            { stem: "わたしはにほんごをはなす（　　　）。", options: ["ことができます", "ことがあります", "つもりです", "でしょう"], answer: 1, explanation: "〜ことができる (can)." },
+            { stem: "やまださんはピアノを（　　　）ひきます。", options: ["じょうずに", "じょうずな", "じょうずだ", "じょうずで"], answer: 1, explanation: "じょうずに (skillfully, adverb)." },
+            { stem: "あたまがいたい（　　　）、はやくかえります。", options: ["のに", "ので", "ても", "なら"], answer: 2, explanation: "〜ので (because)." },
+            { stem: "なつやすみにくにへかえる（　　　）です。", options: ["つもり", "ところ", "ばかり", "はず"], answer: 1, explanation: "〜つもり (intend to)." },
+            { stem: "あした、はやくおき（　　　）なりません。", options: ["なくても", "なければ", "ないで", "なく"], answer: 2, explanation: "〜なければなりません (must)." }
           ]
         },
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "あのひとは　＿　＿　＿　★　みえます。", reorder: true, context: "あのひとは ＿ ＿ ＿ ★ みえます。", options: ["じっさい", "より", "とても", "わかく"], answer: 4, explanation: "あのひとは じっさい より とても わかく みえます。★ = わかく" },
-            { stem: "でんしゃの　＿　＿　★　＿　ました。", reorder: true, context: "でんしゃの ＿ ＿ ★ ＿ ました。", options: ["かさを", "なかに", "わすれて", "しまい"], answer: 3, explanation: "でんしゃの なかに かさを わすれて しまいました。★ = わすれて" },
-            { stem: "にほんに　＿　＿　＿　★　。", reorder: true, context: "にほんに ＿ ＿ ＿ ★ 。", options: ["いちねん", "もう", "すんで", "になります"], answer: 4, explanation: "にほんに すんで もう いちねん になります。★ = になります" },
-            { stem: "ははは　＿　＿　★　＿　くれました。", reorder: true, context: "ははは ＿ ＿ ＿ ★ くれました。", options: ["わたしに", "セーターを", "あたたかい", "つくって"], answer: 4, explanation: "ははは わたしに あたたかい セーターを つくって くれました。★ = つくって" },
-            { stem: "たなかさんは　＿　＿　★　＿　います。", reorder: true, context: "たなかさんは ＿ ＿ ＿ ★ います。", options: ["うたを", "たのしそうに", "うたって", "あの"], answer: 3, explanation: "たなかさんは たのしそうに あの うたを うたって います。★ = うたって" }
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "わたしは ＿ ★ ＿ ＿ のみます。", options: ["コーヒー", "まいあさ", "を", "あつい"], answer: 4, explanation: "Correct: わたしはまいあさあついコーヒーをのみます。  ★ = あつい" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "きのう ＿ ＿ ★ ＿ かいました。", options: ["あたらしい", "を", "デパートで", "かばん"], answer: 4, explanation: "Correct: きのうデパートであたらしいかばんをかいました。  ★ = かばん" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ＿ ★ ＿ おいしいです。", options: ["からくて", "この", "とても", "りょうりは"], answer: 1, explanation: "Correct: このりょうりはからくてとてもおいしいです。  ★ = からくて" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ★ ＿ ＿ およぎました。", options: ["で", "ともだちと", "にちようびに", "プール"], answer: 2, explanation: "Correct: にちようびにともだちとプールでおよぎました。  ★ = ともだちと" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ＿ ＿ ★ います。", options: ["で", "あには", "はたらいて", "ぎんこう"], answer: 3, explanation: "Correct: あにはぎんこうではたらいています。  ★ = はたらいて" }
           ]
         },
         {
           label: "問題7 — Read the text and fill in the blanks",
-          passage: "<p>きのうはたなかさんのたんじょうびパーティーでした。パーティーは（ 1 ）にありました。みんなでケーキを（ 2 ）、うたをうたいました。たなかさんは（ 3 ）そうでした。わたしはたなかさんに（ 4 ）をあげました。パーティーは（ 5 ）ごろおわりました。</p>",
+          passage: "<p>わたしはせんしゅう、はじめてひとりでりょうりをつくりました。ははにレシピを（ 1 ）、カレーをつくりました。やさいをきって、にく（ 2 ）いっしょににました。３０ぷん（ 3 ）まちました。できたカレーはすこしからかったですが、とても（ 4 ）。かぞくも「おいしい」といってくれました。こんどはもっとじょうずに（ 5 ）とおもいます。</p>",
           questions: [
-            { stem: "（ 1 ）にはいることばはどれですか。", options: ["レストラン", "こうえん", "びょういん", "がっこう"], answer: 1, explanation: "パーティーはレストランにありました。" },
-            { stem: "（ 2 ）にはいることばはどれですか。", options: ["たべて", "のんで", "つくって", "かって"], answer: 1, explanation: "ケーキをたべて (ate cake)." },
-            { stem: "（ 3 ）にはいることばはどれですか。", options: ["かなし", "うれし", "さびし", "つまらな"], answer: 2, explanation: "うれしそうでした (looked happy)." },
-            { stem: "（ 4 ）にはいることばはどれですか。", options: ["プレゼント", "おかね", "でんわ", "てがみ"], answer: 1, explanation: "プレゼントをあげました (gave a present)." },
-            { stem: "（ 5 ）にはいることばはどれですか。", options: ["あさ", "ひる", "よる９じ", "よる１２じ"], answer: 3, explanation: "よる９じごろおわりました (ended around 9 PM)." }
+            { stem: "（ 1 ）にはいることばはどれですか。", options: ["あげて", "もらって", "くれて", "かして"], answer: 2, explanation: "母にレシピをもらって (received)." },
+            { stem: "（ 2 ）にはいることばはどれですか。", options: ["を", "と", "が", "に"], answer: 2, explanation: "にくといっしょに (together with meat)." },
+            { stem: "（ 3 ）にはいることばはどれですか。", options: ["ぐらい", "しか", "だけ", "など"], answer: 1, explanation: "30分ぐらい (about)." },
+            { stem: "（ 4 ）にはいることばはどれですか。", options: ["おいしいです", "おいしかったです", "おいしくないです", "おいしくありません"], answer: 2, explanation: "過去の肯定 (was delicious)." },
+            { stem: "（ 5 ）にはいることばはどれですか。", options: ["つくりたい", "つくった", "つくって", "つくらない"], answer: 1, explanation: "もっと上手に作りたい (want to make)." }
           ]
         },
         {
           label: "問題8 — Read the passage and answer the question",
-          passage: "<p>わたしはまいあさ、こうえんでジョギングをします。いつもは３０ぷんぐらいはしりますが、あめのひはうちでストレッチをします。うんどうしたあとは、シャワーをあびて、あさごはんをたべます。あさのうんどうをはじめてから、からだのちょうしがよくなりました。</p>",
+          passage: "<p>みなさんへ<br>あしたのえんそくは、あめがふったらちゅうしです。あさ７じにテレビをみてください。７じのニュースで、えんそくがあるかないか、わかります。べんとうはいりません。みずだけもってきてください。</p>",
           questions: [
-            { stem: "あめのひはなにをしますか。", options: ["こうえんではしる", "うちでストレッチをする", "なにもしない", "ジムにいく"], answer: 2, explanation: "あめのひはうちでストレッチをします。" }
+            { stem: "えんそくがあるかどうか、どうやってわかりますか。", options: ["せんせいにきく", "７じのニュースをみる", "がっこうへいく", "でんわする"], answer: 2, explanation: "7時のニュースでわかる。" }
           ]
         },
         {
           label: "問題8b — Short passage reading",
-          passage: "<p>やまもとさんへ<br>あしたのミーティングのじかんがかわりました。１０じからではなく、１１じからになりました。ばしょはおなじで、３かいのかいぎしつＡです。しりょうをもってきてください。<br>すずきより</p>",
+          passage: "<p>わたしのへやには おおきいまどがあります。まどからうみがみえます。あさ、まどをあけると、つめたいかぜがはいってきて、とてもきもちがいいです。よるは うみのうえに ほしがたくさんみえます。わたしはこのへやがだいすきです。</p>",
           questions: [
-            { stem: "ミーティングはなんじからですか。", options: ["９じ", "１０じ", "１１じ", "１２じ"], answer: 3, explanation: "１１じからになりました。" }
+            { stem: "「わたし」のへやのまどから、なにがみえますか。", options: ["やま", "うみ", "こうえん", "えき"], answer: 2, explanation: "窓から海が見える。" }
           ]
         },
         {
           label: "問題8c — Short passage reading",
-          passage: "<p>きのう、はじめてかいてんずしにいきました。おすしがベルトの上をまわっていて、すきなものをとって食べます。わたしはまぐろとサーモンをたくさんたべました。１０さらたべて、２,０００えんでした。やすくておいしかったです。</p>",
+          passage: "<p>スミスさんへ<br>らいしゅうのどようび、わたしのうちでパーティーをします。ごご６じからです。たべものはわたしがつくりますから、なにももってこなくていいです。でも、すきなのみものがあったら、もってきてください。<br>たなか</p>",
           questions: [
-            { stem: "このひとはいくらはらいましたか。", options: ["１,０００えん", "１,５００えん", "２,０００えん", "３,０００えん"], answer: 3, explanation: "２,０００えんでした。" }
+            { stem: "スミスさんはパーティーになにをもっていきますか。", options: ["たべもの", "なにも", "すきなのみもの", "おかし"], answer: 3, explanation: "好きな飲み物があれば持ってくる。" }
           ]
         },
         {
           label: "問題9 — Read the passage and answer the questions",
-          passage: "<p>わたしはことしの４がつからにほんにすんでいます。にほんにくるまえ、にほんのせいかつはたいへんだとおもっていました。でも、じっさいにすんでみると、まわりのひとがとてもやさしくて、たすけてくれます。いちばんこまったのはごみのだしかたです。にほんではごみをわけなければなりません。さいしょはわかりませんでしたが、となりのひとがおしえてくれました。いまはなれて、にほんのせいかつがたのしいです。</p>",
+          passage: "<p>わたしはこどものとき、やさいがきらいでした。とくにトマトがだいきらいで、ぜんぜんたべませんでした。でも、だいがくにはいってから、ひとりでくらすようになって、じぶんでりょうりをつくりはじめました。<br>あるひ、ともだちがトマトのサラダをつくってくれました。たべてみると、とてもおいしかったです。それから、わたしはやさいがすきになりました。いまはまいにちやさいをたべています。</p>",
           questions: [
-            { stem: "いちばんこまったことはなんですか。", options: ["にほんごがわからない", "ごみのだしかた", "たべものがあわない", "ともだちがいない"], answer: 2, explanation: "いちばんこまったのはごみのだしかたです。" },
-            { stem: "だれがごみのだしかたをおしえてくれましたか。", options: ["せんせい", "ともだち", "となりのひと", "かぞく"], answer: 3, explanation: "となりのひとがおしえてくれました。" }
+            { stem: "「わたし」はこどものとき、なにがだいきらいでしたか。", options: ["やさいぜんぶ", "トマト", "サラダ", "りょうり"], answer: 2, explanation: "特にトマトが大嫌い。" },
+            { stem: "「わたし」はどうしてやさいがすきになりましたか。", options: ["ははがつくってくれたから", "ともだちのトマトのサラダがおいしかったから", "びょうきになったから", "だいがくでならったから"], answer: 2, explanation: "友達のトマトサラダが美味しかったから。" }
           ]
         },
         {
           label: "問題10 — Look at the information and answer the question",
-          passage: "<p><b>【えいがかん シネマパーク】</b><br>じょうえいスケジュール：<br>① 「ネコものがたり」 ９：３０〜１１：３０<br>② 「トウキョウ・ラブ」 １２：００〜１４：００<br>③ 「サムライ X」 １４：３０〜１６：３０<br>④ 「ネコものがたり」 １７：００〜１９：００<br>⑤ 「トウキョウ・ラブ」 １９：３０〜２１：３０<br><br>りょうきん：おとな１,８００えん／がくせい１,２００えん／こども８００えん<br>※まいしゅうすいようびはレディースデー（じょせいは１,０００えん）</p>",
+          passage: "<p><b>【としょかんのつかいかた】</b><br>あいているじかん：かようび〜にちようび　９：００〜２０：００<br>やすみ：まいしゅうげつようび<br>ほんをかりる：いちどに５さつまで、２しゅうかん<br>※カードがひつようです。はじめてのひとは、うけつけでカードをつくってください。</p>",
           questions: [
-            { stem: "がくせいが「サムライ X」をみるとき、いくらですか。", options: ["８００えん", "１,０００えん", "１,２００えん", "１,８００えん"], answer: 3, explanation: "がくせい１,２００えん。" }
+            { stem: "はじめてほんをかりるひとは、まずなにをしますか。", options: ["５さつえらぶ", "げつようびにいく", "うけつけでカードをつくる", "２しゅうかんまつ"], answer: 3, explanation: "初めての人は受付でカードを作る。" }
           ]
         }
       ]
@@ -3045,48 +3045,48 @@ var EXAM_DATA = {
         {
           label: "問題1 — Choose the correct reading for the underlined kanji",
           questions: [
-            { stem: "<u>今日</u>はいいてんきですね。", options: ["きょう", "こんにち", "いまにち", "きょうび"], answer: 1, explanation: "今日 is read きょう (today)." },
-            { stem: "わたしは<u>音楽</u>がすきです。", options: ["おとがく", "おんがく", "おんらく", "いんがく"], answer: 2, explanation: "音楽 is read おんがく (music)." },
-            { stem: "<u>水曜日</u>にテストがあります。", options: ["かようび", "もくようび", "すいようび", "きんようび"], answer: 3, explanation: "水曜日 is read すいようび (Wednesday)." },
-            { stem: "<u>旅行</u>がたのしかったです。", options: ["りょこう", "りょうこう", "たびこう", "りょぎょう"], answer: 1, explanation: "旅行 is read りょこう (travel)." },
-            { stem: "この<u>料理</u>はおいしいです。", options: ["りょうり", "りょり", "りょうい", "りょうじ"], answer: 1, explanation: "料理 is read りょうり (cooking/food)." },
-            { stem: "<u>駅</u>のちかくにすんでいます。", options: ["まち", "えき", "むら", "みせ"], answer: 2, explanation: "駅 is read えき (station)." },
-            { stem: "<u>仕事</u>がいそがしいです。", options: ["しごと", "しこと", "つかえもの", "じごと"], answer: 1, explanation: "仕事 is read しごと (work/job)." },
-            { stem: "<u>晩御飯</u>はなにをたべますか。", options: ["ばんごはん", "ひるごはん", "あさごはん", "ゆうごはん"], answer: 1, explanation: "晩御飯 is read ばんごはん (dinner)." }
+            { stem: "<u>夜</u>１１じにねます。", options: ["あさ", "ひる", "よる", "ばん"], answer: 3, explanation: "夜 = よる (night)." },
+            { stem: "きょうは<u>風</u>がつよいです。", options: ["かぜ", "あめ", "ゆき", "くも"], answer: 1, explanation: "風 = かぜ (wind)." },
+            { stem: "にわに<u>木</u>があります。", options: ["き", "かわ", "つき", "もく"], answer: 1, explanation: "木 = き (tree)." },
+            { stem: "<u>耳</u>がいたいです。", options: ["め", "みみ", "はな", "くち"], answer: 2, explanation: "耳 = みみ (ear)." },
+            { stem: "あした<u>九時</u>にあいましょう。", options: ["くじ", "きゅうじ", "ここのじ", "くうじ"], answer: 1, explanation: "九時 = くじ (nine o'clock)." },
+            { stem: "スーパーで<u>買い</u>ものをします。", options: ["かい", "ばい", "がい", "かえ"], answer: 1, explanation: "買う = かう (to buy)." },
+            { stem: "これは<u>六百</u>円です。", options: ["ろくひゃく", "ろっぴゃく", "ろくびゃく", "ろっひゃく"], answer: 2, explanation: "六百 = ろっぴゃく (sound change)." },
+            { stem: "そふはとても<u>元気</u>です。", options: ["げんき", "がんき", "けんき", "げんぎ"], answer: 1, explanation: "元気 = げんき (healthy)." }
           ]
         },
         {
           label: "問題2 — Choose the correct writing for the underlined word",
           questions: [
-            { stem: "まいにち<u>しんぶん</u>をよみます。", options: ["新分", "新文", "新聞", "信聞"], answer: 3, explanation: "しんぶん is written 新聞 (newspaper)." },
-            { stem: "<u>くうこう</u>までバスでいきます。", options: ["空港", "空行", "空向", "宮港"], answer: 1, explanation: "くうこう is written 空港 (airport)." },
-            { stem: "この<u>おかし</u>はおいしいです。", options: ["お果子", "お菓子", "お貸し", "お華子"], answer: 2, explanation: "おかし is written お菓子 (sweets)." },
-            { stem: "まいつき<u>やちん</u>をはらいます。", options: ["屋金", "家賃", "家金", "屋賃"], answer: 2, explanation: "やちん is written 家賃 (rent)." },
-            { stem: "<u>せいかつ</u>になれました。", options: ["生活", "正活", "製活", "生括"], answer: 1, explanation: "せいかつ is written 生活 (daily life)." },
-            { stem: "あそこに<u>こうばん</u>があります。", options: ["公番", "交番", "効番", "光番"], answer: 2, explanation: "こうばん is written 交番 (police box)." }
+            { stem: "きれいな<u>はな</u>ですね。", options: ["草", "花", "芸", "茶"], answer: 2, explanation: "はな = 花 (flower)." },
+            { stem: "<u>がっこう</u>はたのしいです。", options: ["学校", "学枚", "字校", "学交"], answer: 1, explanation: "がっこう = 学校." },
+            { stem: "あしたは<u>あめ</u>でしょう。", options: ["雪", "雨", "雲", "電"], answer: 2, explanation: "あめ = 雨." },
+            { stem: "この<u>ちいさい</u>はこをください。", options: ["大さい", "少さい", "小さい", "木さい"], answer: 3, explanation: "ちいさい = 小さい." },
+            { stem: "ともだちがあした<u>きます</u>。", options: ["来ます", "求ます", "米ます", "東ます"], answer: 1, explanation: "くる = 来る." },
+            { stem: "ここになまえを<u>かいて</u>ください。", options: ["書いて", "昼いて", "署いて", "晝いて"], answer: 1, explanation: "かく = 書く." }
           ]
         },
         {
           label: "問題3 — Choose the best word to fill in the blank",
           questions: [
-            { stem: "じしょで（　　　）をしらべました。", options: ["いみ", "はなし", "うた", "えいが"], answer: 1, explanation: "じしょでいみをしらべる means to look up a meaning in a dictionary." },
-            { stem: "あしたの（　　　）にともだちとあいます。", options: ["よる", "ごご", "あさ", "ひる"], answer: 2, explanation: "ごご (afternoon) is a common meeting time." },
-            { stem: "かぜをひいたので、（　　　）をのみました。", options: ["みず", "おちゃ", "くすり", "ジュース"], answer: 3, explanation: "くすりをのむ means to take medicine." },
-            { stem: "つくえのうえにほんが（　　　）あります。", options: ["みっつ", "さんこ", "さんまい", "さんさつ"], answer: 4, explanation: "さんさつ is the counter for books." },
-            { stem: "（　　　）をきめましたか。——はい、にほんりょうりにしました。", options: ["ちゅうもん", "メニュー", "りょうり", "レストラン"], answer: 1, explanation: "ちゅうもんをきめる means to decide on an order." },
-            { stem: "へやが（　　　）ですから、エアコンをつけてください。", options: ["あつい", "さむい", "むし あつい", "すずしい"], answer: 3, explanation: "むしあつい means humid and hot." },
-            { stem: "えきのまえに（　　　）がとまっています。", options: ["タクシー", "でんしゃ", "ひこうき", "ふね"], answer: 1, explanation: "タクシーがとまっている means a taxi is parked/waiting." },
-            { stem: "これは（　　　）にもらったゆびわです。", options: ["おっと", "はは", "かれ", "ともだち"], answer: 3, explanation: "かれにもらった means received from boyfriend/him." }
+            { stem: "（　　　）をわすれましたから、なにもかえません。", options: ["さいふ", "かさ", "かぎ", "とけい"], answer: 1, explanation: "さいふ (wallet)." },
+            { stem: "ここはくるまがおおいですから、（　　　）です。", options: ["あぶない", "あかるい", "しずか", "べんり"], answer: 1, explanation: "あぶない (dangerous)." },
+            { stem: "わたしのしゅみはギターを（　　　）ことです。", options: ["ひく", "ふく", "かく", "つく"], answer: 1, explanation: "ギターをひく (play guitar)." },
+            { stem: "なつは（　　　）のみものがおいしいです。", options: ["あつい", "つめたい", "からい", "あまい"], answer: 2, explanation: "つめたい (cold drinks)." },
+            { stem: "へやがきたないですから、（　　　）をします。", options: ["せんたく", "そうじ", "りょうり", "かいもの"], answer: 2, explanation: "そうじ (cleaning)." },
+            { stem: "ゆうべは（　　　）までべんきょうしました。", options: ["はやく", "おそく", "ちかく", "とおく"], answer: 2, explanation: "おそくまで (until late)." },
+            { stem: "このつくえは（　　　）ですから、ながくつかえます。", options: ["じょうぶ", "にぎやか", "しんせつ", "ゆうめい"], answer: 1, explanation: "じょうぶ (sturdy)." },
+            { stem: "そらを（　　　）がとんでいます。", options: ["とり", "さかな", "いぬ", "ねこ"], answer: 1, explanation: "とり (bird) flies in the sky." }
           ]
         },
         {
           label: "問題4 — Choose the sentence with the closest meaning",
           questions: [
-            { stem: "しゅくだいをまだやっていません。", options: ["しゅくだいをもうやりました。", "しゅくだいがまだおわっていません。", "しゅくだいがありません。", "しゅくだいをやりたくないです。"], answer: 2, explanation: "まだやっていない = まだおわっていない (not finished yet)." },
-            { stem: "この本をかしてもらえませんか。", options: ["この本をかえしてください。", "この本をかしてください。", "この本をかってください。", "この本をよんでください。"], answer: 2, explanation: "かしてもらえませんか is a polite request to borrow." },
-            { stem: "きのうのパーティーはにぎやかでした。", options: ["きのうのパーティーはしずかでした。", "きのうのパーティーはさびしかったです。", "きのうのパーティーはひとがおおくてたのしかったです。", "きのうのパーティーはつまらなかったです。"], answer: 3, explanation: "にぎやか (lively) = ひとがおおくてたのしい." },
-            { stem: "すずきさんはめがねをかけています。", options: ["すずきさんはめがねをもっていません。", "すずきさんはめがねをはずしました。", "すずきさんはいまめがねをしています。", "すずきさんはめがねをかいたいです。"], answer: 3, explanation: "かけている = いましている (is wearing)." },
-            { stem: "このもんだいはむずかしすぎます。", options: ["このもんだいはとてもかんたんです。", "このもんだいはちょうどいいです。", "このもんだいはむずかしくてできません。", "このもんだいはすこしむずかしいです。"], answer: 3, explanation: "むずかしすぎる = too difficult, implying できない (can't do it)." }
+            { stem: "このみせはゆうめいです。", options: ["このみせはたくさんのひとがしっています。", "このみせはちいさいです。", "このみせはあたらしいです。", "このみせはしずかです。"], answer: 1, explanation: "有名 = 多くの人が知っている。" },
+            { stem: "このとけいはたかくないです。", options: ["このとけいはやすいです。", "このとけいはおおきいです。", "このとけいはふるいです。", "このとけいはきれいです。"], answer: 1, explanation: "たかくない = やすい (cheap)." },
+            { stem: "じゅぎょうはもうおわりました。", options: ["じゅぎょうはまだしています。", "じゅぎょうはこれからです。", "じゅぎょうはもうすみました。", "じゅぎょうははじまりました。"], answer: 3, explanation: "おわった = すんだ (finished)." },
+            { stem: "わたしはときどきえいがをみます。", options: ["わたしはまいにちえいがをみます。", "わたしはぜんぜんえいがをみません。", "わたしはたまにえいがをみます。", "わたしはよくえいがをみます。"], answer: 3, explanation: "ときどき = たまに (sometimes)." },
+            { stem: "わたしはともだちにかさをかりました。", options: ["ともだちはわたしにかさをかりました。", "わたしはともだちにかさをかしました。", "ともだちはわたしにかさをかしました。", "わたしはともだちにかさをあげました。"], answer: 3, explanation: "私が借りた = 友達が貸した。" }
           ]
         }
       ]
@@ -3099,76 +3099,76 @@ var EXAM_DATA = {
         {
           label: "問題5 — Choose the best answer to fill in the blank",
           questions: [
-            { stem: "にほんに（　　　）まえに、パスポートをとりました。", options: ["いく", "いった", "いって", "いかない"], answer: 1, explanation: "Dictionary form + まえに: before going." },
-            { stem: "あしたはやく（　　　）なくてはいけません。", options: ["おきる", "おき", "おきて", "おきない"], answer: 2, explanation: "おき + なくてはいけません: have to wake up (verb stem + なくては)." },
-            { stem: "でんわ（　　　）はなしながらあるくのはあぶないです。", options: ["を", "で", "に", "が"], answer: 2, explanation: "でんわではなす: talk on the phone (means)." },
-            { stem: "にほんごがもっと（　　　）なりたいです。", options: ["じょうずに", "じょうずな", "じょうずの", "じょうず"], answer: 1, explanation: "な-adj + に + なる: become more skilled." },
-            { stem: "あめがふっている（　　　）、サッカーをしました。", options: ["から", "のに", "ので", "し"], answer: 2, explanation: "のに means even though (despite rain, played soccer)." },
-            { stem: "せんせいはわたしたちに（　　　）をよむようにいいました。", options: ["ほん", "ほんが", "ほんを", "ほんの"], answer: 1, explanation: "ほんをよむように — the を is part of よむ, not needed before よむように." },
-            { stem: "しけんが（　　　）あとで、みんなでしょくじにいきました。", options: ["おわる", "おわった", "おわって", "おわり"], answer: 2, explanation: "た form + あとで: after finishing." },
-            { stem: "わたしはピアノ（　　　）ひくことができません。", options: ["が", "を", "で", "に"], answer: 2, explanation: "ピアノをひく uses を for the direct object." },
-            { stem: "しんかんせんは（　　　）はやいです。", options: ["とても", "あまり", "ぜんぜん", "たぶん"], answer: 1, explanation: "とてもはやい means very fast." },
-            { stem: "あしたのてんきは（　　　）でしょう。", options: ["あめ", "あめの", "あめだ", "あめが"], answer: 1, explanation: "Noun + でしょう for prediction." },
-            { stem: "このくすりは１にち（　　　）のんでください。", options: ["３かいに", "３かい", "３つに", "３つ"], answer: 2, explanation: "１にち３かい means 3 times a day." },
-            { stem: "おかあさんがりょうりを（　　　）くれました。", options: ["つくる", "つくり", "つくって", "つくった"], answer: 3, explanation: "て form + くれる: did the favor of making food." },
-            { stem: "にほんではくつを（　　　）、いえにはいります。", options: ["ぬいで", "ぬいだ", "ぬいでから", "ぬがないで"], answer: 1, explanation: "〜て connecting two actions: take off shoes and enter." }
+            { stem: "わたしはいぬ（　　　）こうえんをさんぽします。", options: ["を", "に", "と", "が"], answer: 3, explanation: "いぬと (with a dog)." },
+            { stem: "らいねん にほん（　　　）いきます。", options: ["で", "へ", "を", "が"], answer: 2, explanation: "へ (direction)." },
+            { stem: "まいにち テレビ（　　　）みます。", options: ["が", "を", "に", "で"], answer: 2, explanation: "を (object)." },
+            { stem: "なつやすみは うみ（　　　）およぎました。", options: ["に", "を", "で", "へ"], answer: 3, explanation: "で (place of action)." },
+            { stem: "ひこうきは でんしゃ（　　　）はやいです。", options: ["ほど", "より", "しか", "から"], answer: 2, explanation: "AよりB (faster than)." },
+            { stem: "さいふに１００円（　　　）ありません。", options: ["しか", "だけ", "ばかり", "ぐらい"], answer: 1, explanation: "〜しか〜ない (only)." },
+            { stem: "このコーヒーはあま（　　　）ます。", options: ["すぎ", "つづけ", "はじめ", "おわり"], answer: 1, explanation: "あますぎる (too sweet) — stem ＋ すぎる." },
+            { stem: "つかれましたから、ちょっと やすみ（　　　）。", options: ["ましょう", "ました", "ません", "ましたか"], answer: 1, explanation: "〜ましょう (let's)." },
+            { stem: "あめがふっ（　　　）、いきます。", options: ["ては", "ても", "てから", "たり"], answer: 2, explanation: "〜ても (even if)." },
+            { stem: "にほんへいった（　　　）がありますか。", options: ["こと", "もの", "とき", "ところ"], answer: 1, explanation: "〜たことがある (have done)." },
+            { stem: "ともだちにプレゼントをあげる（　　　）、はなをかいました。", options: ["ために", "あいだに", "まえに", "あとで"], answer: 1, explanation: "〜ために (in order to)." },
+            { stem: "ここにすわら（　　　）ください。", options: ["ない", "なくて", "ないで", "なく"], answer: 3, explanation: "〜ないでください (please don't)." },
+            { stem: "らいしゅうはさむく なる（　　　）。", options: ["です", "でしょう", "ました", "ています"], answer: 2, explanation: "〜でしょう (probably)." }
           ]
         },
         {
           label: "問題6 — Reorder the words to make a correct sentence. Choose ★.",
           questions: [
-            { stem: "あした　＿　＿　★　＿　か。", reorder: true, context: "あした ＿ ＿ ★ ＿ か。", options: ["なに", "を", "し", "ます"], answer: 3, explanation: "あした なに を し ます か。★ = し" },
-            { stem: "いちばん　＿　★　＿　＿　です。", reorder: true, context: "いちばん ★ ＿ ＿ ＿ です。", options: ["きせつ", "はる", "が", "すきな"], answer: 4, explanation: "いちばんすきなきせつがはるです。★ = すきな" },
-            { stem: "まいにち　＿　＿　★　＿　います。", reorder: true, context: "まいにち ＿ ＿ ＿ ★ います。", options: ["かんじ", "を", "おぼえて", "あたらしい"], answer: 3, explanation: "まいにち あたらしい かんじ を おぼえて います。★ = おぼえて" },
-            { stem: "ははに　＿　＿　★　＿　もらいました。", reorder: true, context: "ははに ＿ ＿ ＿ ★ もらいました。", options: ["を", "つくって", "おべんとう", "おいしい"], answer: 2, explanation: "ははに おいしい おべんとう を つくって もらいました。★ = つくって" },
-            { stem: "わたしは　＿　＿　★　＿　おもいます。", reorder: true, context: "わたしは ＿ ＿ ＿ ★ おもいます。", options: ["と", "にほんは", "きれいだ", "とても"], answer: 1, explanation: "わたしは にほんは とても きれいだ と おもいます。★ = と" }
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "わたしは ＿ ＿ ＿ ★ います。", options: ["ねこを", "いぬ", "かって", "と"], answer: 3, explanation: "Correct: わたしはいぬとねこをかっています。  ★ = かって" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ＿ ★ ＿ さむかったです。", options: ["とても", "きのう", "よるは", "の"], answer: 3, explanation: "Correct: きのうのよるはとてもさむかったです。  ★ = よるは" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ★ ＿ ＿ かいました。", options: ["あまい", "この", "くだものを", "みせで"], answer: 4, explanation: "Correct: このみせであまいくだものをかいました。  ★ = みせで" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ★ ＿ ＿ かきます。", options: ["てがみを", "ともだちに", "あした", "ながい"], answer: 2, explanation: "Correct: あしたともだちにながいてがみをかきます。  ★ = ともだちに" },
+            { stem: "ただしいじゅんにならべてください。", reorder: true, context: "＿ ＿ ★ ＿ のみます。", options: ["つめたい", "ちちは", "ビールを", "まいばん"], answer: 1, explanation: "Correct: ちちはまいばんつめたいビールをのみます。  ★ = つめたい" }
           ]
         },
         {
           label: "問題7 — Read the text and fill in the blanks",
-          passage: "<p>きのう、デパートにかいものにいきました。まず、３かいで（ 1 ）をかいました。つぎに、１かいの（ 2 ）でおかしをかいました。おかしはともだちへの（ 3 ）です。さいごにちかのレストランで（ 4 ）をたべました。（ 5 ）がたくさんあったので、つかれました。</p>",
+          passage: "<p>せんしゅうのどようび、かぞく（ 1 ）うみへいきました。あさはやくいえをでて、でんしゃ（ 2 ）２じかんかかりました。うみはとてもきれいで、ひとが（ 3 ）いました。わたしはおとうととうみで およぎました。おひるは うみのちかくのみせで さかなを たべました。とても（ 4 ）。ゆうがた、つかれましたから、はやくいえへ かえりました。また かぞくで うみへ（ 5 ）です。</p>",
           questions: [
-            { stem: "（ 1 ）にはいることばはどれですか。", options: ["ふく", "くすり", "ほん", "くだもの"], answer: 1, explanation: "３かいでふくをかいました (bought clothes on the 3rd floor)." },
-            { stem: "（ 2 ）にはいることばはどれですか。", options: ["おかしうりば", "レストラン", "としょかん", "コンビニ"], answer: 1, explanation: "おかしうりば (sweets counter) on the 1st floor." },
-            { stem: "（ 3 ）にはいることばはどれですか。", options: ["しゅくだい", "おみやげ", "でんわ", "てがみ"], answer: 2, explanation: "ともだちへのおみやげ (a souvenir for a friend)." },
-            { stem: "（ 4 ）にはいることばはどれですか。", options: ["あさごはん", "ひるごはん", "ばんごはん", "おべんとう"], answer: 2, explanation: "ひるごはん — lunch at the restaurant in the basement." },
-            { stem: "（ 5 ）にはいることばはどれですか。", options: ["ひと", "おかね", "にもつ", "じかん"], answer: 3, explanation: "にもつがたくさんあったので、つかれました (had lots of bags, so got tired)." }
+            { stem: "（ 1 ）にはいることばはどれですか。", options: ["を", "と", "へ", "に"], answer: 2, explanation: "かぞくと (with family)." },
+            { stem: "（ 2 ）にはいることばはどれですか。", options: ["に", "で", "を", "が"], answer: 2, explanation: "電車で (by train)." },
+            { stem: "（ 3 ）にはいることばはどれですか。", options: ["たくさん", "あまり", "ぜんぜん", "すこししか"], answer: 1, explanation: "人がたくさんいた (many)." },
+            { stem: "（ 4 ）にはいることばはどれですか。", options: ["おいしいです", "おいしかったです", "おいしくないです", "おいしくなかったです"], answer: 2, explanation: "過去の肯定 (was delicious)." },
+            { stem: "（ 5 ）にはいることばはどれですか。", options: ["いきたい", "いった", "いって", "いかない"], answer: 1, explanation: "また行きたい (want to go again)." }
           ]
         },
         {
           label: "問題8 — Read the passage and answer the question",
-          passage: "<p>わたしのともだちのリーさんはちゅうごくからきました。にほんごがとてもじょうずです。リーさんはまいにちにほんのドラマをみて、にほんごをべんきょうしたそうです。いまはにほんのかいしゃではたらいています。しゅうまつはよくいっしょにラーメンをたべにいきます。</p>",
+          passage: "<p>やまもとさんへ<br>あしたのあさ、えきで９じにあいましょう。きっぷはわたしがかいますから、やまもとさんはかわなくていいです。すこしさむいですから、あたたかいふくをきてきてください。<br>すずき</p>",
           questions: [
-            { stem: "リーさんはどうやってにほんごをべんきょうしましたか。", options: ["にほんごがっこうにいった", "にほんのドラマをみた", "せんせいにならった", "ほんをよんだ"], answer: 2, explanation: "にほんのドラマをみて、にほんごをべんきょうした。" }
+            { stem: "やまもとさんは、あしたなにをしなくてもいいですか。", options: ["えきへいく", "きっぷをかう", "あたたかいふくをきる", "９じにあう"], answer: 2, explanation: "切符は鈴木さんが買うので買わなくていい。" }
           ]
         },
         {
           label: "問題8b — Short passage reading",
-          passage: "<p>みなさんへ<br>らいしゅうのかようび、クラスのあとにおわかれパーティーをします。スミスさんがくにへかえるからです。ひとり５００えんです。さんかしたいひとはもくようびまでにわたしにいってください。<br>たなかゆみ</p>",
+          passage: "<p>わたしのいえには ねこが３びきいます。くろいねこと、しろいねこと、ちゃいろいねこです。くろいねこがいちばんおおきくて、いちばんとしうえです。しろいねこはいちばんちいさくて、まだあかちゃんです。３びきともとてもかわいいです。</p>",
           questions: [
-            { stem: "なぜパーティーをしますか。", options: ["たなかさんのたんじょうびだから", "しけんがおわったから", "スミスさんがくにへかえるから", "あたらしいがくせいがきたから"], answer: 3, explanation: "スミスさんがくにへかえるからです。" }
+            { stem: "いちばんちいさいねこは どんなねこですか。", options: ["くろいねこ", "しろいねこ", "ちゃいろいねこ", "としうえのねこ"], answer: 2, explanation: "白い猫が一番小さい（赤ちゃん）。" }
           ]
         },
         {
           label: "問題8c — Short passage reading",
-          passage: "<p>にほんでは、おふろにはいるまえにからだをあらいます。おゆにはいるのはからだをあらったあとです。おふろのおゆはかぞくでいっしょにつかいます。ですから、おゆのなかでせっけんをつかってはいけません。</p>",
+          passage: "<p>きょうは ともだちのたんじょうびです。それで、ケーキをかいにいきました。でも、みせはとてもこんでいて、ながいじかんまちました。やっとかえたケーキをもって、ともだちのうちへいきました。ともだちはとてもよろこんでくれました。</p>",
           questions: [
-            { stem: "おふろのおゆのなかでなにをしてはいけませんか。", options: ["はなしをする", "ながくはいる", "せっけんをつかう", "うたをうたう"], answer: 3, explanation: "おゆのなかでせっけんをつかってはいけません。" }
+            { stem: "どうしてながいじかんまちましたか。", options: ["みせがとおかったから", "みせがこんでいたから", "ケーキがたかかったから", "ともだちがこなかったから"], answer: 2, explanation: "店が混んでいたから。" }
           ]
         },
         {
           label: "問題9 — Read the passage and answer the questions",
-          passage: "<p>わたしはにほんのまんがが大すきです。はじめてにほんのまんがをよんだのは、ちゅうがくせいのときです。さいしょはえいごのやくでよんでいましたが、にほんごでよみたくなって、にほんごをべんきょうしはじめました。いまはにほんごでまんがをよむことができます。にほんごをべんきょうしてよかったとおもいます。しょうらいは、にほんのまんがをじぶんのくにのことばにほんやくするしごとがしたいです。</p>",
+          passage: "<p>わたしのあには、せんげつから あたらしいかいしゃではたらいています。かいしゃはいえからとおいですから、まいあさ６じにおきて、でんしゃで１じかんはんかかります。たいへんですが、しごとはとてもおもしろいといっています。<br>あにはおんがくがすきですから、でんしゃのなかで いつもおんがくをききながら、ほんをよんでいます。やすみのひは、わたしといっしょにえいがをみにいきます。</p>",
           questions: [
-            { stem: "このひとはなぜにほんごをべんきょうしはじめましたか。", options: ["にほんにすみたかったから", "にほんごでまんがをよみたかったから", "しごとでつかうから", "がっこうのじゅぎょうだったから"], answer: 2, explanation: "にほんごでよみたくなって、にほんごをべんきょうしはじめました。" },
-            { stem: "このひとはしょうらいなにがしたいですか。", options: ["まんがをかきたい", "にほんにすみたい", "まんがをほんやくしたい", "にほんごのせんせいになりたい"], answer: 3, explanation: "にほんのまんがをじぶんのくにのことばにほんやくするしごとがしたい。" }
+            { stem: "あにはまいあさ かいしゃまで どのくらいかかりますか。", options: ["３０ぷん", "１じかん", "１じかんはん", "２じかん"], answer: 3, explanation: "電車で1時間半。" },
+            { stem: "あには でんしゃのなかで なにをしますか。", options: ["ねています", "おんがくをききながらほんをよみます", "えいがをみます", "べんきょうします"], answer: 2, explanation: "音楽を聞きながら本を読む。" }
           ]
         },
         {
           label: "問題10 — Look at the information and answer the question",
-          passage: "<p><b>【スポーツセンター りようあんない】</b><br>プール：ごぜん１０：００〜ごご８：００<br>ジム：ごぜん９：００〜ごご９：００<br>テニスコート：ごぜん８：００〜ごご６：００（よやくひつよう）<br><br>りょうきん（１かい）：<br>プール：おとな６００えん／こども３００えん<br>ジム：おとな８００えん／こども４００えん<br>テニスコート：１じかん１,０００えん<br><br>おやすみ：まいしゅうげつようび<br>※テニスコートのよやくはでんわでおねがいします。（TEL: 03-1234-5678）</p>",
+          passage: "<p><b>【りょうりきょうしつのおしらせ】</b><br>にほんりょうりをつくりましょう！<br>ようび：まいしゅうどようび　１０：００〜１２：００<br>ばしょ：みどりかいかん　３かい<br>りょうきん：１かい２,０００円（ざいりょうだいこみ）<br>※エプロンをもってきてください。<br>※はじめてのひとは、まえのひのきんようびまでにでんわしてください。でんわ：０１２−３４５−６７８９</p>",
           questions: [
-            { stem: "おとながプールとジムをりようすると、いくらですか。", options: ["８００えん", "１,０００えん", "１,２００えん", "１,４００えん"], answer: 4, explanation: "プール600 + ジム800 = 1,400円." }
+            { stem: "はじめてさんかするひとは、いつまでにでんわしますか。", options: ["どようび", "きんようび", "もくようび", "にちようび"], answer: 2, explanation: "前の日の金曜までに電話。" }
           ]
         }
       ]
