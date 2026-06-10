@@ -2921,6 +2921,135 @@
             arrow.textContent = '▼';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // ============ SYNC CHAPTER DECKS WITH vocabulary.html ============
+        // The per-chapter quiz decks (fcData.ch1..ch12 / extra above) were once
+        // hand-maintained and drifted out of sync with vocabulary.html, whose
+        // tables are the real source of truth for the Genki word list. When a new
+        // word was added to a chapter table it never reached the quiz, so picking
+        // "Ch.N + Untested" found nothing even though the vocab page still listed
+        // untested words. We now rebuild the chapter decks live from
+        // vocabulary.html on load: every word in the vocab tables flows into the
+        // quiz, and because both pages key vocab_scores by "form|en", testing a
+        // word here is reflected on the vocab page (its dots/percentages) at once.
+
+        // Same kana/kanji split vocabulary.html uses, so generated score keys match.
+        function parseRowFormsFC(rawJp) {
+            const m = rawJp.match(/^([^（(]+)[（(]([^）)]+)[）)]\s*$/);
+            if (!m) return { kana: rawJp.trim(), kanji: [] };
+            return { kana: m[1].trim(), kanji: m[2].split('・').map(function (s) { return s.trim(); }).filter(Boolean) };
+        }
+
+        function chapterKeyFromTitle(title) {
+            const t = (title || '').trim();
+            const m = t.match(/Ch\.?\s*(\d+)/i);
+            if (m) return 'ch' + m[1];
+            if (/^Extra/i.test(t)) return 'extra';
+            return null;
+        }
+
+        // Reflect the live per-chapter card counts in the filter chips.
+        function updateChapterChipCounts() {
+            document.querySelectorAll('.filter-chips input[type="checkbox"]').forEach(function (inp) {
+                const v = inp.value;
+                if (!/^ch\d+$/.test(v) && v !== 'extra') return;
+                const count = (fcData[v] || []).length;
+                const display = (v === 'extra' ? 'Extra' : 'Ch. ' + v.slice(2)) + ' (' + count + ')';
+                const label = inp.parentElement;
+                if (!label) return;
+                let textNode = null;
+                label.childNodes.forEach(function (n) {
+                    if (n.nodeType === 3 && n.textContent.trim()) textNode = n;
+                });
+                if (textNode) textNode.textContent = ' ' + display;
+                else label.appendChild(document.createTextNode(' ' + display));
+            });
+        }
+
+        // Parse a fetched vocabulary.html document into the canonical word list.
+        function wordsFromVocabDoc(doc) {
+            const words = [];
+            doc.querySelectorAll('.week-section').forEach(function (section) {
+                const titleEl = section.querySelector('.week-title');
+                const chKey = chapterKeyFromTitle(titleEl ? titleEl.textContent : '');
+                if (!chKey) return;
+                section.querySelectorAll('tbody tr').forEach(function (row) {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length < 3) return;
+                    const rawJp = cells[0].textContent.trim();
+                    if (!rawJp) return;
+                    const forms = parseRowFormsFC(rawJp);
+                    words.push({
+                        kana: forms.kana,
+                        kanji: forms.kanji,
+                        en: cells[2].textContent.trim(),
+                        extra: chKey === 'extra',
+                        ch: chKey,
+                        romaji: cells[1].textContent.trim()
+                    });
+                });
+            });
+            return words;
+        }
+
+        // Rebuild fcData chapter decks from a canonical word list (entries need a
+        // `ch` key). Returns true if it actually replaced the decks.
+        function buildDecksFromWords(words) {
+            if (!Array.isArray(words)) return false;
+            const usable = words.filter(function (w) { return w && w.ch && w.kana; });
+            if (!usable.length) return false;
+            // Keep the curated emoji from the built-in decks where the word matches.
+            const emojiByKey = {};
+            Object.keys(fcData).forEach(function (k) {
+                if (!/^ch\d+$/.test(k) && k !== 'extra') return;
+                (fcData[k] || []).forEach(function (c) {
+                    if (c && c.j) emojiByKey[c.j + '|' + c.e] = c.em;
+                });
+            });
+            const decks = {};
+            usable.forEach(function (w) {
+                // Skip the Extra tables — they're large and not part of the Genki
+                // chapter flow, so the built-in fcData.extra deck is kept as-is.
+                // (Extra words still go into the published vocab_word_list below so
+                // kanji-form lookups and the dashboard wheel stay complete.)
+                if (w.ch === 'extra') return;
+                const card = { j: w.kana, r: w.romaji || '', e: w.en, em: emojiByKey[w.kana + '|' + w.en] || '📝' };
+                (decks[w.ch] = decks[w.ch] || []).push(card);
+            });
+            Object.keys(decks).forEach(function (k) { fcData[k] = decks[k]; });
+            _vocabFormsMap = null; // force kanji-form map rebuild from the fresh list
+            updateChapterChipCounts();
+            return true;
+        }
+
+        // Primary path: fetch vocabulary.html (same source of truth as the vocab
+        // page) and rebuild decks. Falls back to a published vocab_word_list, then
+        // to the built-in fcData if everything fails (e.g. offline / file://).
+        function syncChapterDecks() {
+            return fetch('vocabulary.html', { cache: 'no-store' })
+                .then(function (r) { return r.ok ? r.text() : Promise.reject(new Error('HTTP ' + r.status)); })
+                .then(function (html) {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const words = wordsFromVocabDoc(doc);
+                    if (buildDecksFromWords(words)) {
+                        // Publish so vocabFormsMap()/the dashboard wheel use the same list.
+                        try { localStorage.setItem('vocab_word_list', JSON.stringify(words)); } catch (e) {}
+                    }
+                })
+                .catch(function (e) {
+                    console.warn('[flashcards] chapter sync from vocabulary.html failed; using published list/built-ins:', e);
+                    try {
+                        const list = JSON.parse(localStorage.getItem('vocab_word_list') || '[]');
+                        buildDecksFromWords(list); // no-op if entries lack `ch`
+                    } catch (_) {}
+                });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', syncChapterDecks);
+        } else {
+            syncChapterDecks();
+        }
     </script>
 </body>
 </html>

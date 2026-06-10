@@ -1753,6 +1753,15 @@
             document.querySelectorAll('.week-section').forEach(section => {
                 const title = section.querySelector('.week-title');
                 const isExtra = title && (title.textContent.trim() === 'Extra Vocabulary' || title.textContent.trim().startsWith('Extra'));
+                // Chapter key (ch1..ch12 / extra) so flashcards.html can rebuild
+                // its per-chapter quiz decks from this same canonical list.
+                const chKey = (function () {
+                    const t = title ? title.textContent.trim() : '';
+                    const m = t.match(/Ch\.?\s*(\d+)/i);
+                    if (m) return 'ch' + m[1];
+                    if (/^Extra/i.test(t)) return 'extra';
+                    return null;
+                })();
 
                 let sTotal = 0, sMastered = 0;
                 section.querySelectorAll('tbody tr').forEach(row => {
@@ -1770,8 +1779,11 @@
                         cells[0].dataset.rawJp = rawJp;
                     }
                     const en = cells[2].textContent.trim();
+                    // Reading column is never touched by the indicator markup, so
+                    // its textContent stays clean romaji for the quiz to reuse.
+                    const romaji = cells[1] ? cells[1].textContent.trim() : '';
                     const forms = parseRowForms(rawJp);
-                    wordList.push({ kana: forms.kana, kanji: forms.kanji, en: en, extra: !!isExtra });
+                    wordList.push({ kana: forms.kana, kanji: forms.kanji, en: en, extra: !!isExtra, ch: chKey, romaji: romaji });
 
                     // Each FORM is an independent item with its own status: the
                     // kana form, plus each kanji form. We do NOT merge them into
