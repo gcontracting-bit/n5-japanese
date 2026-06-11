@@ -942,14 +942,29 @@ document.addEventListener('DOMContentLoaded', function() {
     seedAttemptBaselineIfNeeded();
     renderExams();
 });
+// An exam is mid-flight or a result/review panel is on screen — re-rendering
+// the exam list now would wipe it. Submitting an exam saves the attempt to the
+// cloud, which echoes straight back as a cloudsync:update; without this guard
+// that echo destroys the score+review the user is trying to read.
+function examViewActive() {
+    if (document.querySelector('.exam-mode')) return true;          // taking an exam
+    var panels = document.querySelectorAll('[id^="score-"]');
+    for (var i = 0; i < panels.length; i++) {
+        if (panels[i].style.display === 'block') return true;       // result/review showing
+    }
+    return false;
+}
 // cloud_sync may overwrite localStorage AFTER the initial render with whatever
 // it pulled from Supabase — so re-run the seed (idempotent) and re-render
-// after the cloud round-trip lands.
+// after the cloud round-trip lands, UNLESS the user is actively in an exam or
+// reviewing a result (resetExam / Try Again re-renders with fresh data later).
 window.addEventListener('cloudsync:ready', function() {
+    if (examViewActive()) return;
     seedAttemptBaselineIfNeeded();
     renderExams();
 });
 window.addEventListener('cloudsync:update', function() {
+    if (examViewActive()) return;
     seedAttemptBaselineIfNeeded();
     renderExams();
 });
