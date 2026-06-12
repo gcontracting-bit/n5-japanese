@@ -51,6 +51,11 @@
         .timer-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 16px; border-radius: 6px; font-size: 0.85em; cursor: pointer; font-weight: 600; }
         .timer-btn:hover { background: rgba(255,255,255,0.3); }
         .timer-bar.hidden { display: none; }
+        .timer-section { font-size: 0.9em; opacity: 0.95; font-weight: 600; }
+        .exam-section-hidden { display: none; }
+        .exam-sub.exam-mode .q-option.locked { opacity: 0.45; cursor: default; }
+        .timer-toast { position: fixed; top: 64px; left: 50%; transform: translateX(-50%); background: #1a202c; color: #fff; padding: 11px 22px; border-radius: 10px; font-size: 0.95em; font-weight: 600; z-index: 200; box-shadow: 0 4px 16px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .timer-toast.show { opacity: 1; }
 
         /* Answer toggle & take exam button */
         .answer-toggle { display: flex; align-items: center; gap: 10px; }
@@ -247,8 +252,10 @@
     <div class="timer-bar hidden" id="timer-bar">
         <span class="timer-display" id="timer-display">00:00</span>
         <span class="timer-recommended" id="timer-rec"></span>
+        <span class="timer-section" id="timer-section"></span>
+        <button class="timer-btn" id="timer-next" onclick="advanceSection(false)" style="display:none">Finish Section →</button>
         <button class="timer-btn" id="timer-toggle" onclick="toggleTimer()">Pause</button>
-        <button class="timer-btn" onclick="hideTimer()">Hide</button>
+        <button class="timer-btn" id="timer-hide" onclick="hideTimer()">Hide</button>
     </div>
     <div class="container">
         <nav><a href="index.html">← Home</a></nav>
@@ -264,7 +271,7 @@
             </div>
         </div>
         <div class="exam-instructions">
-            <strong>How to use:</strong> Levels 1–6 are cumulative chapter reviews (~50 questions). <strong>Level 7</strong> has 5 full-length JLPT N5 mock exams (~80 questions each) with Vocabulary, Grammar・Reading (one combined section, as on the real exam), and Listening — matching the real exam's three test parts. Note: these full mocks are pitched slightly harder than the real N5 (a few N4-level grammar points are included) so you over-prepare. Click <strong>Take Exam</strong> for interactive mode with timer, or <strong>Show Answers</strong> to study.
+            <strong>How to use:</strong> Levels 1–6 are cumulative chapter reviews (~50 questions). <strong>Level 7</strong> has 5 full-length JLPT N5 mock exams (~80 questions each) with Vocabulary, Grammar・Reading (one combined section, as on the real exam), and Listening — matching the real exam's three test parts. Note: these full mocks are pitched slightly harder than the real N5 (a few N4-level grammar points are included) so you over-prepare. In Level 7's <strong>Take Exam</strong> mode each section is timed and run separately — Vocabulary 20 min, Grammar・Reading 40 min, Listening 30 min — exactly like test day: when a section's time is up it locks and the next one begins. Or use <strong>Show Answers</strong> to study at your own pace.
         </div>
         <div id="exam-container"></div>
     </div>
@@ -276,6 +283,12 @@ function startTimer(recMinutes) {
     var bar = document.getElementById('timer-bar');
     bar.classList.remove('hidden');
     document.getElementById('timer-rec').textContent = '(recommended: ' + recMinutes + ' min)';
+    // Reset any sectioned-mode UI (only Level 7 uses it).
+    document.getElementById('timer-section').textContent = '';
+    document.getElementById('timer-next').style.display = 'none';
+    var hideBtn = document.getElementById('timer-hide');
+    if (hideBtn) hideBtn.style.display = '';
+    document.getElementById('timer-display').style.color = '';
     timerSeconds = 0; timerRunning = true;
     document.getElementById('timer-toggle').textContent = 'Pause';
     updateTimerDisplay();
@@ -409,25 +422,30 @@ function renderExamVariant(levelKey, variantKey, exam, timeMinutes) {
 
     var qNum = 0;
     exam.sections.forEach(function(section) {
+        // Each section is wrapped so Level 7 can show/hide & time them one at a time.
+        var sectionWrap = document.createElement('div');
+        sectionWrap.className = 'exam-section';
+        sectionWrap.setAttribute('data-section-id', section.sectionId || '');
+
         // Section divider
         var secDiv = document.createElement('div');
         secDiv.className = 'section-divider';
         secDiv.innerHTML = section.title + ' <span class="section-jp">' + section.titleJp + '</span>';
-        subBody.appendChild(secDiv);
+        sectionWrap.appendChild(secDiv);
 
         section.parts.forEach(function(part) {
             // Part label
             var partDiv = document.createElement('div');
             partDiv.className = 'part-label';
             partDiv.textContent = part.label;
-            subBody.appendChild(partDiv);
+            sectionWrap.appendChild(partDiv);
 
             // Reading passage if present
             if (part.passage) {
                 var passDiv = document.createElement('div');
                 passDiv.className = 'reading-passage';
                 passDiv.innerHTML = '<div class="passage-label">Read the following</div>' + part.passage;
-                subBody.appendChild(passDiv);
+                sectionWrap.appendChild(passDiv);
             }
 
             // Audio block for listening parts
@@ -450,7 +468,7 @@ function renderExamVariant(levelKey, variantKey, exam, timeMinutes) {
                 audioHtml += '<div class="listen-note">Listen carefully — you can play the audio as many times as you like</div></div>';
                 var audioDiv = document.createElement('div');
                 audioDiv.innerHTML = audioHtml;
-                while (audioDiv.firstChild) subBody.appendChild(audioDiv.firstChild);
+                while (audioDiv.firstChild) sectionWrap.appendChild(audioDiv.firstChild);
             }
 
             part.questions.forEach(function(q) {
@@ -492,9 +510,11 @@ function renderExamVariant(levelKey, variantKey, exam, timeMinutes) {
                 if (q.explanation) innerHtml += '<div class="q-explanation">' + q.explanation + '</div>';
 
                 qBlock.innerHTML = innerHtml;
-                subBody.appendChild(qBlock);
+                sectionWrap.appendChild(qBlock);
             });
         });
+
+        subBody.appendChild(sectionWrap);
     });
 
     // Submit area
@@ -535,8 +555,141 @@ function toggleAnswers(checkbox, examId) {
     });
 }
 
+// ─── Sectioned (real-exam) mode for full mocks ───
+// The real JLPT N5 is run as three separately-timed sections you can't return to:
+//   Vocabulary 20 min · Grammar & Reading 40 min · Listening 30 min.
+// When a section's time is up it locks and the next one opens automatically.
+var SECTIONED_LEVELS = ['level7'];
+var SECTION_TIME = { vocab: 20, grammar: 40, listening: 30 }; // minutes
+var SECTION_NAME = { vocab: 'Vocabulary 語彙', grammar: 'Grammar & Reading 文法・読解', listening: 'Listening 聴解' };
+var sectioned = null; // active sectioned-exam state
+
+function startSectionedExam(levelKey, variantKey) {
+    var examId = levelKey + '-' + variantKey;
+    var sub = document.getElementById('exam-' + examId);
+    var body = document.getElementById('exam-body-' + examId);
+    var submitArea = document.getElementById('submit-' + examId);
+    var scorePanel = document.getElementById('score-' + examId);
+
+    sub.querySelector('.exam-sub-header').classList.add('open');
+    body.classList.add('open');
+    sub.classList.add('exam-mode');
+
+    scorePanel.style.display = 'none';
+    scorePanel.innerHTML = '';
+    submitArea.style.display = 'none'; // advancing is driven by the section timer / Finish Section button
+
+    body.querySelectorAll('.q-option').forEach(function(opt) {
+        opt.classList.remove('selected', 'correct', 'wrong', 'locked');
+        opt.onclick = function() { selectOption(this); };
+    });
+    body.querySelectorAll('.q-explanation').forEach(function(el) { el.classList.remove('show'); });
+    var toggle = sub.querySelector('.answer-toggle input');
+    if (toggle) { toggle.checked = false; toggleAnswers(toggle, examId); }
+
+    var sections = [];
+    body.querySelectorAll('.exam-section').forEach(function(el) {
+        var sid = el.getAttribute('data-section-id');
+        sections.push({ el: el, sectionId: sid, minutes: SECTION_TIME[sid] || 20 });
+        el.classList.add('exam-section-hidden');
+    });
+    sectioned = { examId: examId, levelKey: levelKey, variantKey: variantKey,
+                  sections: sections, idx: -1, totalElapsed: 0, secRemaining: 0 };
+
+    // Configure the timer bar for sectioned mode.
+    document.getElementById('timer-bar').classList.remove('hidden');
+    document.getElementById('timer-rec').textContent = '';
+    document.getElementById('timer-next').style.display = '';
+    var hideBtn = document.getElementById('timer-hide');
+    if (hideBtn) hideBtn.style.display = 'none'; // no hiding the clock during a timed section
+
+    enterSection(0);
+    sub.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function enterSection(i) {
+    var S = sectioned; if (!S) return;
+    S.sections.forEach(function(s, idx) { s.el.classList.toggle('exam-section-hidden', idx !== i); });
+    S.idx = i;
+    var sec = S.sections[i];
+    document.getElementById('timer-section').textContent =
+        (SECTION_NAME[sec.sectionId] || sec.sectionId) + ' · Section ' + (i + 1) + '/' + S.sections.length;
+    document.getElementById('timer-next').textContent =
+        (i < S.sections.length - 1) ? 'Finish Section →' : 'Finish & Submit →';
+    startCountdown(sec.minutes * 60);
+    sec.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function startCountdown(totalSec) {
+    timerRunning = true;
+    document.getElementById('timer-toggle').textContent = 'Pause';
+    sectioned.secRemaining = totalSec;
+    updateCountdownDisplay();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(function() {
+        if (!timerRunning) return;
+        sectioned.secRemaining--;
+        sectioned.totalElapsed++;
+        updateCountdownDisplay();
+        if (sectioned.secRemaining <= 0) {
+            clearInterval(timerInterval); timerInterval = null;
+            advanceSection(true);
+        }
+    }, 1000);
+}
+
+function updateCountdownDisplay() {
+    if (!sectioned) return;
+    var r = Math.max(0, sectioned.secRemaining);
+    var m = Math.floor(r / 60), s = r % 60;
+    var disp = document.getElementById('timer-display');
+    disp.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    disp.style.color = (r <= 60) ? '#fc8181' : '';
+}
+
+function showTimerToast(msg) {
+    var t = document.getElementById('timer-toast');
+    if (!t) {
+        t = document.createElement('div');
+        t.id = 'timer-toast';
+        t.className = 'timer-toast';
+        document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2600);
+}
+
+function advanceSection(auto) {
+    var S = sectioned; if (!S) return;
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    var cur = S.sections[S.idx];
+    cur.el.querySelectorAll('.q-option').forEach(function(o) { o.onclick = null; o.classList.add('locked'); });
+    if (auto) showTimerToast('⏰ Time’s up — ' + (SECTION_NAME[cur.sectionId] || '') + ' is now closed');
+    if (S.idx < S.sections.length - 1) {
+        enterSection(S.idx + 1);
+    } else {
+        finishSectionedExam();
+    }
+}
+
+function finishSectionedExam() {
+    var S = sectioned; if (!S) return;
+    S.sections.forEach(function(s) { s.el.classList.remove('exam-section-hidden'); }); // reveal all for review
+    document.getElementById('timer-next').style.display = 'none';
+    document.getElementById('timer-section').textContent = '';
+    document.getElementById('timer-display').style.color = '';
+    var hideBtn = document.getElementById('timer-hide');
+    if (hideBtn) hideBtn.style.display = '';
+    timerSeconds = S.totalElapsed; // submitExam reads this for the saved time
+    var lk = S.levelKey, vk = S.variantKey;
+    sectioned = null;
+    submitExam(lk, vk);
+}
+
 // ─── Interactive Exam Mode ───
 function startExam(levelKey, variantKey, timeMinutes) {
+    if (SECTIONED_LEVELS.indexOf(levelKey) !== -1) { startSectionedExam(levelKey, variantKey); return; }
     var examId = levelKey + '-' + variantKey;
     var sub = document.getElementById('exam-' + examId);
     var body = document.getElementById('exam-body-' + examId);

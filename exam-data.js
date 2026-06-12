@@ -2132,7 +2132,7 @@ var EXAM_DATA = {
   title: "Level 7: Full JLPT N5 Mock Exam",
   subtitle: "Complete exam with Listening — 日本語能力試験 N5",
   unlockWeek: 12,
-  timeMinutes: 105,
+  timeMinutes: 90,
   exams: {
 
 // ── Level 7 Exam A ──────────────────────────────────────────
